@@ -49,10 +49,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Seed roles + default admin at startup (idempotent). Does NOT run migrations.
+// Seed roles + default admin, then EN content at startup (idempotent). Does NOT run migrations.
 using (var scope = app.Services.CreateScope())
 {
     await DbSeeder.SeedAsync(scope.ServiceProvider);
+    await ContentSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 app.Run();
