@@ -1,1 +1,102 @@
-/* RTL overrides — filled in Phase 4 */
+/* ===========================================================================
+   RTL overrides (Phase 4). Loaded only when <html dir="rtl">.
+   Mirrors the physical-direction declarations in styles.css.
+   Sliders keep direction:ltr so main.js translateX math is unchanged.
+   =========================================================================== */
+
+/* ---- Arabic typography ---- */
+[dir="rtl"] body { font-family: "Cairo", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4,
+[dir="rtl"] .hero__title, [dir="rtl"] .spec__value,
+[dir="rtl"] .offer-card__title { font-family: "Cairo", "Montserrat", system-ui, sans-serif; letter-spacing: 0; }
+
+/* ---- Global text direction ---- */
+[dir="rtl"] { text-align: right; }
+[dir="rtl"] .crumb-bar .crumb-trail,
+[dir="rtl"] .bas-hero__title h1,
+[dir="rtl"] .fin-intro h1,
+[dir="rtl"] .fin-banner h2 { text-align: right; }
+
+/* ---- Header: brandbar / lang / nav ---- */
+[dir="rtl"] .brandbar__franchise { margin-left: 0; margin-right: 6px; }
+[dir="rtl"] .lang-menu { right: auto; left: 0; }
+[dir="rtl"] .menu > li > a::after { transform-origin: right; }
+[dir="rtl"] .has-drop > .drop { left: auto; right: 0; }
+[dir="rtl"] .megamenu { left: 0; right: 0; }
+[dir="rtl"] .megamenu__item .is-new { margin-left: 0; margin-right: 5px; }
+[dir="rtl"] .megamenu__tab.is-active::after { left: 0; right: 0; }
+[dir="rtl"] .mainnav__inner .menu { padding-left: 0; }
+
+/* ---- Mobile drawer: slides from the right in RTL ---- */
+[dir="rtl"] .drawer__panel { right: auto; left: 0; }
+
+/* ---- Action dock: dock to the left edge in RTL ---- */
+[dir="rtl"] .action-dock { right: auto; left: 20px; }
+@media (min-width: 1101px) { [dir="rtl"] .footer-socials { padding-right: 0; padding-left: 56px; } }
+
+/* ---- Back-to-top button ---- */
+[dir="rtl"] .back-top, [dir="rtl"] .back-top.back-top { right: auto; left: 20px; }
+
+/* ---- Carousels / sliders: keep LTR track so main.js translateX math holds ---- */
+[dir="rtl"] .carousel__track,
+[dir="rtl"] .newscar__track,
+[dir="rtl"] .hero__track,
+[dir="rtl"] [data-carousel] .carousel__track { direction: ltr; }
+/* restore RTL for readable card text */
+[dir="rtl"] .model-card,
+[dir="rtl"] .listing-card__body,
+[dir="rtl"] .hero__inner { direction: rtl; }
+/* swap prev/next arrow positions */
+[dir="rtl"] .carousel__btn--prev { left: auto; right: -22px; }
+[dir="rtl"] .carousel__btn--next { right: auto; left: -22px; }
+[dir="rtl"] .newscar__arrow--prev { left: auto; right: -22px; }
+[dir="rtl"] .newscar__arrow--next { right: auto; left: -22px; }
+
+/* ---- Cards / badges (top-left -> top-right) ---- */
+[dir="rtl"] .lineup-card__badge,
+[dir="rtl"] .listing-card__cat { left: auto; right: 12px; }
+[dir="rtl"] .offer-card__badge { left: auto; right: 16px; }
+
+/* ---- Spec table borders ---- */
+[dir="rtl"] .spec { border-right: 0; border-left: 1px solid var(--c-line); }
+[dir="rtl"] .spec:last-child { border-left: 0; }
+[dir="rtl"] .specs .spec:nth-child(2n) { border-left: 0; }
+[dir="rtl"] .spec__unit { margin-left: 0; margin-right: 4px; }
+
+/* ---- Misc directional accents ---- */
+[dir="rtl"] .callout { border-left: 0; border-right: 3px solid var(--c-accent); }
+[dir="rtl"] .crumb-bar .crumb-trail { border-left: 0; border-right: 1px solid rgba(255,255,255,.22); padding-left: 0; padding-right: 16px; }
+[dir="rtl"] .warr-banner__label { left: auto; right: 24px; }
+
+/* ---- Model-page (mp-*) directional rules ---- */
+[dir="rtl"] .mp-subnav__links { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .mp-feature__list { padding-left: 0; padding-right: 1.1em; }
+[dir="rtl"] .mp-gallery { margin-left: 0; margin-right: calc(50% - 50vw); }
+@media (min-width:1200px){ [dir="rtl"] .mp-head--left { padding-right: 0; padding-left: 14%; } }
+
+/* ---- Additional mirrored rules from styles.css audit ---- */
+/* styles.css:164-167 .brand__co (header brand divider) */
+[dir="rtl"] .brand__co { margin-left: 0; margin-right: 16px; padding-left: 0; padding-right: 16px; border-left: 0; border-right: 1px solid var(--c-line); }
+/* styles.css:1235-1240 .brand__co (nav variant divider) */
+[dir="rtl"] .mainnav .brand__co, [dir="rtl"] .megamenu .brand__co { padding-left: 0; padding-right: 14px; border-left: 0; border-right: 1px solid var(--c-line); }
+/* styles.css:359-367 select dropdown arrow (background-position right + padding-right) */
+[dir="rtl"] .searchblock__form select { background-position: left 16px center; padding-right: 14px; padding-left: 44px; }
+/* styles.css:787 .drawer__group button text-align:left */
+[dir="rtl"] .drawer__group button { text-align: right; }
+/* styles.css:903-904 .dir-list a::after margin-left:auto pushes badge to inline-end */
+[dir="rtl"] .dir-list a::after { margin-left: 0; margin-right: auto; }
+/* styles.css:977 .bas-submit text-align:right (inline-end button) */
+[dir="rtl"] .bas-submit { text-align: left; }
+/* styles.css:1068,1070 datatable first-column / matrix cells text-align:left */
+[dir="rtl"] .datatable tbody tr:first-child td:first-child,
+[dir="rtl"] .datatable tbody td:first-child,
+[dir="rtl"] .datatable--matrix td, [dir="rtl"] .datatable--matrix th { text-align: right; }
+/* styles.css:1594 .mp-head--left text-align:left */
+[dir="rtl"] .mp-head--left { text-align: right; }
+/* styles.css:1724 .mp-stoggle__head text-align:left */
+[dir="rtl"] .mp-stoggle__head { text-align: right; }
+/* styles.css:1787-1788 .mp-card__title accordion +/- icon (padding-right + ::after right) */
+[dir="rtl"] .mp-card__title { padding-right: 0; padding-left: 34px; }
+[dir="rtl"] .mp-card__title::after { right: auto; left: var(--space-5); }
+/* styles.css:1845 .crumb-bar .crumb-back optical offset margin-left:-6px */
+[dir="rtl"] .crumb-bar .crumb-back { margin-left: 0; margin-right: -6px; }
