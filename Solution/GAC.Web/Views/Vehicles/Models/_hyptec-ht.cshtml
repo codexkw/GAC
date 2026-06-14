@@ -1,0 +1,487 @@
+@model GAC.Core.Content.Vehicle
+@{
+    var hero = Model.Images.FirstOrDefault(i => i.Kind == GAC.Core.Content.VehicleImageKind.Hero)?.Path;
+}
+
+  <main class="mp">
+
+    <!-- ============ HERO / INTRO BANNER ============ -->
+    <section class="mp-hero">
+      <a class="mp-hero__link" href="#enquiry" aria-label="Book a Test Drive">
+        <img class="mp-hero__img" src="@hero" alt="2026 GAC HYPTEC HT" />
+        <div class="mp-hero__overlay">
+          <div class="container">
+            <h1 class="mp-hero__title">@Model.Name.Localize()</h1>
+            <p class="mp-hero__sub">The all-new electric vehicle</p>
+            <span class="btn btn--hero">Book a Test Drive</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <!-- ============ SECTION JUMP NAV ============ -->
+    <nav class="mp-subnav" aria-label="Model sections">
+      <div class="container mp-subnav__inner">
+        <a class="btn btn--subnav" href="#trims">Price and Trims</a>
+        <div class="mp-subnav__links">
+          <a href="#exterior" class="is-active">Exterior</a>
+          <a href="#design">Design</a>
+          <a href="#interior">Interior</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#quality">Quality</a>
+          <a href="#technology">Technology</a>
+          <a href="#performance">Performance</a>
+          <a href="#safety">Safety</a>
+          <a href="#warranty">Warranty</a>
+        </div>
+        <a class="btn btn--subnav" href="#enquiry">Order Online</a>
+      </div>
+    </nav>
+
+    <!-- ============ OVERVIEW ============ -->
+    <section class="mp-section" id="exterior">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">HYPTEC HT</h2>
+          <p class="mp-head__sub">Discover true luxury powered by electrifying performance, bold design, exceptional Gullwing doors, and intelligent driving technologies.</p>
+        </header>
+        <div class="mp-stats">
+          <div class="mp-stat"><span class="mp-stat__label">Battery Capacity</span><span class="mp-stat__value">72.7 kWh</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Driving Range</span><span class="mp-stat__value">445 KM</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Electric Motor</span><span class="mp-stat__value">250 kW / 335 HP</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Torque</span><span class="mp-stat__value">Up to 430 Nm</span></div>
+        </div>
+        <p class="mp-note">*Fuel consumption differs from a trim to another. You can refer to specifications of all trims below for more information.</p>
+      </div>
+    </section>
+
+    <!-- ============ EXTERIOR CAROUSEL ============ -->
+    <section class="mp-slider-wrap">
+      <div class="mp-slider" data-slider>
+        <div class="mp-slider__viewport">
+          <div class="mp-slider__track" data-slider-track>
+            <figure class="mp-slide"><img src="/assets/img/hyptec-ht/ext-1.jpg" alt="HYPTEC HT exterior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/hyptec-ht/ext-2.jpg" alt="HYPTEC HT exterior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/hyptec-ht/ext-3.jpg" alt="HYPTEC HT exterior" /></figure>
+          </div>
+        </div>
+        <div class="mp-slider__caption">
+          <span class="mp-slider__eyebrow">Exterior</span>
+          <span class="mp-slider__title">Experience true luxury driven by electric power</span>
+        </div>
+        <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="Previous">‹</button>
+        <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- ============ DESIGN ============ -->
+    <section class="mp-section" id="design">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Design</h2>
+          <p class="mp-head__sub">A futuristic exterior with a bold design that reflects the identity of a next-generation electric SUV.</p>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="d1">A Captivating Design</button>
+            <button class="mp-tabs__btn" data-tab-btn="d2">A Luxurious Cabin</button>
+            <button class="mp-tabs__btn" data-tab-btn="d3">Advanced Intelligence</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-feature is-active" data-tab-panel="d1">
+              <div class="mp-feature__media"><img src="/assets/img/hyptec-ht/design-1.jpg" alt="HYPTEC HT captivating exterior design" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">An exceptional exterior design that captivates from the very first glance</h3>
+                <ul class="mp-feature__list">
+                  <li>Gullwing rear doors (Ultra trim) that open upward with a distinctive flair</li>
+                  <li>External V2L charging port (3.3 kW) for powering devices during camping or outdoor trips</li>
+                  <li>High-sensitivity windshield with intelligent wiper sensors</li>
+                  <li>Electric rear spoiler with open and close functionality</li>
+                  <li>Hidden electric door handles</li>
+                  <li>Panoramic roof with thermal insulation and an electric sunshade</li>
+                  <li>Dynamic body lines that enhance aerodynamics and improve electric performance</li>
+                  <li>Smart LED headlights with a Follow-Me-Home function</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="d2">
+              <div class="mp-feature__media"><img src="/assets/img/hyptec-ht/design-2.jpg" alt="HYPTEC HT luxurious cabin" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">The interior of the HYPTEC HT elevates your driving experience to a new level of luxury</h3>
+                <ul class="mp-feature__list">
+                  <li>Premium Nappa leather seats</li>
+                  <li>8-way power driver seat with 4-way lumbar support &nbsp;·&nbsp; 6-way power passenger seat</li>
+                  <li>Extendable passenger seat up to 145° (Ultra trim – Relax Mode)</li>
+                  <li>Front-seat heating and ventilation, with driver and front-passenger memory</li>
+                  <li>Second-row seat recline up to 46° with a multi-purpose rear tray table</li>
+                  <li>60:40 split-folding rear seats to expand cargo space</li>
+                  <li>Dual-zone automatic climate control with PM2.5 air filter and AQS air purification</li>
+                  <li>Ambient lighting, illuminated visor mirrors, and generous front, rear, and trunk storage</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="d3">
+              <div class="mp-feature__media"><img src="/assets/img/hyptec-ht/design-3.jpg" alt="HYPTEC HT advanced intelligence and connectivity" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Advanced technologies that make every drive smooth and enjoyable</h3>
+                <ul class="mp-feature__list">
+                  <li>8.8-inch digital instrument cluster</li>
+                  <li>14.6-inch large central control display</li>
+                  <li>Premium 12-speaker sound system with Dolby Atmos</li>
+                  <li>Apple CarPlay and Android Auto</li>
+                  <li>Front and rear USB ports (Type-A &amp; Type-C)</li>
+                  <li>Phone-based vehicle unlock and start, plus NFC digital key</li>
+                  <li>360° surround-view camera</li>
+                  <li>Mobile Remote Control smart app integration and V2L for powering external devices</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTERIOR CAROUSEL ============ -->
+    <section class="mp-slider-wrap" id="interior">
+      <div class="mp-slider" data-slider>
+        <div class="mp-slider__viewport">
+          <div class="mp-slider__track" data-slider-track>
+            <figure class="mp-slide"><img src="/assets/img/hyptec-ht/int-1.jpg" alt="HYPTEC HT interior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/hyptec-ht/int-2.jpg" alt="HYPTEC HT interior" /></figure>
+          </div>
+        </div>
+        <div class="mp-slider__caption">
+          <span class="mp-slider__eyebrow">Interior</span>
+          <span class="mp-slider__title">A spacious cabin with premium finishes</span>
+        </div>
+        <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="Previous">‹</button>
+        <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY ============ -->
+    <section class="mp-section" id="gallery">
+      <div class="container">
+        <header class="mp-head mp-head--center">
+          <h2 class="mp-head__title">Gallery</h2>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="gex">Exterior</button>
+            <button class="mp-tabs__btn" data-tab-btn="gin">Interior</button>
+            <button class="mp-tabs__btn" data-tab-btn="gte">Technology</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-gpanel is-active" data-tab-panel="gex">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-1.jpg"><img src="/assets/img/hyptec-ht/gal-1.jpg" alt="HYPTEC HT exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-2.jpg"><img src="/assets/img/hyptec-ht/gal-2.jpg" alt="HYPTEC HT exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-3.jpg"><img src="/assets/img/hyptec-ht/gal-3.jpg" alt="HYPTEC HT exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-4.jpg"><img src="/assets/img/hyptec-ht/gal-4.jpg" alt="HYPTEC HT exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-5.jpg"><img src="/assets/img/hyptec-ht/gal-5.jpg" alt="HYPTEC HT exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-6.jpg"><img src="/assets/img/hyptec-ht/gal-6.jpg" alt="HYPTEC HT exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+            <div class="mp-gpanel" data-tab-panel="gin">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-int-1.jpg"><img src="/assets/img/hyptec-ht/gal-int-1.jpg" alt="HYPTEC HT interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-int-2.jpg"><img src="/assets/img/hyptec-ht/gal-int-2.jpg" alt="HYPTEC HT interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-int-3.jpg"><img src="/assets/img/hyptec-ht/gal-int-3.jpg" alt="HYPTEC HT interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-int-4.jpg"><img src="/assets/img/hyptec-ht/gal-int-4.jpg" alt="HYPTEC HT interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-int-5.jpg"><img src="/assets/img/hyptec-ht/gal-int-5.jpg" alt="HYPTEC HT interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-int-6.jpg"><img src="/assets/img/hyptec-ht/gal-int-6.jpg" alt="HYPTEC HT interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+            <div class="mp-gpanel" data-tab-panel="gte">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-tech-1.jpg"><img src="/assets/img/hyptec-ht/gal-tech-1.jpg" alt="HYPTEC HT technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-tech-2.jpg"><img src="/assets/img/hyptec-ht/gal-tech-2.jpg" alt="HYPTEC HT technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/hyptec-ht/gal-tech-3.jpg"><img src="/assets/img/hyptec-ht/gal-tech-3.jpg" alt="HYPTEC HT technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ QUALITY ============ -->
+    <section class="mp-section" id="quality">
+      <div class="container">
+        <div class="mp-quality">
+          <div class="mp-quality__main">
+            <img src="/assets/img/hyptec-ht/jdpower-award.jpg" alt="J.D. Power award — GAC HYPTEC HT" />
+          </div>
+          <aside class="mp-quality__card">
+            <div class="mp-quality__thumb"><img src="/assets/img/hyptec-ht/quality-thumb.jpg" alt="HYPTEC HT" loading="lazy" /></div>
+            <div class="mp-quality__text">
+              <span class="mp-quality__strapline">Extraordinary Standards</span>
+              <p class="mp-quality__content">Winner of the J.D. Power prize for 8 Years in a row.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TECHNOLOGY ============ -->
+    <section class="mp-section mp-section--grey" id="technology">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Technology &amp; Connectivity</h2>
+          <p class="mp-head__sub">Advanced intelligence, a fully connected world at your fingertips.</p>
+        </header>
+        <div class="mp-tech-banner"><img src="/assets/img/hyptec-ht/tech-banner.jpg" alt="HYPTEC HT technology and connectivity" /></div>
+        <div class="mp-cards">
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/hyptec-ht/tech-1.jpg" alt="Massive 14.6-inch central control display" /></div>
+            <h3 class="mp-card__title">Massive 14.6-Inch Central Control Display</h3>
+            <p class="mp-card__text">A high-tech infotainment system supporting Apple CarPlay and Android Auto.</p>
+          </article>
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/hyptec-ht/tech-2.jpg" alt="Premium 12-speaker sound system with Dolby Atmos" /></div>
+            <h3 class="mp-card__title">Premium 12-Speaker Sound System With Dolby Atmos</h3>
+            <p class="mp-card__text">A premium audio experience that reveals every detail and surrounds you with immersive sound from every direction.</p>
+          </article>
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/hyptec-ht/tech-3.jpg" alt="8.8-inch digital instrument cluster" /></div>
+            <h3 class="mp-card__title">8.8-Inch Digital Instrument Cluster</h3>
+            <p class="mp-card__text">A cutting-edge digital cockpit designed to elevate your driving experience.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PERFORMANCE ============ -->
+    <section class="mp-section" id="performance">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Performance</h2>
+          <p class="mp-head__sub">Smooth control, dynamic power</p>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="p1">Balanced Electric Power</button>
+            <button class="mp-tabs__btn" data-tab-btn="p2">Intelligent Driving Technologies</button>
+            <button class="mp-tabs__btn" data-tab-btn="p3">Comprehensive Safety</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-feature is-active" data-tab-panel="p1">
+              <div class="mp-feature__media"><img src="/assets/img/hyptec-ht/perf-1.jpg" alt="HYPTEC HT electric motor and battery" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">HYPTEC HT is engineered to deliver a performance that balances power with refined smoothness</h3>
+                <ul class="mp-feature__list">
+                  <li><strong>Motor power:</strong> 250 kW / 335 hp</li>
+                  <li><strong>Torque:</strong> 430 Nm</li>
+                  <li><strong>Acceleration:</strong> 0–100 km/h in 5.8 seconds</li>
+                  <li><strong>Battery capacity:</strong> 72.7 kWh &nbsp;·&nbsp; <strong>Driving range:</strong> up to 445 km</li>
+                  <li><strong>Energy efficiency:</strong> 27.7 km/L equivalent, offering high energy economy</li>
+                  <li>Rear-Wheel Drive (RWD)</li>
+                  <li>Independent front and rear suspension</li>
+                  <li>Quiet, vibration-free driving experience</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="p2">
+              <div class="mp-feature__media"><img src="/assets/img/hyptec-ht/perf-2.jpg" alt="HYPTEC HT intelligent driving technologies" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">An advanced suite of 12 intelligent driving systems</h3>
+                <ul class="mp-feature__list">
+                  <li>Adaptive Cruise Control (ACC) &amp; Integrated Cruise Assist (ICA)</li>
+                  <li>Automatic Emergency Braking (AEB) &amp; Forward Collision Warning (FCW)</li>
+                  <li>Lane Departure Warning (LDW) &amp; Enhanced Lane Keeping Assist (ELKA)</li>
+                  <li>Lane Departure Prevention (LDP)</li>
+                  <li>Intelligent High Beam Control (IHBC)</li>
+                  <li>Blind Spot Detection (BSD) &amp; Door Open Warning (DOW)</li>
+                  <li>Rear Cross Traffic Alert (RCTA) &amp; Rear Collision Warning (RCW)</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="p3">
+              <div class="mp-feature__media"><img src="/assets/img/hyptec-ht/perf-3.jpg" alt="HYPTEC HT comprehensive safety" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Multi-layered protection on every journey</h3>
+                <ul class="mp-feature__list">
+                  <li>6 airbags</li>
+                  <li>E-Call emergency system</li>
+                  <li>Anti-theft alarm + immobilizer</li>
+                  <li>Electric child lock with ISOFIX</li>
+                  <li>Front and rear parking sensors</li>
+                  <li>Hydraulic Brake Assist (HBA)</li>
+                  <li>Hill Hold Control (HHC) &amp; Hill Descent Control (HDC)</li>
+                  <li>Brake system: ABS + EBD + ESC</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SAFETY ============ -->
+    <section class="mp-section mp-section--grey" id="safety">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">All-Round Protection</h2>
+          <p class="mp-head__sub">Your safety isn't optional; it's built into every part of it. Equipped with a range of features designed to provide maximum protection for you and your family.</p>
+        </header>
+        <div class="mp-stoggles">
+          <article class="mp-stoggle is-open">
+            <button class="mp-stoggle__head" type="button" aria-expanded="true"><span>Comprehensive Protection</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/hyptec-ht/safe-1.jpg" alt="HYPTEC HT comprehensive protection" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Comprehensive Protection</h3>
+              <p class="mp-stoggle__content">Safety features that keep you prepared for the unexpected.</p>
+            </div>
+          </article>
+          <article class="mp-stoggle">
+            <button class="mp-stoggle__head" type="button" aria-expanded="false"><span>6 Airbags With a Supplemental Restraint System (SRS)</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/hyptec-ht/safe-2.jpg" alt="HYPTEC HT 6 airbags with SRS" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">6 Airbags With a Supplemental Restraint System (SRS)</h3>
+              <p class="mp-stoggle__content">Dual front airbags with a Supplemental Restraint System (SRS), along with integrated side curtain airbags to ensure passenger safety.</p>
+            </div>
+          </article>
+          <article class="mp-stoggle">
+            <button class="mp-stoggle__head" type="button" aria-expanded="false"><span>Safety Is Our Top Priority</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/hyptec-ht/safe-3.jpg" alt="HYPTEC HT ISOFIX child seat anchors" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Safety Is Our Top Priority</h3>
+              <p class="mp-stoggle__content">ISOFIX child seat anchors.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRIMS ============ -->
+    <section class="mp-section" id="trims">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">HYPTEC HT Trims</h2>
+          <p class="mp-head__sub">Choose the right trim level for you</p>
+          <p class="mp-head__body">The price does not include registration fees and plates<br>Terms and conditions apply</p>
+        </header>
+        <div class="mp-trims" style="gap:var(--space-7); flex-wrap:wrap;">
+          <article class="mp-trim">
+            <div class="mp-trim__media"><img src="/assets/img/hyptec-ht/trim-hyptec-ht.png" alt="HYPTEC HT" /></div>
+            <div class="mp-trim__body">
+              <p class="mp-trim__model">GAC</p>
+              <h3 class="mp-trim__name">HYPTEC HT</h3>
+              <ul class="mp-trim__price">
+                <li>Pricing available on request.</li>
+                <li>Up to 445 km range · 72.7 kWh battery</li>
+                <li>250 kW / 335 HP rear-drive electric motor</li>
+              </ul>
+              <div class="mp-trim__cta">
+                <a class="btn btn--trim" href="#enquiry">Book A test drive</a>
+                <a class="btn btn--trim" href="#enquiry">Request a Quote</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WARRANTY ============ -->
+    <section class="mp-section" id="warranty">
+      <div class="container">
+        <hr class="mp-hr" />
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Warranty</h2>
+          <p class="mp-head__sub">7 years or 200,000 km warranty.<br>Battery warranty: 8 years or 200,000 km</p>
+        </header>
+        <div class="mp-warranty__links">
+          <a class="btn btn--doc" href="https://en.gacmotorsaudi.com/pdfs/a19-g1-hyper-ht-user-manual-english.pdf" target="_blank" rel="noopener">Manuals</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENQUIRY / CONTACT ============ -->
+    <section class="mp-enquiry" id="enquiry" style="background-image:url('/assets/img/hyptec-ht/enquiry-bg.jpg')">
+      <div class="mp-enquiry__overlay">
+        <div class="container mp-enquiry__grid">
+          <div class="mp-enquiry__intro">
+            <h2 class="mp-enquiry__title">Contact Us</h2>
+            <p class="mp-enquiry__sub">request a quote or test drive</p>
+            <p class="mp-enquiry__lead">You will be contacted within 24 working hours.</p>
+            <div class="mp-enquiry__actions">
+              <a class="mp-enquiry__action" href="tel:1833334">
+                <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+                <span>Call us</span>
+              </a>
+              <a class="mp-enquiry__action" href="/contact-us">
+                <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                <span>Find a location</span>
+              </a>
+            </div>
+          </div>
+
+          <form class="mp-form" data-form novalidate>
+            <div class="field">
+              <label>Message</label>
+              <textarea rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>Select Branch *</label>
+              <select required>
+                <option value="">Please select ...</option>
+                <option>Riyadh Branch</option>
+                <option>GAC Motors Jeddah, Malibari Sq Showroom</option>
+                <option>GAC Motors Jeddah, Kilo 3 Branch</option>
+                <option>Dammam Branch</option>
+                <option>GAC Motors Al-Madinah Al-Munawarrah Branch</option>
+                <option>GAC Motors Khamis Mushait Branch</option>
+                <option>GAC Motors Jazan Branch</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Title *</label>
+              <select required>
+                <option value="">Please select ...</option>
+                <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+              </select>
+            </div>
+            <div class="field"><label>First Name *</label><input type="text" required /></div>
+            <div class="field"><label>Last Name *</label><input type="text" required /></div>
+            <div class="field"><label>Email Address *</label><input type="email" required /></div>
+            <div class="field"><label>Contact Number *</label><input type="tel" required /></div>
+            <div class="mp-form__dpp">
+              <p class="mp-form__dpp-title">Privacy statement &amp; legal disclaimer</p>
+              I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties are required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a>
+            </div>
+            <label class="mp-check"><input type="checkbox" /> <span>I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</span></label>
+            <button class="mp-form__submit" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================
+       FOOTER
+       ================================================= -->
+  <div data-include="footer"></div>
+
+  <!-- Gallery lightbox viewer -->
+  <div class="mp-lightbox" data-lightbox aria-hidden="true" role="dialog" aria-label="Image viewer">
+    <button class="mp-lightbox__close" data-lb-close aria-label="Close">×</button>
+    <button class="mp-lightbox__nav mp-lightbox__nav--prev" data-lb-prev aria-label="Previous image">‹</button>
+    <img class="mp-lightbox__img" data-lb-img src="" alt="" />
+    <button class="mp-lightbox__nav mp-lightbox__nav--next" data-lb-next aria-label="Next image">›</button>
+    <div class="mp-lightbox__count" data-lb-count></div>
+  </div>

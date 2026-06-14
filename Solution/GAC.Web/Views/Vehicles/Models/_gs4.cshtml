@@ -1,0 +1,469 @@
+@model GAC.Core.Content.Vehicle
+@{
+    var hero = Model.Images.FirstOrDefault(i => i.Kind == GAC.Core.Content.VehicleImageKind.Hero)?.Path;
+}
+
+  <main class="mp">
+
+    <!-- ============ HERO / INTRO BANNER ============ -->
+    <section class="mp-hero">
+      <a class="mp-hero__link" href="#enquiry" aria-label="Book a Test Drive">
+        <img class="mp-hero__img" src="@hero" alt="2026 GAC GS4 MAX" />
+        <div class="mp-hero__overlay">
+          <div class="container">
+            <h1 class="mp-hero__title">@Model.Name.Localize()</h1>
+            <p class="mp-hero__sub">The Power without Compromise</p>
+            <span class="btn btn--hero">Book a Test Drive</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <!-- ============ SECTION JUMP NAV ============ -->
+    <nav class="mp-subnav" aria-label="Model sections">
+      <div class="container mp-subnav__inner">
+        <a class="btn btn--subnav" href="#trims">Price and Trims</a>
+        <div class="mp-subnav__links">
+          <a href="#exterior" class="is-active">Exterior</a>
+          <a href="#design">Design</a>
+          <a href="#interior">Interior</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#quality">Quality</a>
+          <a href="#technology">Technology</a>
+          <a href="#performance">Performance</a>
+          <a href="#safety">Safety</a>
+          <a href="#warranty">Warranty</a>
+        </div>
+        <a class="btn btn--subnav" href="#enquiry">Order Online</a>
+      </div>
+    </nav>
+
+    <!-- ============ OVERVIEW ============ -->
+    <section class="mp-section" id="exterior">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">All New GAC GS4 MAX</h2>
+          <p class="mp-head__sub">Inspiring Performance</p>
+        </header>
+        <div class="mp-stats">
+          <div class="mp-stat"><span class="mp-stat__label">Fuel Consumption</span><span class="mp-stat__value">12.3 KM/L</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Horsepower</span><span class="mp-stat__value">248 HP</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Engine</span><span class="mp-stat__value">2.0L Turbo</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Seating</span><span class="mp-stat__value">5</span></div>
+        </div>
+        <p class="mp-note">*Fuel consumption differs from a trim to another. You can refer to specifications of all trims below for more information.</p>
+      </div>
+    </section>
+
+    <!-- ============ EXTERIOR CAROUSEL ============ -->
+    <section class="mp-slider-wrap">
+      <div class="mp-slider" data-slider>
+        <div class="mp-slider__viewport">
+          <div class="mp-slider__track" data-slider-track>
+            <figure class="mp-slide"><img src="/assets/img/gs4/ext-1.jpg" alt="GS4 MAX exterior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/gs4/ext-2.jpg" alt="GS4 MAX exterior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/gs4/ext-3.jpg" alt="GS4 MAX exterior" /></figure>
+          </div>
+        </div>
+        <div class="mp-slider__caption">
+          <span class="mp-slider__eyebrow">Exterior</span>
+          <span class="mp-slider__title">A Sporty Design Powered by Advanced Technology</span>
+        </div>
+        <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="Previous">‹</button>
+        <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- ============ DESIGN ============ -->
+    <section class="mp-section" id="design">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Design</h2>
+          <p class="mp-head__sub">A design that defines excellence</p>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="d1">Aesthetics of Light and Shadow 3.0</button>
+            <button class="mp-tabs__btn" data-tab-btn="d2">It Is All in the Details</button>
+            <button class="mp-tabs__btn" data-tab-btn="d3">Elegant Cabin with More Space</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-feature is-active" data-tab-panel="d1">
+              <div class="mp-feature__media"><img src="/assets/img/gs4/design-1.jpg" alt="GS4 MAX design that reflects distinction" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">A Design That Reflects Distinction</h3>
+                <p>An elegant exterior that blends sophistication with dynamic character, the GS4 MAX embodies a modern identity that reflects confidence and individuality. Featuring 20-inch aluminum wheels, it delivers a sporty, refined look with stable performance in all conditions, while sleek, flowing lines express strength and assurance.</p>
+                <p>Intelligent LED headlights shine with clarity and style, offering excellent visibility alongside a striking visual presence. The daytime running lights add a contemporary touch that enhances the vehicle's distinctive identity.</p>
+                <p>The panoramic glass sunroof creates an open, luxurious feel, and with hidden door handles and power-folding side mirrors, every detail of the GS4 MAX is designed to seamlessly combine elegance with practicality at its finest.</p>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="d2">
+              <div class="mp-feature__media"><img src="/assets/img/gs4/design-2.jpg" alt="GS4 MAX luxurious interior" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Interior Design — Luxury in Every Detail</h3>
+                <p>A refined cabin that brings together comfortable leather seats, intelligent multi-color ambient lighting, and a panoramic glass roof with an electric sunshade—creating journeys filled with luxury and comfort. Seamless convenience comes standard with electrically hidden door handles, a power tailgate, and a 6-way electrically adjustable driver's seat.</p>
+                <ul class="mp-feature__list">
+                  <li><strong>Perforated leather seats with Zero-Pressure technology:</strong> Unmatched comfort for long journeys.</li>
+                  <li><strong>Front seat ventilation:</strong> Keeps you cool and refreshed in all climates.</li>
+                  <li><strong>6-way power-adjustable driver's seat:</strong> Easily find your ideal driving position.</li>
+                  <li><strong>Multi-color ambient lighting:</strong> Adds a refined touch and a relaxing atmosphere tailored to your mood.</li>
+                  <li><strong>Power tailgate:</strong> Effortless opening and closing for a premium, practical experience.</li>
+                  <li><strong>Anti-pinch power windows:</strong> Safety and comfort at the touch of a button.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="d3">
+              <div class="mp-feature__media"><img src="/assets/img/gs4/design-3.jpg" alt="GS4 MAX smart technologies" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Smart Technologies at Your Fingertips</h3>
+                <p>Advanced technology keeps you connected while delivering a modern driving experience.</p>
+                <ul class="mp-feature__list">
+                  <li>An intelligent driving experience with a 10.1-inch high-resolution touchscreen and a 7-inch digital instrument cluster.</li>
+                  <li>Stay connected at all times with Apple CarPlay, Android Auto, Bluetooth, and remote vehicle control via the smartphone app.</li>
+                  <li>Manage your car effortlessly even when you're away.</li>
+                  <li>Fast 50W wireless charging and multiple USB ports.</li>
+                  <li>Dual-zone automatic climate control with rear vents for perfectly distributed airflow.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTERIOR CAROUSEL ============ -->
+    <section class="mp-slider-wrap" id="interior">
+      <div class="mp-slider" data-slider>
+        <div class="mp-slider__viewport">
+          <div class="mp-slider__track" data-slider-track>
+            <figure class="mp-slide"><img src="/assets/img/gs4/int-1.jpg" alt="GS4 MAX interior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/gs4/int-2.jpg" alt="GS4 MAX interior" /></figure>
+          </div>
+        </div>
+        <div class="mp-slider__caption">
+          <span class="mp-slider__eyebrow">Interior</span>
+          <span class="mp-slider__title">A Spacious and Comfortable Interior</span>
+        </div>
+        <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="Previous">‹</button>
+        <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY ============ -->
+    <section class="mp-section" id="gallery">
+      <div class="container">
+        <header class="mp-head mp-head--center">
+          <h2 class="mp-head__title">Gallery</h2>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="gex">Exterior</button>
+            <button class="mp-tabs__btn" data-tab-btn="gin">Interior</button>
+            <button class="mp-tabs__btn" data-tab-btn="gte">Technology</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-gpanel is-active" data-tab-panel="gex">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-1.jpg"><img src="/assets/img/gs4/gal-1.jpg" alt="GS4 MAX exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-2.jpg"><img src="/assets/img/gs4/gal-2.jpg" alt="GS4 MAX exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-3.jpg"><img src="/assets/img/gs4/gal-3.jpg" alt="GS4 MAX exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-4.jpg"><img src="/assets/img/gs4/gal-4.jpg" alt="GS4 MAX exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-5.jpg"><img src="/assets/img/gs4/gal-5.jpg" alt="GS4 MAX exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-6.jpg"><img src="/assets/img/gs4/gal-6.jpg" alt="GS4 MAX exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+            <div class="mp-gpanel" data-tab-panel="gin">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-int-1.jpg"><img src="/assets/img/gs4/gal-int-1.jpg" alt="GS4 MAX interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-int-2.jpg"><img src="/assets/img/gs4/gal-int-2.jpg" alt="GS4 MAX interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-int-3.jpg"><img src="/assets/img/gs4/gal-int-3.jpg" alt="GS4 MAX interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-int-4.jpg"><img src="/assets/img/gs4/gal-int-4.jpg" alt="GS4 MAX interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-int-5.jpg"><img src="/assets/img/gs4/gal-int-5.jpg" alt="GS4 MAX interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-int-6.jpg"><img src="/assets/img/gs4/gal-int-6.jpg" alt="GS4 MAX interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+            <div class="mp-gpanel" data-tab-panel="gte">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-tech-1.jpg"><img src="/assets/img/gs4/gal-tech-1.jpg" alt="GS4 MAX technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-tech-2.jpg"><img src="/assets/img/gs4/gal-tech-2.jpg" alt="GS4 MAX technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs4/gal-tech-3.jpg"><img src="/assets/img/gs4/gal-tech-3.jpg" alt="GS4 MAX technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ QUALITY ============ -->
+    <section class="mp-section" id="quality">
+      <div class="container">
+        <div class="mp-quality">
+          <div class="mp-quality__main">
+            <img src="/assets/img/gs4/jdpower-award.jpg" alt="J.D. Power award — GAC GS4 MAX" />
+          </div>
+          <aside class="mp-quality__card">
+            <div class="mp-quality__thumb"><img src="/assets/img/gs4/quality-thumb.jpg" alt="GS4 MAX" loading="lazy" /></div>
+            <div class="mp-quality__text">
+              <span class="mp-quality__strapline">High Standards</span>
+              <p class="mp-quality__content">Winner of the J.D. Power prize for 8 Years in a row.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TECHNOLOGY ============ -->
+    <section class="mp-section mp-section--grey" id="technology">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Advanced Technology Features</h2>
+          <p class="mp-head__sub">The vehicle comes equipped with a wide range of advanced technologies, including smartphone connectivity with a high-resolution 12.3-inch touchscreen, push-button start/stop, a USB charging port, hands-free Bluetooth phone system, rearview camera, and a 10-speaker sound system.</p>
+        </header>
+        <div class="mp-tech-banner"><img src="/assets/img/gs4/tech-banner.jpg" alt="GS4 MAX advanced technology features" /></div>
+        <div class="mp-cards">
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/gs4/tech-1.jpg" alt="Electrically hidden door handles" /></div>
+            <h3 class="mp-card__title">Electrically Hidden Door Handles</h3>
+            <p class="mp-card__text">Electrically hidden door handles.</p>
+          </article>
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/gs4/tech-2.jpg" alt="Electric tailgate" /></div>
+            <h3 class="mp-card__title">Electric Tailgate</h3>
+            <p class="mp-card__text">Electric tailgate.</p>
+          </article>
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/gs4/tech-3.jpg" alt="Electric driver's seat" /></div>
+            <h3 class="mp-card__title">Electric Driver's Seat</h3>
+            <p class="mp-card__text">Driver's seat, electrically adjustable in 6 positions.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PERFORMANCE ============ -->
+    <section class="mp-section" id="performance">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Performance</h2>
+          <p class="mp-head__sub">Powerful performance</p>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="p1">Superior Performance for an Unprecedented Experience</button>
+            <button class="mp-tabs__btn" data-tab-btn="p2">New Generation of GAC 270T Engine</button>
+            <button class="mp-tabs__btn" data-tab-btn="p3">All-New AISIN 6AT Tiptronic Transmission</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-feature is-active" data-tab-panel="p1">
+              <div class="mp-feature__media"><img src="/assets/img/gs4/perf-1.jpg" alt="GS4 MAX 2.0L Turbo GDI performance" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Performance That Inspires</h3>
+                <p>The new GS4 MAX delivers true power with its 2.0L Turbo GDI engine, generating 248 hp and 400 Nm of torque for a smooth yet exhilarating driving experience.</p>
+                <p>The 8-speed AISIN automatic transmission ensures precise shifts and exceptional driving smoothness, while the AWD system provides optimal stability and control on all types of roads.</p>
+                <p>Choose from 7 driving modes for a tailored experience on every journey—whether navigating city streets, cruising on the highway, or exploring light off-road adventures.</p>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="p2">
+              <div class="mp-feature__media"><img src="/assets/img/gs4/perf-2.jpg" alt="GS4 MAX safety first" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Safety First</h3>
+                <p>The GS4 MAX puts your safety at the forefront, featuring 8 airbags, high-definition surround-view cameras, and intelligent driver assistance systems.</p>
+                <ul class="mp-feature__list">
+                  <li>Advanced safety technologies—such as Adaptive Cruise Control, Forward Collision Warning, Automatic Emergency Braking, and Lane Keeping Assist—offer a Level 2 semi-autonomous driving experience.</li>
+                  <li>Complete peace of mind on the road.</li>
+                  <li>Additional systems, including Traffic Jam Assist, Speed Limit Recognition, Electronic Stability Control, and Tire Pressure Monitoring, ensure a safe and stable journey in all conditions.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="p3">
+              <div class="mp-feature__media"><img src="/assets/img/gs4/perf-3.jpg" alt="GS4 MAX advanced driving intelligence" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Advanced Driving — Intelligence That Makes a Difference</h3>
+                <p>Safe and smooth driving supported by intelligent systems that anticipate the road ahead.</p>
+                <ul class="mp-feature__list">
+                  <li><strong>Intelligent Adaptive Cruise Control (ACC):</strong> Maintains a safe distance from vehicles ahead.</li>
+                  <li><strong>Integrated Cruise Assist (ICA):</strong> Adjusts speed according to road conditions for a smoother experience.</li>
+                  <li><strong>Forward Collision Warning (FCW):</strong> Alerts you to potential collisions.</li>
+                  <li><strong>Lane Keeping Assist (LKA) &amp; Lane Departure Warning (LDW):</strong> Helps you stay in your lane at all times.</li>
+                  <li><strong>Intelligent Speed Recognition:</strong> Reads traffic signs and adjusts speed automatically.</li>
+                  <li><strong>Traffic Jam Assist (TJA):</strong> Eases driving in congestion and reduces stress.</li>
+                  <li><strong>High Beam Assist (HMA):</strong> Adjusts headlights for optimal visibility without disturbing other drivers.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SAFETY ============ -->
+    <section class="mp-section mp-section--grey" id="safety">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Have a Smart, Safe Trip</h2>
+          <p class="mp-head__sub">Unprecedented levels of safety technology help you enjoy your journey with total confidence.</p>
+          <p class="mp-head__body">Equipped with a wide range of safety features, including Anti-lock Braking System (ABS), Electronic Brakeforce Distribution (EBD), Electronic Stability Program (ESP), Electronic Parking Brake (EPB) with Auto Hold, Tire Pressure Monitoring System (TPMS), and more—providing maximum protection for you and your family.</p>
+        </header>
+        <div class="mp-stoggles">
+          <article class="mp-stoggle is-open">
+            <button class="mp-stoggle__head" type="button" aria-expanded="true"><span>Comprehensive Protection</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/gs4/safe-1.jpg" alt="GS4 MAX comprehensive protection" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Comprehensive Protection</h3>
+              <p class="mp-stoggle__content">Adaptive Cruise Control and Integrated Driving Assistance System.</p>
+            </div>
+          </article>
+          <article class="mp-stoggle">
+            <button class="mp-stoggle__head" type="button" aria-expanded="false"><span>Safe Body Design</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/gs4/safe-2.jpg" alt="GS4 MAX safe body design" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Safe Body Design</h3>
+              <p class="mp-stoggle__content">High strength safety body design.</p>
+            </div>
+          </article>
+          <article class="mp-stoggle">
+            <button class="mp-stoggle__head" type="button" aria-expanded="false"><span>Safety is a Top Priority</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/gs4/safe-3.jpg" alt="GS4 MAX eight airbags and surround-view cameras" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Safety is a Top Priority</h3>
+              <p class="mp-stoggle__content">Eight airbags, high-definition surround-view cameras, and intelligent driver assistance systems.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRIMS ============ -->
+    <section class="mp-section" id="trims">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">GS4 MAX Trims</h2>
+          <p class="mp-head__sub">Choose the right trim level for you</p>
+          <p class="mp-head__body">The price does not include registration fees and plates<br>Terms and conditions apply</p>
+        </header>
+        <div class="mp-trims">
+          <article class="mp-trim">
+            <div class="mp-trim__media"><img src="/assets/img/gs4/trim-gs4.png" alt="GS4 MAX" /></div>
+            <div class="mp-trim__body">
+              <p class="mp-trim__model">GAC</p>
+              <h3 class="mp-trim__name">GS4 MAX</h3>
+              <ul class="mp-trim__price">
+                <li>Cash purchase price: KWD 94,240</li>
+                <li>VAT: KWD 14,136</li>
+                <li>Total: KWD 108,376</li>
+                <li><strong>Exclusive launch offer:</strong> KWD 94,300 inclusive VAT</li>
+              </ul>
+              <div class="mp-trim__cta">
+                <a class="btn btn--trim" href="#enquiry">Book A test drive</a>
+                <a class="btn btn--trim" href="#enquiry">Request a Quote</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WARRANTY ============ -->
+    <section class="mp-section" id="warranty">
+      <div class="container">
+        <hr class="mp-hr" />
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Warranty</h2>
+          <p class="mp-head__sub">7 years warranty, or 200,000 km.</p>
+        </header>
+        <div class="mp-warranty__links">
+          <a class="btn btn--doc" href="https://en.gacmotorsaudi.com/" target="_blank" rel="noopener">Manuals</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENQUIRY / CONTACT ============ -->
+    <section class="mp-enquiry" id="enquiry" style="background-image:url('/assets/img/gs4/enquiry-bg.jpg')">
+      <div class="mp-enquiry__overlay">
+        <div class="container mp-enquiry__grid">
+          <div class="mp-enquiry__intro">
+            <h2 class="mp-enquiry__title">Contact Us</h2>
+            <p class="mp-enquiry__sub">request a price or book a test drive</p>
+            <p class="mp-enquiry__lead">We will contact you within 24 working hours.</p>
+            <div class="mp-enquiry__actions">
+              <a class="mp-enquiry__action" href="tel:1833334">
+                <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+                <span>Call us</span>
+              </a>
+              <a class="mp-enquiry__action" href="/contact-us">
+                <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                <span>Find a location</span>
+              </a>
+            </div>
+          </div>
+
+          <form class="mp-form" data-form novalidate>
+            <div class="field">
+              <label>Message</label>
+              <textarea rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>Select Branch *</label>
+              <select required>
+                <option value="">Please select ...</option>
+                <option>Riyadh Branch</option>
+                <option>GAC Motors Jeddah, Malibari Sq Showroom</option>
+                <option>GAC Motors Jeddah, Kilo 3 Branch</option>
+                <option>Dammam Branch</option>
+                <option>GAC Motors Al-Madinah Al-Munawarrah Branch</option>
+                <option>GAC Motors Khamis Mushait Branch</option>
+                <option>GAC Motors Jazan Branch</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Title *</label>
+              <select required>
+                <option value="">Please select ...</option>
+                <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+              </select>
+            </div>
+            <div class="field"><label>First Name *</label><input type="text" required /></div>
+            <div class="field"><label>Last Name *</label><input type="text" required /></div>
+            <div class="field"><label>Email Address *</label><input type="email" required /></div>
+            <div class="field"><label>Contact Number *</label><input type="tel" required /></div>
+            <div class="mp-form__dpp">
+              <p class="mp-form__dpp-title">Privacy statement &amp; legal disclaimer</p>
+              I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties are required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a>
+            </div>
+            <label class="mp-check"><input type="checkbox" /> <span>I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</span></label>
+            <button class="mp-form__submit" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================
+       FOOTER
+       ================================================= -->
+  <div data-include="footer"></div>
+
+  <!-- Gallery lightbox viewer -->
+  <div class="mp-lightbox" data-lightbox aria-hidden="true" role="dialog" aria-label="Image viewer">
+    <button class="mp-lightbox__close" data-lb-close aria-label="Close">×</button>
+    <button class="mp-lightbox__nav mp-lightbox__nav--prev" data-lb-prev aria-label="Previous image">‹</button>
+    <img class="mp-lightbox__img" data-lb-img src="" alt="" />
+    <button class="mp-lightbox__nav mp-lightbox__nav--next" data-lb-next aria-label="Next image">›</button>
+    <div class="mp-lightbox__count" data-lb-count></div>
+  </div>

@@ -1,0 +1,465 @@
+@model GAC.Core.Content.Vehicle
+@{
+    var hero = Model.Images.FirstOrDefault(i => i.Kind == GAC.Core.Content.VehicleImageKind.Hero)?.Path;
+}
+
+  <main class="mp">
+
+    <!-- ============ HERO / INTRO BANNER ============ -->
+    <section class="mp-hero">
+      <a class="mp-hero__link" href="#enquiry" aria-label="Book a Test Drive">
+        <img class="mp-hero__img" src="@hero" alt="2026 GAC GS8 Traveller" />
+        <div class="mp-hero__overlay">
+          <div class="container">
+            <h1 class="mp-hero__title">@Model.Name.Localize()</h1>
+            <p class="mp-hero__sub">Journey in Style!</p>
+            <span class="btn btn--hero">Book a Test Drive</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <!-- ============ SECTION JUMP NAV ============ -->
+    <nav class="mp-subnav" aria-label="Model sections">
+      <div class="container mp-subnav__inner">
+        <a class="btn btn--subnav" href="#trims">Price and Trims</a>
+        <div class="mp-subnav__links">
+          <a href="#exterior" class="is-active">Exterior</a>
+          <a href="#design">Design</a>
+          <a href="#interior">Interior</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#colorisers">Colorisers</a>
+          <a href="#quality">Quality</a>
+          <a href="#technology">Technology</a>
+          <a href="#performance">Performance</a>
+          <a href="#safety">Safety</a>
+          <a href="#warranty">Warranty</a>
+        </div>
+        <a class="btn btn--subnav" href="#enquiry">Order Online</a>
+      </div>
+    </nav>
+
+    <!-- ============ OVERVIEW ============ -->
+    <section class="mp-section" id="exterior">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">GAC GS8 Traveller</h2>
+          <p class="mp-head__sub">Embark on a journey that combines sophistication and innovation.</p>
+        </header>
+        <div class="mp-stats">
+          <div class="mp-stat"><span class="mp-stat__label">Fuel Consumption</span><span class="mp-stat__value">12.5 KM/L</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Horsepower</span><span class="mp-stat__value">248 HP</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Engine</span><span class="mp-stat__value">2.0TGDI</span></div>
+          <div class="mp-stat"><span class="mp-stat__label">Seating</span><span class="mp-stat__value">7</span></div>
+        </div>
+        <p class="mp-note">*Fuel consumption differs from a trim to another. You can refer to specifications of all trims below for more information.</p>
+      </div>
+    </section>
+
+    <!-- ============ EXTERIOR CAROUSEL ============ -->
+    <section class="mp-slider-wrap">
+      <div class="mp-slider" data-slider>
+        <div class="mp-slider__viewport">
+          <div class="mp-slider__track" data-slider-track>
+            <figure class="mp-slide"><img src="/assets/img/gs8t/ext-1.jpg" alt="GS8 Traveller exterior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/gs8t/ext-2.jpg" alt="GS8 Traveller exterior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/gs8t/ext-3.jpg" alt="GS8 Traveller exterior" /></figure>
+          </div>
+        </div>
+        <div class="mp-slider__caption">
+          <span class="mp-slider__eyebrow">Exterior</span>
+          <span class="mp-slider__title">Powerful Design</span>
+        </div>
+        <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="Previous">‹</button>
+        <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- ============ DESIGN ============ -->
+    <section class="mp-section" id="design">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Design</h2>
+          <p class="mp-head__sub">Designed to give quality comfort blended with utmost luxury.</p>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="d1">Bold and Inspiring Design</button>
+            <button class="mp-tabs__btn" data-tab-btn="d2">Intelligent Cockpit</button>
+            <button class="mp-tabs__btn" data-tab-btn="d3">Smarter Interaction</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-feature is-active" data-tab-panel="d1">
+              <div class="mp-feature__media"><img src="/assets/img/gs8t/design-1.jpg" alt="Aerodynamic Body, Attractive Appearance" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Aerodynamic Body, Attractive Appearance</h3>
+                <p>The Traveller's exterior design exudes confidence with its wide, chrome-accented grille, sharp LED headlights, and flowing lines. The squared-off, upright grille emulates the majestic appearance of Mount Everest, forming a clear and organized visual rhythm, conveying a spacious design and a strong, imposing aura.</p>
+                <ul class="mp-feature__list">
+                  <li><strong>Versatile Travel Backpack Ready for Any Adventure:</strong> The versatile trunk is seamlessly integrated into the tailgate design, adding a touch of style and functionality, enhancing the Traveller's appearance. It provides external storage space and quick access to essential gear, tools, and essentials, so you're always ready for the next great trip.</li>
+                  <li><strong>Power tailgate with automatic closing:</strong> Convenience at your fingertips.</li>
+                  <li><strong>Dominant Headlights:</strong> Bold and attractive, with a distinctive futuristic touch and high visibility, equipped with High Beam Assist (HBA) and Adaptive Driving Beam (ADB). Automatic LED headlights and DRLs ensure visibility in all conditions.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="d2">
+              <div class="mp-feature__media"><img src="/assets/img/gs8t/design-2.jpg" alt="Smart Enjoyment to Every Journey" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Smart Enjoyment to Every Journey</h3>
+                <p>The Traveler is the ultimate driving haven: with spacious seating for up to 7 passengers, every journey will be a first-class experience. Enjoy luxurious materials, customizable ambient lighting, and a functional design that prioritizes comfort.</p>
+                <ul class="mp-feature__list">
+                  <li><strong>Multi-function Leather Steering Wheel:</strong> Combines comfort and control with integrated buttons for audio, cruise control, and phone.</li>
+                  <li><strong>Premium Alpine Sound System:</strong> 8 speakers deliver superior surround sound for an immersive experience.</li>
+                  <li><strong>Panoramic Roof:</strong> Enjoy the views with a stunning panoramic roof with the ability to open the front, plus a power sunshade.</li>
+                  <li><strong>Leather seats:</strong> Leather-trimmed seats add a touch of elegance, with ventilated first-row seats for added comfort.</li>
+                  <li><strong>Multi-color intelligent ambient light</strong> and a built-in <strong>Cabin Fragrance System</strong> for a more enjoyable journey.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="d3">
+              <div class="mp-feature__media"><img src="/assets/img/gs8t/design-3.jpg" alt="Smarter Interaction" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Smarter Interaction</h3>
+                <p>Enjoy an unparalleled driving experience with an intelligent three-screen system: a 14.6-inch touchscreen central multimedia display, a 12.3-inch instrument cluster display, and an Augmented Reality Head-Up Display (AR-HUD). Coupled with advanced AI voice control that supports multiple languages.</p>
+                <ul class="mp-feature__list">
+                  <li><strong>14.6-inch Multimedia Display:</strong> High-resolution multi-function LCD touchscreen — your control center for navigation, entertainment, and connectivity.</li>
+                  <li><strong>Augmented Reality Head-Up Display (AR-HUD):</strong> A 30-inch TFT display projects navigation, driving data, and safety alerts onto the windshield in augmented reality.</li>
+                  <li><strong>Smartphone Connectivity:</strong> Wireless smartphone integration supporting Apple CarPlay, a 50W wireless charging system, and USB-C ports.</li>
+                  <li><strong>12.3-inch Instrument Cluster:</strong> A color LCD multi-information display keeps you informed of vehicle performance and settings.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTERIOR CAROUSEL ============ -->
+    <section class="mp-slider-wrap" id="interior">
+      <div class="mp-slider" data-slider>
+        <div class="mp-slider__viewport">
+          <div class="mp-slider__track" data-slider-track>
+            <figure class="mp-slide"><img src="/assets/img/gs8t/int-1.jpg" alt="GS8 Traveller interior" /></figure>
+            <figure class="mp-slide"><img src="/assets/img/gs8t/int-2.jpg" alt="GS8 Traveller interior" /></figure>
+          </div>
+        </div>
+        <div class="mp-slider__caption">
+          <span class="mp-slider__eyebrow">Interior</span>
+          <span class="mp-slider__title">Feel relaxed, feel free.</span>
+        </div>
+        <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="Previous">‹</button>
+        <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY ============ -->
+    <section class="mp-section" id="gallery">
+      <div class="container">
+        <header class="mp-head mp-head--center">
+          <h2 class="mp-head__title">Gallery</h2>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="gex">Exterior</button>
+            <button class="mp-tabs__btn" data-tab-btn="gin">Interior</button>
+            <button class="mp-tabs__btn" data-tab-btn="gte">Technology</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-gpanel is-active" data-tab-panel="gex">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-1.jpg"><img src="/assets/img/gs8t/gal-1.jpg" alt="GS8 Traveller exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-2.jpg"><img src="/assets/img/gs8t/gal-2.jpg" alt="GS8 Traveller exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-3.jpg"><img src="/assets/img/gs8t/gal-3.jpg" alt="GS8 Traveller exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-4.jpg"><img src="/assets/img/gs8t/gal-4.jpg" alt="GS8 Traveller exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-5.jpg"><img src="/assets/img/gs8t/gal-5.jpg" alt="GS8 Traveller exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-6.jpg"><img src="/assets/img/gs8t/gal-6.jpg" alt="GS8 Traveller exterior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+            <div class="mp-gpanel" data-tab-panel="gin">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-int-1.jpg"><img src="/assets/img/gs8t/gal-int-1.jpg" alt="GS8 Traveller interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-int-2.jpg"><img src="/assets/img/gs8t/gal-int-2.jpg" alt="GS8 Traveller interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-int-3.jpg"><img src="/assets/img/gs8t/gal-int-3.jpg" alt="GS8 Traveller interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-int-4.jpg"><img src="/assets/img/gs8t/gal-int-4.jpg" alt="GS8 Traveller interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-int-5.jpg"><img src="/assets/img/gs8t/gal-int-5.jpg" alt="GS8 Traveller interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-int-6.jpg"><img src="/assets/img/gs8t/gal-int-6.jpg" alt="GS8 Traveller interior" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+            <div class="mp-gpanel" data-tab-panel="gte">
+              <div class="mp-gallery">
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-tech-1.jpg"><img src="/assets/img/gs8t/gal-tech-1.jpg" alt="GS8 Traveller technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-tech-2.jpg"><img src="/assets/img/gs8t/gal-tech-2.jpg" alt="GS8 Traveller technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+                    <a class="mp-gshot" href="/assets/img/gs8t/gal-tech-3.jpg"><img src="/assets/img/gs8t/gal-tech-3.jpg" alt="GS8 Traveller technology" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg></span></a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ QUALITY ============ -->
+    <section class="mp-section" id="quality">
+      <div class="container">
+        <div class="mp-quality">
+          <div class="mp-quality__main">
+            <img src="/assets/img/gs8t/jdpower-award.jpg" alt="J.D. Power award — GAC GS8 Traveller" />
+          </div>
+          <aside class="mp-quality__card">
+            <div class="mp-quality__thumb"><img src="/assets/img/gs8t/quality-thumb.jpg" alt="GS8 Traveller" loading="lazy" /></div>
+            <div class="mp-quality__text">
+              <span class="mp-quality__strapline">Extraordinary Standards</span>
+              <p class="mp-quality__content">Winner of the J.D. Power prize for 8 Years in a row.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TECHNOLOGY ============ -->
+    <section class="mp-section mp-section--grey" id="technology">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Advanced Technology</h2>
+          <p class="mp-head__sub">Discover unlimited possibilities with Traveller technologies such as advanced driving assistance systems, modern multimedia, and unique built-in options. These technologies allow you to maintain complete control of the road and enjoy the ride.</p>
+        </header>
+        <div class="mp-tech-banner"><img src="/assets/img/gs8t/tech-banner.jpg" alt="GS8 Traveller advanced technology" /></div>
+        <div class="mp-cards">
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/gs8t/tech-1.jpg" alt="Seamless Interactive Cabin" /></div>
+            <h3 class="mp-card__title">Seamless Interactive Cabin</h3>
+            <p class="mp-card__text">Cutting-edge technology redefined the interactive experience and unleashed unlimited possibilities.</p>
+          </article>
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/gs8t/tech-2.jpg" alt="Intelligent Interconnection" /></div>
+            <h3 class="mp-card__title">Ultra-thin screen &amp; full coverage LCD dashboard</h3>
+            <p class="mp-card__text">7" wide dashboard, vivid UI design, 14.6" wide central control screen.</p>
+          </article>
+          <article class="mp-card">
+            <div class="mp-card__media"><img src="/assets/img/gs8t/tech-3.jpg" alt="Alpine Entertainment System / AR-HUD" /></div>
+            <h3 class="mp-card__title">AR-HUD</h3>
+            <p class="mp-card__text">By using technologies like AR navigation and driver assistance, an augmented image on the real road condition is displayed in front of the driver.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PERFORMANCE ============ -->
+    <section class="mp-section" id="performance">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Performance</h2>
+          <p class="mp-head__sub">Ready for every road, with efficiency that knows no retreat</p>
+        </header>
+
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            <button class="mp-tabs__btn is-active" data-tab-btn="p1">Ultra-high Strength Steel</button>
+            <button class="mp-tabs__btn" data-tab-btn="p2">Powerful 2.0T GDI Engine</button>
+            <button class="mp-tabs__btn" data-tab-btn="p3">Powerful BorgWarner sixth-generation all-wheel drive system</button>
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+
+            <div class="mp-feature is-active" data-tab-panel="p1">
+              <div class="mp-feature__media"><img src="/assets/img/gs8t/perf-1.jpg" alt="Ultra-high strength steel body frame" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Power Meets Precision and Efficiency</h3>
+                <ul class="mp-feature__list">
+                  <li><strong>All Round Protection:</strong> 27 active safety features including low-speed collision avoidance system, driver assistance system, and pre-collision system.</li>
+                  <li><strong>Megastar Chassis:</strong> Tuned to realize the ultimate balance between handling and comfort — comfortable driving, stable handling, easy steering, and reliable braking.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="p2">
+              <div class="mp-feature__media"><img src="/assets/img/gs8t/perf-2.jpg" alt="Powerful 2.0T GDI engine" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Power Meets Precision and Efficiency</h3>
+                <ul class="mp-feature__list">
+                  <li><strong>2.0-litre turbocharged engine:</strong> 248 hp of superior performance and 400 Nm of torque.</li>
+                  <li><strong>AISIN 8-speed automatic transmission:</strong> Smooth shifting with intelligent torque distribution.</li>
+                  <li><strong>Paddle Shifters:</strong> Manually control the transmission from the steering wheel for a more dynamic, sporty drive.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mp-feature" data-tab-panel="p3">
+              <div class="mp-feature__media"><img src="/assets/img/gs8t/perf-3.jpg" alt="BorgWarner all-wheel drive" /></div>
+              <div class="mp-feature__body">
+                <h3 class="mp-feature__title">Power Meets Precision and Efficiency</h3>
+                <ul class="mp-feature__list">
+                  <li><strong>Unparalleled performance and control:</strong> The powerful BorgWarner sixth-generation all-wheel drive system delivers power to all four wheels for enhanced traction and control.</li>
+                  <li><strong>Driving Modes:</strong> ECO, Comfort, Sport, Sand, Mud, Snow.</li>
+                  <li><strong>Electric Power Steering (EPS):</strong> Smooth, responsive steering with reduced effort, improving control and fuel efficiency.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SAFETY ============ -->
+    <section class="mp-section mp-section--grey" id="safety">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">All-Round Protection</h2>
+          <p class="mp-head__sub">Your safety isn't optional; it's built into every part of it.</p>
+          <p class="mp-head__body">Your safety is our priority. The Traveller includes a comprehensive suite of advanced safety features, including adaptive cruise control, lane-keeping assist, collision-avoidance technology, a 360-degree camera system, and 10 airbags for the driver and passengers, including a driver's knee airbag. With advanced safety technologies, you can drive with confidence wherever the road takes you. Drive with confidence!</p>
+        </header>
+        <div class="mp-stoggles">
+          <article class="mp-stoggle is-open">
+            <button class="mp-stoggle__head" type="button" aria-expanded="true"><span>Hills Hold Control</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/gs8t/safe-1.png" alt="Advanced Vehicle Dynamic Control" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Advanced Vehicle Dynamic Control (AVDC) Shadow Driver</h3>
+              <p class="mp-stoggle__content">Your intelligent driving assistant, always working in the background to support safe and confident driving and intervening as a "shadow driver" to enhance safety, stability, and control. It learns the driver's habits and dynamically adapts the vehicle's responses, making it suitable for a wide range of road conditions. This intelligent driving assistance system, developed by GAC Group, integrates vehicle dynamics control, environmental sensing, and artificial intelligence algorithms to optimize real-time driving operations (such as steering, acceleration, and braking). This system enhances driving smoothness and safety while reducing driver fatigue.</p>
+            </div>
+          </article>
+          <article class="mp-stoggle">
+            <button class="mp-stoggle__head" type="button" aria-expanded="false"><span>Adaptive Front Lighting</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/gs8t/safe-2.jpg" alt="Adaptive Front Lighting" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">Intelligent Pilot</h3>
+              <p class="mp-stoggle__content">Activate the intelligent pilot feature with just one push on the button. The easier, the better.</p>
+            </div>
+          </article>
+          <article class="mp-stoggle">
+            <button class="mp-stoggle__head" type="button" aria-expanded="false"><span>Anti-Locking Braking System</span><i class="mp-stoggle__icon"></i></button>
+            <div class="mp-stoggle__body">
+              <div class="mp-stoggle__media"><img src="/assets/img/gs8t/safe-3.jpg" alt="540 degree holographic projection" loading="lazy" /></div>
+              <h3 class="mp-stoggle__strap">540° degree Holographic Projection</h3>
+              <p class="mp-stoggle__content">The field of view has been increased from 360° degree to 540° degree to help the wheels avoid dangers and protect the chassis from scratching.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TRIMS ============ -->
+    <section class="mp-section" id="trims">
+      <div class="container">
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">GS8 Traveller Trims</h2>
+          <p class="mp-head__sub">Choose the right trim level for you</p>
+          <p class="mp-head__body">The price does not include registration fees and plates<br>Terms and conditions apply</p>
+        </header>
+        <div class="mp-trims">
+          <article class="mp-trim">
+            <div class="mp-trim__media"><img src="/assets/img/gs8t/trim-traveller.png" alt="GS8 Traveller GX AWD" /></div>
+            <div class="mp-trim__body">
+              <p class="mp-trim__model">GS8 Traveller</p>
+              <h3 class="mp-trim__name">GX AWD</h3>
+              <ul class="mp-trim__price">
+                <li>Cash purchase price: 138,990 KWD.</li>
+                <li>VAT: KWD 20,848.50</li>
+                <li>Total: KWD 159,838.50</li>
+              </ul>
+              <div class="mp-trim__cta">
+                <a class="btn btn--trim" href="#enquiry">Book A test drive</a>
+                <a class="btn btn--trim" href="/pdfs/gs8-traveller-specifications.pdf" target="_blank" rel="noopener">Specifications</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WARRANTY ============ -->
+    <section class="mp-section" id="warranty">
+      <div class="container">
+        <hr class="mp-hr" />
+        <header class="mp-head mp-head--left">
+          <h2 class="mp-head__title">Warranty</h2>
+          <p class="mp-head__sub">7 years warranty, or 200,000 km.<br>Roadside assistance 5 years</p>
+        </header>
+        <div class="mp-warranty__links">
+          <a class="btn btn--doc" href="https://en.gacmotorsaudi.com/pdfs/gs8_2026_user_eng_manual.pdf" target="_blank" rel="noopener">Manuals</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENQUIRY / CONTACT ============ -->
+    <section class="mp-enquiry" id="enquiry" style="background-image:url('/assets/img/gs8t/enquiry-bg.jpg')">
+      <div class="mp-enquiry__overlay">
+        <div class="container mp-enquiry__grid">
+          <div class="mp-enquiry__intro">
+            <h2 class="mp-enquiry__title">Contact Us</h2>
+            <p class="mp-enquiry__sub">request a quote or test drive</p>
+            <p class="mp-enquiry__lead">You will be contacted within 24 working hours.</p>
+            <div class="mp-enquiry__actions">
+              <a class="mp-enquiry__action" href="tel:1833334">
+                <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+                <span>Call us</span>
+              </a>
+              <a class="mp-enquiry__action" href="/contact-us">
+                <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                <span>Find a location</span>
+              </a>
+            </div>
+          </div>
+
+          <form class="mp-form" data-form novalidate>
+            <div class="field">
+              <label>Message</label>
+              <textarea rows="3"></textarea>
+            </div>
+            <div class="field">
+              <label>Select Branch *</label>
+              <select required>
+                <option value="">Please select ...</option>
+                <option>Riyadh Branch</option>
+                <option>GAC Motors Jeddah, Malibari Sq Showroom</option>
+                <option>GAC Motors Jeddah, Kilo 3 Branch</option>
+                <option>Dammam Branch</option>
+                <option>GAC Motors Al-Madinah Al-Munawarrah Branch</option>
+                <option>GAC Motors Khamis Mushait Branch</option>
+                <option>GAC Motors Jazan Branch</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Title *</label>
+              <select required>
+                <option value="">Please select ...</option>
+                <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+              </select>
+            </div>
+            <div class="field"><label>First Name *</label><input type="text" required /></div>
+            <div class="field"><label>Last Name *</label><input type="text" required /></div>
+            <div class="field"><label>Email Address *</label><input type="email" required /></div>
+            <div class="field"><label>Contact Number *</label><input type="tel" required /></div>
+            <div class="mp-form__dpp">
+              <p class="mp-form__dpp-title">Privacy statement &amp; legal disclaimer</p>
+              I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties are required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a>
+            </div>
+            <label class="mp-check"><input type="checkbox" /> <span>I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</span></label>
+            <button class="mp-form__submit" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================
+       FOOTER
+       ================================================= -->
+  <div data-include="footer"></div>
+
+  <!-- Gallery lightbox viewer -->
+  <div class="mp-lightbox" data-lightbox aria-hidden="true" role="dialog" aria-label="Image viewer">
+    <button class="mp-lightbox__close" data-lb-close aria-label="Close">×</button>
+    <button class="mp-lightbox__nav mp-lightbox__nav--prev" data-lb-prev aria-label="Previous image">‹</button>
+    <img class="mp-lightbox__img" data-lb-img src="" alt="" />
+    <button class="mp-lightbox__nav mp-lightbox__nav--next" data-lb-next aria-label="Next image">›</button>
+    <div class="mp-lightbox__count" data-lb-count></div>
+  </div>
