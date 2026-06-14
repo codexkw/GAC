@@ -1,4 +1,5 @@
 using System.Globalization;
+using GAC.Web;
 using GAC.Core.Identity;
 using GAC.Core.Services;
 using GAC.Infrastructure.Data;
@@ -34,7 +35,10 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services
     .AddControllersWithViews()
-    .AddViewLocalization();
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(SharedResource)));
 
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();

@@ -84,4 +84,14 @@
   <data name="Search and Shop Online" xml:space="preserve"><value>ابحث وتسوّق عبر الإنترنت</value></data>
   <data name="News &amp; events" xml:space="preserve"><value>الأخبار والفعاليات</value></data>
   <data name="Find Out More" xml:space="preserve"><value>اكتشف المزيد</value></data>
+  <data name="Please select a title." xml:space="preserve"><value>الرجاء اختيار اللقب.</value></data>
+  <data name="Please enter your first name." xml:space="preserve"><value>الرجاء إدخال الاسم الأول.</value></data>
+  <data name="Please enter your last name." xml:space="preserve"><value>الرجاء إدخال اسم العائلة.</value></data>
+  <data name="Please enter a valid email." xml:space="preserve"><value>الرجاء إدخال بريد إلكتروني صحيح.</value></data>
+  <data name="Please enter your contact number." xml:space="preserve"><value>الرجاء إدخال رقم التواصل.</value></data>
+  <data name="Please select your model." xml:space="preserve"><value>الرجاء اختيار الموديل.</value></data>
+  <data name="Please select a branch." xml:space="preserve"><value>الرجاء اختيار الفرع.</value></data>
+  <data name="Thanks — we received your request." xml:space="preserve"><value>شكراً — تم استلام طلبك.</value></data>
+  <data name="A representative will contact you within one business day." xml:space="preserve"><value>سيتواصل معك أحد ممثلينا خلال يوم عمل واحد.</value></data>
+  <data name="Submit" xml:space="preserve"><value>إرسال</value></data>
 </root>

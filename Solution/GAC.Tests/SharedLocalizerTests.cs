@@ -32,6 +32,30 @@ public class SharedLocalizerTests
     }
 
     [Fact]
+    public void Resolves_ValidationStrings_InArabic()
+    {
+        var loc = BuildLocalizer();
+        var prev = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("ar");
+            string[] keys =
+            {
+                "Please enter your first name.",
+                "Please select a branch.",
+                "Thanks — we received your request."
+            };
+            foreach (var key in keys)
+            {
+                var value = loc[key].Value;
+                Assert.False(string.IsNullOrEmpty(value));
+                Assert.NotEqual(key, value);
+            }
+        }
+        finally { CultureInfo.CurrentUICulture = prev; }
+    }
+
+    [Fact]
     public void FallsBackToEnglishKey_WhenCultureIsEnglish()
     {
         var loc = BuildLocalizer();
