@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace GAC.Infrastructure.Data;
 
 /// <summary>
-/// Seeds EN-only content into the database. Idempotent: each section is guarded
-/// by an existence check so re-running will not duplicate rows.
-/// Arabic content is Phase 4.
+/// Seeds bilingual (EN + AR) content into the database. Idempotent: English inserts are
+/// guarded by an existence check so re-running will not duplicate rows, and the Arabic
+/// backfill (<see cref="EnsureArabicAsync"/>) only writes a field's Arabic when it is blank.
 /// </summary>
 public static class ContentSeeder
 {
