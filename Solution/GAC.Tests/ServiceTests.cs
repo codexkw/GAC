@@ -17,7 +17,7 @@ public class ServiceTests : IClassFixture<DevWebApplicationFactory>
         var vehicles = await Resolve<IVehicleService>(scope).GetVisibleAsync();
         Assert.DoesNotContain(vehicles, v => v.Slug == "aion-v");
         Assert.Contains(vehicles, v => v.Slug == "gs8");
-        Assert.True(vehicles.SequenceEqual(vehicles.OrderBy(v => v.SortOrder)));
+        Assert.Equal(vehicles.Select(v => v.SortOrder), vehicles.OrderBy(v => v.SortOrder).Select(v => v.SortOrder));
     }
 
     [Fact]
@@ -41,5 +41,6 @@ public class ServiceTests : IClassFixture<DevWebApplicationFactory>
         var menu = await Resolve<ISiteService>(scope).GetMenuAsync();
         Assert.All(menu, m => Assert.Null(m.ParentId));
         Assert.True(menu.Count >= 5);
+        Assert.Equal(menu.Select(m => m.SortOrder), menu.OrderBy(m => m.SortOrder).Select(m => m.SortOrder));
     }
 }

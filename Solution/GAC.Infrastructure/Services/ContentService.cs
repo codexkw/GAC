@@ -13,15 +13,15 @@ public class ContentService : IContentService
 
     public async Task<HomePage?> GetHomePageAsync()
         => await _db.HomePages
-            .AsNoTracking()
             .Include(h => h.Slides.OrderBy(s => s.SortOrder))
+            .AsNoTracking()
             .FirstOrDefaultAsync();
 
     public async Task<ContentPage?> GetContentPageBySlugAsync(string slug)
         => await _db.ContentPages
+            .Include(p => p.Sections.OrderBy(s => s.SortOrder))
             .AsNoTracking()
             .Where(p => p.IsVisible && p.Slug == slug)
-            .Include(p => p.Sections.OrderBy(s => s.SortOrder))
             .FirstOrDefaultAsync();
 
     public async Task<FormPage?> GetFormPageBySlugAsync(string slug)

@@ -16,9 +16,9 @@ public class SiteService : ISiteService
 
     public async Task<IReadOnlyList<MenuItem>> GetMenuAsync()
         => await _db.MenuItems
+            .Include(m => m.Children.OrderBy(c => c.SortOrder))
             .AsNoTracking()
             .Where(m => m.ParentId == null)
             .OrderBy(m => m.SortOrder)
-            .Include(m => m.Children.OrderBy(c => c.SortOrder))
             .ToListAsync();
 }
