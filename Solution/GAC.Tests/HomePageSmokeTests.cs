@@ -47,4 +47,13 @@ public class HomePageSmokeTests : IClassFixture<DevWebApplicationFactory>
         Assert.Contains("dir=\"rtl\"", html);
         Assert.Contains("lang=\"ar\"", html);
     }
+
+    [Fact]
+    public async Task Home_RendersVehiclesAndNews_FromDb()
+    {
+        var client = _factory.CreateClient();
+        var html = await (await client.GetAsync("/")).Content.ReadAsStringAsync();
+        Assert.Contains("GS8", html);            // a seeded vehicle name
+        Assert.Contains("/news/", html);         // a news card link
+    }
 }

@@ -1,12 +1,23 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using GAC.Core.Services;
 using GAC.Web.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GAC.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index() => View();
+    private readonly IContentService _content;
+    private readonly IVehicleService _vehicles;
+    public HomeController(IContentService content, IVehicleService vehicles)
+    { _content = content; _vehicles = vehicles; }
+
+    public async Task<IActionResult> Index() => View(new HomeViewModel
+    {
+        Home = await _content.GetHomePageAsync(),
+        Vehicles = await _vehicles.GetVisibleAsync(),
+        News = await _content.GetPublishedNewsAsync()
+    });
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() =>

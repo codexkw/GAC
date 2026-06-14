@@ -1,94 +1,30 @@
+@model GAC.Web.Models.HomeViewModel
 @{
     ViewData["Title"] = "Home";
     ViewData["MetaDescription"] = "Discover the 2026 GAC Motor range in Kuwait — SUVs, sedans and EVs — along with offers, showrooms and aftersales services from Mutawa Alkadi Automotive.";
+    var slides = Model.Home?.Slides ?? new List<HeroSlide>();
 }
 
   <!-- =================================================
-       HERO SLIDER — 8 featured models (real images)
+       HERO SLIDER — featured models (DB-driven)
        ================================================= -->
   <section class="hero" aria-label="Featured models">
     <div class="hero__viewport">
 
+@foreach (var slide in slides)
+{
       <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-s7.jpg')"></div>
+        <div class="hero__bg hero__bg--img" style="background-image:url('@slide.ImagePath')"></div>
         <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">Arriving soon in Kuwait</div>
-          <h1 class="hero__title">S7</h1>
-          <span class="btn btn--primary btn--soon">Coming Soon</span>
+          <div class="hero__eyebrow">@slide.Subheading.Localize()</div>
+          <h1 class="hero__title">@slide.Heading.Localize()</h1>
+@if (slide.CtaLink != null)
+{
+          <a class="btn btn--primary" href="@UrlHelpers.NormalizeUrl(slide.CtaLink)">@(string.IsNullOrWhiteSpace(slide.CtaText.Localize()) ? "Find Out More" : slide.CtaText.Localize())</a>
+}
         </div></div>
       </article>
-
-      <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-gs4.jpg')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">The power without compromise</div>
-          <h1 class="hero__title">GS4 MAX</h1>
-          <a class="btn btn--primary" href="gs4.html">Find Out More</a>
-        </div></div>
-      </article>
-
-      <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-hyptec-ht.jpg')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">Experience true luxury powered by electric</div>
-          <h1 class="hero__title">HYPTEC HT</h1>
-          <a class="btn btn--primary" href="hyptec-ht.html">Find Out More</a>
-        </div></div>
-      </article>
-
-      <!--AION-HIDDEN <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-aion-v.jpg')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">An electric SUV that blends power, comfort and technology</div>
-          <h1 class="hero__title">AION V</h1>
-          <a class="btn btn--primary" href="aion-v.html">Find Out More</a>
-        </div></div>
-      </article> -->
-
-      <!--AION-HIDDEN <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-aion-es.jpg')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">The electric sedan that brings together advanced technology, comfort and the ideal driving range</div>
-          <h1 class="hero__title">AION ES</h1>
-          <a class="btn btn--primary" href="aion-es.html">Find Out More</a>
-        </div></div>
-      </article> -->
-
-      <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-empow-sport.jpg')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">The bullet finally arrived</div>
-          <h1 class="hero__title">EMPOW R</h1>
-          <a class="btn btn--primary" href="empow-sport.html">Find Out More</a>
-        </div></div>
-      </article>
-
-      <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-gs8-traveller.png')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">Journey in style</div>
-          <h1 class="hero__title">GS8 Traveller</h1>
-          <a class="btn btn--primary" href="gs8traveller.html">Find Out More</a>
-        </div></div>
-      </article>
-
-      <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-m8.png')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">It opens new horizons, leading its generation</div>
-          <h1 class="hero__title">M8</h1>
-          <a class="btn btn--primary" href="m8.html">Find Out More</a>
-        </div></div>
-      </article>
-
-      <article class="hero__slide" data-hero-slide>
-        <div class="hero__bg hero__bg--img" style="background-image:url('/assets/img/hero-gs3-emzoom.jpg')"></div>
-        <div class="hero__inner"><div class="hero__content">
-          <div class="hero__eyebrow">Elevate your driving experience</div>
-          <h1 class="hero__title">EMZOOM</h1>
-          <a class="btn btn--primary" href="gs3emzoom.html">Find Out More</a>
-        </div></div>
-      </article>
+}
 
     </div>
 
@@ -96,7 +32,7 @@
     <div class="hero-rail">
       <a href="tel:1833334" aria-label="Call"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg></a>
       <a href="#" aria-label="Saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></a>
-      <a href="contact.html" aria-label="Find us"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></a>
+      <a href="/contact-us" aria-label="Find us"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></a>
     </div>
 
     <div class="hero__arrows">
@@ -105,15 +41,10 @@
     </div>
 
     <div class="hero__dots">
-      <button class="hero__dot" data-hero-dot aria-label="Slide 1"></button>
-      <button class="hero__dot" data-hero-dot aria-label="Slide 2"></button>
-      <button class="hero__dot" data-hero-dot aria-label="Slide 3"></button>
-      <button class="hero__dot" data-hero-dot aria-label="Slide 4"></button>
-      <button class="hero__dot" data-hero-dot aria-label="Slide 5"></button>
-      <button class="hero__dot" data-hero-dot aria-label="Slide 6"></button>
-      <button class="hero__dot" data-hero-dot aria-label="Slide 7"></button>
-      <!--AION-HIDDEN <button class="hero__dot" data-hero-dot aria-label="Slide 8"></button> -->
-      <!--AION-HIDDEN <button class="hero__dot" data-hero-dot aria-label="Slide 9"></button> -->
+@for (var i = 0; i < slides.Count; i++)
+{
+      <button class="hero__dot" data-hero-dot aria-label="Slide @(i + 1)"></button>
+}
     </div>
 
     <div class="hero__scroll" aria-hidden="true">⌄</div>
@@ -128,15 +59,10 @@
       <form class="searchblock__form" onsubmit="event.preventDefault(); if (this.model.value) window.location.href = this.model.value;">
         <select name="model" aria-label="Model">
           <option value="">Model</option>
-          <option value="gs8traveller.html">GS8 Traveller</option>
-          <option value="gs8.html">GS8</option>
-          <option value="gs3emzoom.html">EMZOOM</option>
-          <option value="emkoo.html">EMKOO</option>
-          <option value="empow.html">EMPOW</option>
-          <option value="m8.html">M8</option>
-          <option value="empow-sport.html">EMPOW R</option>
-          <option value="hyptec-ht.html">HYPTEC HT</option>
-          <option value="gs4.html">GS4 MAX</option>
+@foreach (var v in Model.Vehicles)
+{
+          <option value="/@v.Slug">@v.Name.Localize()</option>
+}
         </select>
         <button type="submit">Search</button>
       </form>
@@ -144,99 +70,36 @@
   </section>
 
   <!-- =================================================
-       MODEL STRIP — tabs (ALL / SEDAN / SUV / EV)
+       MODEL STRIP — tabs (ALL / SEDAN / SUV / EV), DB-driven
        ================================================= -->
   <section class="model-strip">
-    <div class="container">
+    <div class="container" data-filter-root>
       <div class="model-strip__head">
         <div data-tabs>
           <div class="tabs" role="tablist">
-            <button class="tabs__btn is-active" data-tab-btn="all">All</button>
-            <button class="tabs__btn" data-tab-btn="sedan">Sedan</button>
-            <button class="tabs__btn" data-tab-btn="suv">SUV</button>
-            <button class="tabs__btn" data-tab-btn="ev">EV</button>
+            <button class="tabs__btn is-active" data-filter="all">All</button>
+            <button class="tabs__btn" data-filter="sedan">Sedan</button>
+            <button class="tabs__btn" data-filter="suv">SUV</button>
+            <button class="tabs__btn" data-filter="ev">EV</button>
           </div>
         </div>
       </div>
 
-      <div data-tab-root>
-
-        <!-- ALL -->
-        <div class="tabpanel is-active" data-tab-panel="all">
-          <div class="carousel" data-carousel>
-            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
-            <div class="carousel__viewport"><div class="carousel__track">
-              <a class="carousel__slide" href="hyptec-ht.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-hyptec-ht.png" alt="HYPTEC HT" /></div><div class="model-card__name">HYPTEC HT</div></div></a>
-              <!--AION-HIDDEN <a class="carousel__slide" href="aion-v.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-aion-v.png" alt="AION V" /></div><div class="model-card__name">AION V</div></div></a> -->
-              <!--AION-HIDDEN <a class="carousel__slide" href="aion-es.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-aion-es.png" alt="AION ES" /></div><div class="model-card__name">AION ES</div></div></a> -->
-              <a class="carousel__slide" href="gs8traveller.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-gs8-traveller.png" alt="GS8 Traveller" /></div><div class="model-card__name">GS8 Traveller</div></div></a>
-              <a class="carousel__slide" href="gs8.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-gs8.jpg" alt="GS8" /></div><div class="model-card__name">GS8</div></div></a>
-              <a class="carousel__slide" href="gs4.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-gs4.png" alt="GS4 MAX" /></div><div class="model-card__name">GS4 MAX</div></div></a>
-              <a class="carousel__slide" href="gs3emzoom.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-gs3-emzoom.png" alt="EMZOOM" /></div><div class="model-card__name">EMZOOM</div></div></a>
-              <a class="carousel__slide" href="m8.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-m8.png" alt="M8" /></div><div class="model-card__name">M8</div></div></a>
-              <a class="carousel__slide" href="emkoo.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-emkoo.png" alt="EMKOO" /></div><div class="model-card__name">EMKOO</div></div></a>
-              <a class="carousel__slide" href="empow.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-empow.png" alt="EMPOW" /></div><div class="model-card__name">EMPOW</div></div></a>
-              <a class="carousel__slide" href="empow-sport.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-empow-sport.png" alt="EMPOW R" /></div><div class="model-card__name">EMPOW R</div></div></a>
-            </div></div>
-            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
-          </div>
-          <div class="carousel__dots" data-carousel-dots>
-            <button class="carousel__dot is-active" data-cdot="0"></button>
-            <button class="carousel__dot" data-cdot="1"></button>
-            <button class="carousel__dot" data-cdot="2"></button>
-          </div>
-        </div>
-
-        <!-- SEDAN -->
-        <div class="tabpanel" data-tab-panel="sedan">
-          <div class="carousel" data-carousel>
-            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
-            <div class="carousel__viewport"><div class="carousel__track">
-              <!--AION-HIDDEN <a class="carousel__slide" href="aion-es.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-aion-es.png" alt="AION ES" /></div><div class="model-card__name">AION ES</div></div></a> -->
-              <a class="carousel__slide" href="empow-sport.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-empow-sport.png" alt="EMPOW R" /></div><div class="model-card__name">EMPOW R</div></div></a>
-              <a class="carousel__slide" href="empow.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-empow.png" alt="EMPOW" /></div><div class="model-card__name">EMPOW</div></div></a>
-            </div></div>
-            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
-          </div>
-        </div>
-
-        <!-- SUV -->
-        <div class="tabpanel" data-tab-panel="suv">
-          <div class="carousel" data-carousel>
-            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
-            <div class="carousel__viewport"><div class="carousel__track">
-              <a class="carousel__slide" href="hyptec-ht.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-hyptec-ht.png" alt="HYPTEC HT" /></div><div class="model-card__name">HYPTEC HT</div></div></a>
-              <!--AION-HIDDEN <a class="carousel__slide" href="aion-v.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-aion-v.png" alt="AION V" /></div><div class="model-card__name">AION V</div></div></a> -->
-              <a class="carousel__slide" href="gs8traveller.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-gs8-traveller.png" alt="GS8 Traveller" /></div><div class="model-card__name">GS8 Traveller</div></div></a>
-              <a class="carousel__slide" href="gs8.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-gs8.jpg" alt="GS8" /></div><div class="model-card__name">GS8</div></div></a>
-              <a class="carousel__slide" href="gs4.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-gs4.png" alt="GS4 MAX" /></div><div class="model-card__name">GS4 MAX</div></div></a>
-              <a class="carousel__slide" href="gs3emzoom.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-gs3-emzoom.png" alt="EMZOOM" /></div><div class="model-card__name">EMZOOM</div></div></a>
-              <a class="carousel__slide" href="m8.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-m8.png" alt="M8" /></div><div class="model-card__name">M8</div></div></a>
-              <a class="carousel__slide" href="emkoo.html"><div class="model-card"><div class="model-card__media"><img src="~/assets/img/m-emkoo.png" alt="EMKOO" /></div><div class="model-card__name">EMKOO</div></div></a>
-            </div></div>
-            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
-          </div>
-        </div>
-
-        <!-- EV -->
-        <div class="tabpanel" data-tab-panel="ev">
-          <div class="carousel" data-carousel>
-            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
-            <div class="carousel__viewport"><div class="carousel__track">
-              <a class="carousel__slide" href="hyptec-ht.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-hyptec-ht.png" alt="HYPTEC HT" /></div><div class="model-card__name">HYPTEC HT</div></div></a>
-              <!--AION-HIDDEN <a class="carousel__slide" href="aion-v.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-aion-v.png" alt="AION V" /></div><div class="model-card__name">AION V</div></div></a> -->
-              <!--AION-HIDDEN <a class="carousel__slide" href="aion-es.html"><div class="model-card"><span class="model-card__badge">New</span><div class="model-card__media"><img src="~/assets/img/m-aion-es.png" alt="AION ES" /></div><div class="model-card__name">AION ES</div></div></a> -->
-            </div></div>
-            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
-          </div>
-        </div>
-
+      <div class="carousel" data-carousel>
+        <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
+        <div class="carousel__viewport"><div class="carousel__track">
+@foreach (var v in Model.Vehicles)
+{
+          <a class="carousel__slide" href="/@v.Slug" data-cat="@UrlHelpers.CategoryCss(v.Category)"><div class="model-card"><div class="model-card__media"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></div><div class="model-card__name">@v.Name.Localize()</div></div></a>
+}
+        </div></div>
+        <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
       </div>
     </div>
   </section>
 
   <!-- =================================================
-       PROMO STRIP — Latest Offers (green GS8 Traveller photo, matches real site)
+       PROMO STRIP — Latest Offers
        ================================================= -->
   <section class="promo">
     <div class="promo__image promo__image--photo" style="background-image:url('/assets/img/feature-gs8-traveller.jpg')"></div>
@@ -248,34 +111,34 @@
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Buy now, pay after 2 years</li>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>0% interest</li>
       </ul>
-      <a class="btn btn--outline-light" href="offers.html">View Offers</a>
+      <a class="btn btn--outline-light" href="/offers">View Offers</a>
     </div>
   </section>
 
   <!-- =================================================
-       JUMP TILES — Locations / Book a Service / Parts & Accessories (real photos)
+       JUMP TILES — Locations / Book a Service / Parts & Accessories
        ================================================= -->
   <section class="dual">
     <div class="container">
       <div class="dual__grid">
 
         <div class="dual__card">
-          <a class="dual__media dual__media--photo" href="contact.html" aria-label="Locations" style="background-image:url('/assets/img/tile-locations.jpg')"></a>
+          <a class="dual__media dual__media--photo" href="/contact-us" aria-label="Locations" style="background-image:url('/assets/img/tile-locations.jpg')"></a>
           <div class="dual__body">
             <div class="dual__eyebrow">Our showrooms</div>
             <h3 class="dual__title">Locations</h3>
             <p class="dual__text">Mutawa Alkadi Automotive has a strong presence across Kuwait with a number of showrooms that stretch across the country.</p>
-            <a class="btn btn--ghost" href="contact.html">Find Us</a>
+            <a class="btn btn--ghost" href="/contact-us">Find Us</a>
           </div>
         </div>
 
         <div class="dual__card">
-          <a class="dual__media dual__media--photo" href="book-a-service.html" aria-label="Book a service" style="background-image:url('/assets/img/tile-service.jpg')"></a>
+          <a class="dual__media dual__media--photo" href="/book-a-service" aria-label="Book a service" style="background-image:url('/assets/img/tile-service.jpg')"></a>
           <div class="dual__body">
             <div class="dual__eyebrow">Aftersales</div>
             <h3 class="dual__title">Book a service</h3>
             <p class="dual__text">We are here to help make sure your GAC is running smoothly so you can continue to drive worry-free.</p>
-            <a class="btn btn--ghost" href="book-a-service.html">Book Now</a>
+            <a class="btn btn--ghost" href="/book-a-service">Book Now</a>
           </div>
         </div>
 
@@ -294,7 +157,7 @@
   </section>
 
   <!-- =================================================
-       NEWS & EVENTS — header + square-thumb carousel (matches real site)
+       NEWS & EVENTS — header + square-thumb carousel (DB-driven)
        ================================================= -->
   <section class="news">
     <div class="container">
@@ -303,7 +166,7 @@
           <h2>News &amp; events</h2>
           <p>Keep up to date with all the latest news and stories from Mutawa Alkadi Automotive.</p>
         </div>
-        <a class="btn btn--ghost" href="news.html">Read All News</a>
+        <a class="btn btn--ghost" href="/news">Read All News</a>
       </div>
 
       <div class="newscar" data-news-carousel>
@@ -311,51 +174,27 @@
         <div class="newscar__viewport">
           <div class="newscar__track" data-news-track>
 
-        <a class="news-card" href="news.html">
-          <div class="news-card__media news-card__media--photo" style="background-image:url('/assets/img/news-empow.jpg')"></div>
+@foreach (var n in Model.News)
+{
+        <a class="news-card" href="/news/@n.Slug">
+          <div class="news-card__media news-card__media--photo" style="background-image:url('@n.ImagePath')"></div>
           <div class="news-card__body">
-            <div class="news-card__date">Posted:</div>
-            <h3 class="news-card__title">GAC EMPOW 2026: The High-Performance Sports Sedan with a New Engine</h3>
+            <div class="news-card__date">@n.PublishedOn.ToString("dd MMM yyyy")</div>
+            <h3 class="news-card__title">@n.Title.Localize()</h3>
             <span class="news-card__more">Read More</span>
           </div>
         </a>
-
-        <a class="news-card" href="news.html">
-          <div class="news-card__media news-card__media--photo" style="background-image:url('/assets/img/news-training.jpg')"></div>
-          <div class="news-card__body">
-            <div class="news-card__date">Posted:</div>
-            <h3 class="news-card__title">Mutawa Alkadi Automotive Company Conducts Intensive Training and Technical Competition for GAC Motor Technicians</h3>
-            <span class="news-card__more">Read More</span>
-          </div>
-        </a>
-
-        <a class="news-card" href="news.html">
-          <div class="news-card__media news-card__media--photo" style="background-image:url('/assets/img/news-gs3-award.jpg')"></div>
-          <div class="news-card__body">
-            <div class="news-card__date">Posted:</div>
-            <h3 class="news-card__title">Mutawa Alkadi Automotive Company Announces EMZOOM the First in Chinese Car Quality Ranking for 2024's First Half</h3>
-            <span class="news-card__more">Read More</span>
-          </div>
-        </a>
-
-        <a class="news-card" href="news.html">
-          <div class="news-card__media news-card__media--photo" style="background-image:url('/assets/img/news-m8.png')"></div>
-          <div class="news-card__body">
-            <div class="news-card__date">Posted:</div>
-            <h3 class="news-card__title">Mutawa Alkadi Automotive Launches GAC M8 the Family Vehicle: A New Generation with Advanced Design, Technology, and Exceptional Features.</h3>
-            <span class="news-card__more">Read More</span>
-          </div>
-        </a>
+}
 
           </div>
         </div>
         <button class="newscar__arrow newscar__arrow--next" data-news-next aria-label="Next">›</button>
 
         <div class="newscar__pager" data-news-pager>
-          <button class="newscar__dot is-active" aria-label="Slide 1"></button>
-          <button class="newscar__dot" aria-label="Slide 2"></button>
-          <button class="newscar__dot" aria-label="Slide 3"></button>
-          <button class="newscar__dot" aria-label="Slide 4"></button>
+@for (var i = 0; i < Model.News.Count; i++)
+{
+          <button class="newscar__dot @(i == 0 ? "is-active" : "")" aria-label="Slide @(i + 1)"></button>
+}
         </div>
       </div>
     </div>
