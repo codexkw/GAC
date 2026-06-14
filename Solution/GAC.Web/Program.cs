@@ -25,10 +25,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.DefaultRequestCulture = new RequestCulture("en");
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
-    options.RequestCultureProviders = new List<IRequestCultureProvider>
-    {
-        new CookieRequestCultureProvider()
-    };
+    options.RequestCultureProviders = [new CookieRequestCultureProvider()];
 });
 
 builder.Services.AddControllersWithViews();

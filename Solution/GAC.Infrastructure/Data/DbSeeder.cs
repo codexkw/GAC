@@ -29,8 +29,11 @@ public static class DbSeeder
                 DisplayName = "Administrator"
             };
             var result = await userManager.CreateAsync(admin, DefaultAdminPassword);
-            if (result.Succeeded)
-                await userManager.AddToRoleAsync(admin, Roles.Admin);
+            if (!result.Succeeded)
+                throw new InvalidOperationException(
+                    $"DbSeeder: failed to create default admin — {string.Join("; ", result.Errors.Select(e => e.Description))}");
+
+            await userManager.AddToRoleAsync(admin, Roles.Admin);
         }
     }
 }
