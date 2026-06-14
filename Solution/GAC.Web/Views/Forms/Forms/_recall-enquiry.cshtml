@@ -1,0 +1,40 @@
+@model GAC.Core.Content.FormPage
+
+<div class="crumb-bar">
+  <div class="container">
+    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
+    <nav class="crumb-trail">You are here: <a href="/">Homepage</a> <span>&gt;</span> <a href="/book-a-service">Owners</a> <span>&gt;</span> Vehicle Recall Enquiry</nav>
+  </div>
+</div>
+
+<section class="bas-hero" style="background-image:url('/assets/img/book-a-service/hero.jpg')">
+  <div class="container">
+    <div class="bas-hero__title"></div>
+    <div class="bas-card">
+      <form data-form novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="title">Title *</label>
+            <select id="title" name="title" required>
+              <option value="">Please select ...</option>
+              <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+            </select><span class="err">Please select a title.</span>
+          </div>
+          <div class="field"><label for="fn">First Name *</label><input id="fn" name="firstName" required /><span class="err">Please enter your first name.</span></div>
+          <div class="field"><label for="ln">Last Name *</label><input id="ln" name="lastName" required /><span class="err">Please enter your last name.</span></div>
+          <div class="field"><label for="em">Email Address *</label><input id="em" name="email" type="email" required /><span class="err">Please enter a valid email.</span></div>
+          <div class="field"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required /><span class="err">Please enter your contact number.</span></div>
+          <div class="field"><label for="msg">Message</label><textarea id="msg" name="message"></textarea></div>
+          <div class="bas-disclaimer">
+            <p class="title">Privacy statement &amp; legal disclaimer</p>
+            <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a></p>
+          </div>
+          <div class="field-check">
+            <input id="mk" name="marketing" type="checkbox" />
+            <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
+          </div>
+          <div class="bas-submit"><button class="btn btn--hero" type="submit">Submit</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

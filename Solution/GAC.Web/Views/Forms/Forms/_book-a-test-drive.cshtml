@@ -1,0 +1,65 @@
+@model GAC.Core.Content.FormPage
+
+<div class="crumb-bar">
+  <div class="container">
+    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
+    <nav class="crumb-trail">You are here: <a href="/">Homepage</a> <span>&gt;</span> <a href="/models">New Vehicles</a> <span>&gt;</span> Book a Test Drive</nav>
+  </div>
+</div>
+
+<section class="bas-hero" style="background-image:url('/assets/img/book-a-test-drive/hero.jpg')">
+  <div class="container">
+    <div class="btd-aside">
+      <p class="btd-aside__elig">Test drive is subject to eligibility of 21 years of age, and must have a driver license.</p>
+      <hr class="btd-aside__hr" />
+      <p class="btd-aside__need">Need an answer to your question quicker?</p>
+      <div class="btd-help">
+        <a href="tel:1833334">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+          <span>Call Us</span>
+        </a>
+        <a href="https://api.whatsapp.com/send/?phone=1833334" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span>Chat Live</span>
+        </a>
+        <a href="/contact-us">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Visit Us</span>
+        </a>
+      </div>
+    </div>
+    <div class="bas-card">
+      <form data-form novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="title">Title *</label>
+            <select id="title" name="title" required>
+              <option value="">Please select ...</option>
+              <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+            </select><span class="err">Please select a title.</span>
+          </div>
+          <div class="field"><label for="fn">First Name *</label><input id="fn" name="firstName" required /><span class="err">Please enter your first name.</span></div>
+          <div class="field"><label for="ln">Last Name *</label><input id="ln" name="lastName" required /><span class="err">Please enter your last name.</span></div>
+          <div class="field"><label for="em">Email Address *</label><input id="em" name="email" type="email" required /><span class="err">Please enter a valid email.</span></div>
+          <div class="field"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required /><span class="err">Please enter your contact number.</span></div>
+          <div class="field"><label for="model">Select Model *</label>
+            <select id="model" name="model" required>
+              <option value="">Please select ...</option>
+              <option>EMZOOM</option><option>EMPOW</option><option>EMPOW R</option><option>EMKOO</option>
+              <option>Traveler</option><option>GS8</option><option>M8</option><option>GS4 MAX</option>
+              <option>HYPTECH HT</option>
+            </select><span class="err">Please select your model.</span>
+          </div>
+          <div class="bas-disclaimer">
+            <p class="title">Privacy statement &amp; legal disclaimer</p>
+            <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties are required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a></p>
+          </div>
+          <div class="field-check">
+            <input id="mk" name="marketing" type="checkbox" />
+            <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
+          </div>
+          <div class="bas-submit btd-submit"><button class="btn btn--hero" type="submit">Submit</button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
