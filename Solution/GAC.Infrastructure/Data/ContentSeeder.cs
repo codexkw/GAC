@@ -23,6 +23,159 @@ public static class ContentSeeder
         await SeedFormPagesAsync(db);
         await SeedNewsArticlesAsync(db);
         await SeedOffersAsync(db);
+        await EnsureArabicAsync(db);
+    }
+
+    // ──────────────────────────────────────────────
+    //  Arabic backfill (Phase 4). Idempotent: only sets a field's Arabic
+    //  when it is currently null/empty. Matches rows by natural key so it
+    //  works on both fresh and previously-seeded (EN-only) databases.
+    // ──────────────────────────────────────────────
+    private static async Task EnsureArabicAsync(ApplicationDbContext db)
+    {
+        // Returns true (and sets `result`) only when the field's Arabic is currently blank.
+        static bool SetAr(LocalizedText? field, string ar, out LocalizedText result)
+        {
+            var en = field?.En ?? string.Empty;
+            if (field is not null && !string.IsNullOrWhiteSpace(field.Ar))
+            {
+                result = field;
+                return false;
+            }
+            result = new LocalizedText { En = en, Ar = ar };
+            return true;
+        }
+
+        var changed = false;
+
+        // Site settings (FooterTagline)
+        var settings = await db.SiteSettings.FirstOrDefaultAsync();
+        if (settings is not null && SetAr(settings.FooterTagline, "جي إيه سي مطوع القاضي للسيارات", out var tagline))
+        {
+            settings.FooterTagline = tagline;
+            changed = true;
+        }
+
+        // Vehicles: Name + Tagline, keyed by slug
+        var vehicleAr = new Dictionary<string, (string Name, string Tagline)>
+        {
+            ["gs8traveller"] = ("GS8 ترافيلر", "دفع رباعي فاخر بسبعة مقاعد"),
+            ["gs8"]          = ("GS8", "دفع رباعي متوسط فاخر"),
+            ["gs3emzoom"]    = ("إمزوم", "دفع رباعي مدمج عصري"),
+            ["emkoo"]        = ("إمكو", "دفع رباعي رياضي أنيق"),
+            ["empow"]        = ("إمبو", "سيدان رياضية عالية الأداء"),
+            ["m8"]           = ("M8", "ميني فان فاخرة"),
+            ["empow-sport"]  = ("إمبو R", "سيدان رياضية بأداء فائق"),
+            ["aion-v"]       = ("أيون V", "دفع رباعي كهربائي بالكامل"),
+            ["aion-es"]      = ("أيون ES", "سيدان كهربائية بالكامل"),
+            ["hyptec-ht"]    = ("هايبتك HT", "دفع رباعي كهربائي فاخر"),
+            ["gs4"]          = ("GS4 ماكس", "دفع رباعي مدمج عملي"),
+        };
+        foreach (var v in await db.Vehicles.ToListAsync())
+        {
+            if (!vehicleAr.TryGetValue(v.Slug, out var ar)) continue;
+            if (SetAr(v.Name, ar.Name, out var name)) { v.Name = name; changed = true; }
+            if (SetAr(v.Tagline, ar.Tagline, out var tag)) { v.Tagline = tag; changed = true; }
+        }
+
+        // Hero slides: Heading, keyed by SortOrder
+        var slideAr = new Dictionary<int, string>
+        {
+            [1] = "جي إيه سي موتور", [2] = "GS4 ماكس", [3] = "هايبتك HT",
+            [4] = "أيون V", [5] = "أيون ES", [6] = "إمبو R",
+            [7] = "GS8 ترافيلر", [8] = "M8", [9] = "إمزوم",
+        };
+        foreach (var s in await db.HeroSlides.ToListAsync())
+        {
+            if (!slideAr.TryGetValue(s.SortOrder, out var ar)) continue;
+            if (SetAr(s.Heading, ar, out var h)) { s.Heading = h; changed = true; }
+        }
+
+        // Menu items: Label, keyed by the English label
+        var menuAr = new Dictionary<string, string>
+        {
+            ["Home"] = "الرئيسية",
+            ["Models"] = "الموديلات",
+            ["Owners"] = "الملاك",
+            ["Book a Service"] = "احجز صيانة",
+            ["Cost of Service"] = "تكلفة الصيانة",
+            ["Warranty"] = "الضمان",
+            ["Recall"] = "استدعاء",
+            ["Road-Side Assistance"] = "المساعدة على الطريق",
+            ["Shopping Tools"] = "أدوات التسوق",
+            ["Book a Test Drive"] = "احجز تجربة قيادة",
+            ["Request a Quote"] = "اطلب عرض سعر",
+            ["Locations"] = "المواقع",
+            ["More"] = "المزيد",
+            ["Fleet Sales"] = "مبيعات الأساطيل",
+            ["Finance"] = "التمويل",
+        };
+        foreach (var m in await db.MenuItems.ToListAsync())
+        {
+            if (m.Label is null || !menuAr.TryGetValue(m.Label.En ?? "", out var ar)) continue;
+            if (SetAr(m.Label, ar, out var lbl)) { m.Label = lbl; changed = true; }
+        }
+
+        // Content pages: Title, keyed by slug
+        var contentAr = new Dictionary<string, string>
+        {
+            ["about"] = "من نحن",
+            ["warranty"] = "الضمان",
+            ["privacy-policy"] = "سياسة الخصوصية",
+            ["finance"] = "تمويل تيسير",
+            ["cost-of-service"] = "تكلفة الصيانة",
+            ["road-assistance"] = "المساعدة على الطريق",
+        };
+        foreach (var p in await db.ContentPages.ToListAsync())
+        {
+            if (!contentAr.TryGetValue(p.Slug, out var ar)) continue;
+            if (SetAr(p.Title, ar, out var t)) { p.Title = t; changed = true; }
+        }
+
+        // Form pages: Title, keyed by slug
+        var formAr = new Dictionary<string, string>
+        {
+            ["book-a-service"] = "احجز صيانة",
+            ["book-a-test-drive"] = "احجز تجربة قيادة",
+            ["request-a-quote"] = "اطلب عرض سعر",
+            ["contact-us"] = "أوجدنا",
+            ["fleet"] = "الأساطيل",
+            ["recall-enquiry"] = "استعلام استدعاء",
+        };
+        foreach (var f in await db.FormPages.ToListAsync())
+        {
+            if (!formAr.TryGetValue(f.Slug, out var ar)) continue;
+            if (SetAr(f.Title, ar, out var t)) { f.Title = t; changed = true; }
+        }
+
+        // News articles: Title, keyed by slug
+        var newsAr = new Dictionary<string, string>
+        {
+            ["gac-empow-2026-high-performance-sports-sedan"] =
+                "جي إيه سي إمبو 2026: السيدان الرياضية عالية الأداء بمحرك جديد",
+            ["mutawa-alkadi-intensive-training-technical-competition"] =
+                "مطوع القاضي للسيارات تنظّم تدريباً مكثفاً ومسابقة فنية لفنيي جي إيه سي موتور",
+            ["emzoom-first-chinese-car-quality-ranking-2024"] =
+                "مطوع القاضي للسيارات تعلن تصدّر إمزوم تصنيف جودة السيارات الصينية للنصف الأول من 2024",
+        };
+        foreach (var n in await db.NewsArticles.ToListAsync())
+        {
+            if (!newsAr.TryGetValue(n.Slug, out var ar)) continue;
+            if (SetAr(n.Title, ar, out var t)) { n.Title = t; changed = true; }
+        }
+
+        // Offers: Title, keyed by slug
+        var offerAr = new Dictionary<string, string>
+        {
+            ["current-offers"] = "العروض الحالية",
+        };
+        foreach (var o in await db.Offers.ToListAsync())
+        {
+            if (!offerAr.TryGetValue(o.Slug, out var ar)) continue;
+            if (SetAr(o.Title, ar, out var t)) { o.Title = t; changed = true; }
+        }
+
+        if (changed) await db.SaveChangesAsync();
     }
 
     // ──────────────────────────────────────────────
