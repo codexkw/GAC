@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recall Enquiry | Kuwait | GAC</title>
+  <meta name="description" content="Submit a recall enquiry to Mutawa Alkadi Automotive and our team will check whether your GAC vehicle is affected and arrange the required service." />
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=4" />
+</head>
+<body id="page-wrap">
+
+  <div data-include="header"></div>
+
+  <div class="crumb-bar">
+    <div class="container">
+      <a class="crumb-back" href="index.html"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
+      <nav class="crumb-trail">You are here: <a href="index.html">Homepage</a> <span>&gt;</span> <a href="book-a-service.html">Owners</a> <span>&gt;</span> Vehicle Recall Enquiry</nav>
+    </div>
+  </div>
+
+  <section class="bas-hero" style="background-image:url('assets/img/book-a-service/hero.jpg')">
+    <div class="container">
+      <div class="bas-hero__title"></div>
+      <div class="bas-card">
+        <form data-form novalidate>
+          <div class="form-grid">
+            <div class="field"><label for="title">Title *</label>
+              <select id="title" name="title" required>
+                <option value="">Please select ...</option>
+                <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+              </select><span class="err">Please select a title.</span>
+            </div>
+            <div class="field"><label for="fn">First Name *</label><input id="fn" name="firstName" required /><span class="err">Please enter your first name.</span></div>
+            <div class="field"><label for="ln">Last Name *</label><input id="ln" name="lastName" required /><span class="err">Please enter your last name.</span></div>
+            <div class="field"><label for="em">Email Address *</label><input id="em" name="email" type="email" required /><span class="err">Please enter a valid email.</span></div>
+            <div class="field"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required /><span class="err">Please enter your contact number.</span></div>
+            <div class="field"><label for="msg">Message</label><textarea id="msg" name="message"></textarea></div>
+            <div class="bas-disclaimer">
+              <p class="title">Privacy statement &amp; legal disclaimer</p>
+              <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="privacy-policy.html">our Privacy Policy</a></p>
+            </div>
+            <div class="field-check">
+              <input id="mk" name="marketing" type="checkbox" />
+              <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
+            </div>
+            <div class="bas-submit"><button class="btn btn--hero" type="submit">Submit</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div data-include="footer"></div>
+
+  <a href="#page-wrap" class="back-top" data-back-top aria-label="Back to top">↑</a>
+  <script src="assets/js/includes.js?v=3"></script>
+</body>
+</html>

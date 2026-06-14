@@ -16,3 +16,8 @@ node_modules/
 # OS
 Thumbs.db
 .DS_Store
+
+# GAC static-site reference: keep pages/partials/assets/pdfs (porting source for
+# later phases), exclude heavy dev artifacts (screenshots, research probes)
+HTML/docs/
+HTML/shots/

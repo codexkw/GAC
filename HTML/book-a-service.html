@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAC Motor | Kuwait | Mutawa Alkadi Automotive | Book a Service</title>
+  <meta name="description" content="Book a service for your GAC vehicle with Mutawa Alkadi Automotive — choose your model, branch and service date and our team will confirm your booking." />
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=4" />
+</head>
+<body id="page-wrap">
+
+  <div data-include="header"></div>
+
+  <div class="crumb-bar">
+    <div class="container">
+      <a class="crumb-back" href="index.html"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
+      <nav class="crumb-trail">You are here: <a href="index.html">Homepage</a> <span>&gt;</span> <a href="book-a-service.html">Aftersales</a> <span>&gt;</span> Book a Service</nav>
+    </div>
+  </div>
+
+  <section class="bas-hero" style="background-image:url('assets/img/book-a-service/hero.jpg')">
+    <div class="container">
+      <div class="bas-hero__title">
+        <h1>Book a Service</h1>
+      </div>
+      <div class="bas-card">
+        <form data-form novalidate>
+          <div class="form-grid">
+            <div class="field"><label for="model">Model *</label>
+              <select id="model" name="model" required>
+                <option value="">Please select ...</option>
+                <option>GN8</option><option>GS8</option><option>GS4</option><option>GS3</option>
+                <option>GA8</option><option>GA4</option><option>EMPOW</option><option>EMPOW R</option>
+                <option>EMZOOM</option><option>EMKOO</option><option>M8</option><option>traveler</option>
+              </select><span class="err">Please select your model.</span>
+            </div>
+            <div class="field"><label for="mileage">Current Vehicle Mileage</label><input id="mileage" name="mileage" /></div>
+            <div class="field field-date"><label for="due">Vehicle Service Due Date</label><input id="due" name="dueDate" placeholder="DD/MM/YYYY" /><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+            <div class="field"><label for="branch">Select Branch *</label>
+              <select id="branch" name="branch" required>
+                <option value="">Please select ...</option>
+                <option>GAC service Center</option>
+                <option>GAC Motors Jeddah, Kilo 3 Branch</option>
+                <option>Jeddah, Al Amal Branch</option>
+                <option>Dammam Branch – Service</option>
+                <option>GAC Motors Al-Madinah Al-Munawarrah Branch</option>
+                <option>GAC Motors Jazan Branch</option>
+              </select><span class="err">Please select a branch.</span>
+            </div>
+            <div class="field"><label for="title">Title *</label>
+              <select id="title" name="title" required>
+                <option value="">Please select ...</option>
+                <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
+              </select><span class="err">Please select a title.</span>
+            </div>
+            <div class="field"><label for="fn">First Name *</label><input id="fn" name="firstName" required /><span class="err">Please enter your first name.</span></div>
+            <div class="field"><label for="ln">Last Name *</label><input id="ln" name="lastName" required /><span class="err">Please enter your last name.</span></div>
+            <div class="field"><label for="em">Email Address *</label><input id="em" name="email" type="email" required /><span class="err">Please enter a valid email.</span></div>
+            <div class="field"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required /><span class="err">Please enter your contact number.</span></div>
+            <div class="field"><label for="msg">Message</label><textarea id="msg" name="message"></textarea></div>
+            <div class="bas-disclaimer">
+              <p class="title">Privacy statement &amp; legal disclaimer</p>
+              <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="privacy-policy.html">our Privacy Policy</a></p>
+            </div>
+            <div class="field-check">
+              <input id="mk" name="marketing" type="checkbox" />
+              <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
+            </div>
+            <div class="bas-submit"><button class="btn btn--hero" type="submit">Submit</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div data-include="footer"></div>
+
+  <a href="#page-wrap" class="back-top" data-back-top aria-label="Back to top">↑</a>
+  <script src="assets/js/includes.js?v=3"></script>
+</body>
+</html>
