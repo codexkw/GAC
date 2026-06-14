@@ -125,7 +125,7 @@
           }
       }
       <a href="https://api.whatsapp.com/send/?phone=@Model.Settings.WhatsApp" target="_blank" rel="noopener">@L["WhatsApp"]</a>
-      <a href="tel:@Model.Settings.Phone">@L["Call {0}", Model.Settings.Phone]</a>
+      <a href="tel:@Model.Settings.Phone">@L["Call {0}", Model.Settings.Phone ?? ""]</a>
     </nav>
   </div>
 </div>
