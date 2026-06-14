@@ -54,6 +54,7 @@ public class HomePageSmokeTests : IClassFixture<DevWebApplicationFactory>
         var client = _factory.CreateClient();
         var html = await (await client.GetAsync("/")).Content.ReadAsStringAsync();
         Assert.Contains("GS8", html);            // a seeded vehicle name
+        Assert.Contains("data-tab-panel", html); // model-strip per-category panels rendered
         Assert.Contains("/news/", html);         // a news card link
     }
 }

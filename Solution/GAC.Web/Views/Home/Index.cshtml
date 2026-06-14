@@ -73,27 +73,81 @@
        MODEL STRIP — tabs (ALL / SEDAN / SUV / EV), DB-driven
        ================================================= -->
   <section class="model-strip">
-    <div class="container" data-filter-root>
+    <div class="container">
       <div class="model-strip__head">
         <div data-tabs>
           <div class="tabs" role="tablist">
-            <button class="tabs__btn is-active" data-filter="all">All</button>
-            <button class="tabs__btn" data-filter="sedan">Sedan</button>
-            <button class="tabs__btn" data-filter="suv">SUV</button>
-            <button class="tabs__btn" data-filter="ev">EV</button>
+            <button class="tabs__btn is-active" data-tab-btn="all">All</button>
+            <button class="tabs__btn" data-tab-btn="sedan">Sedan</button>
+            <button class="tabs__btn" data-tab-btn="suv">SUV</button>
+            <button class="tabs__btn" data-tab-btn="ev">EV</button>
           </div>
         </div>
       </div>
 
-      <div class="carousel" data-carousel>
-        <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
-        <div class="carousel__viewport"><div class="carousel__track">
+      <div data-tab-root>
+
+        <!-- ALL -->
+        <div class="tabpanel is-active" data-tab-panel="all">
+          <div class="carousel" data-carousel>
+            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
+            <div class="carousel__viewport"><div class="carousel__track">
 @foreach (var v in Model.Vehicles)
 {
-          <a class="carousel__slide" href="/@v.Slug" data-cat="@UrlHelpers.CategoryCss(v.Category)"><div class="model-card"><div class="model-card__media"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></div><div class="model-card__name">@v.Name.Localize()</div></div></a>
+              <a class="carousel__slide" href="/@v.Slug"><div class="model-card"><div class="model-card__media"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></div><div class="model-card__name">@v.Name.Localize()</div></div></a>
 }
-        </div></div>
-        <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
+            </div></div>
+            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
+          </div>
+          <div class="carousel__dots" data-carousel-dots>
+            <button class="carousel__dot is-active" data-cdot="0"></button>
+            <button class="carousel__dot" data-cdot="1"></button>
+            <button class="carousel__dot" data-cdot="2"></button>
+          </div>
+        </div>
+
+        <!-- SEDAN -->
+        <div class="tabpanel" data-tab-panel="sedan">
+          <div class="carousel" data-carousel>
+            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
+            <div class="carousel__viewport"><div class="carousel__track">
+@foreach (var v in Model.Vehicles.Where(v => v.Category.HasFlag(VehicleCategory.Sedan)))
+{
+              <a class="carousel__slide" href="/@v.Slug"><div class="model-card"><div class="model-card__media"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></div><div class="model-card__name">@v.Name.Localize()</div></div></a>
+}
+            </div></div>
+            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
+          </div>
+        </div>
+
+        <!-- SUV -->
+        <div class="tabpanel" data-tab-panel="suv">
+          <div class="carousel" data-carousel>
+            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
+            <div class="carousel__viewport"><div class="carousel__track">
+@foreach (var v in Model.Vehicles.Where(v => v.Category.HasFlag(VehicleCategory.Suv)))
+{
+              <a class="carousel__slide" href="/@v.Slug"><div class="model-card"><div class="model-card__media"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></div><div class="model-card__name">@v.Name.Localize()</div></div></a>
+}
+            </div></div>
+            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
+          </div>
+        </div>
+
+        <!-- EV -->
+        <div class="tabpanel" data-tab-panel="ev">
+          <div class="carousel" data-carousel>
+            <button class="carousel__btn carousel__btn--prev" data-carousel-prev aria-label="Previous">‹</button>
+            <div class="carousel__viewport"><div class="carousel__track">
+@foreach (var v in Model.Vehicles.Where(v => v.Category.HasFlag(VehicleCategory.Ev)))
+{
+              <a class="carousel__slide" href="/@v.Slug"><div class="model-card"><div class="model-card__media"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></div><div class="model-card__name">@v.Name.Localize()</div></div></a>
+}
+            </div></div>
+            <button class="carousel__btn carousel__btn--next" data-carousel-next aria-label="Next">›</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
