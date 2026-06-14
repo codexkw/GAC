@@ -24,9 +24,9 @@
     @await RenderSectionAsync("Head", required: false)
 </head>
 <body id="page-wrap">
-    <partial name="_Header" />
+    <vc:header />
     @RenderBody()
-    <partial name="_Footer" />
+    <vc:footer />
     <a href="#page-wrap" class="back-top" data-back-top aria-label="Back to top">↑</a>
     <script src="~/assets/js/main.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

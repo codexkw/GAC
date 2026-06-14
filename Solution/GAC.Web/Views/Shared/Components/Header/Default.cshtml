@@ -1,0 +1,130 @@
+@using GAC.Web.Infrastructure
+@using GAC.Core.Content
+@model GAC.Web.ViewComponents.HeaderViewModel
+@{
+    var menu = Model.Menu;
+    var vehicles = Model.Vehicles;
+    bool IsModels(MenuItem mi) => UrlHelpers.NormalizeUrl(mi.Url) == "/models";
+}
+
+<header class="gac-header" data-header>
+
+  <!-- Row B: brand lockup -->
+  <div class="brandbar">
+    <div class="container brandbar__inner">
+      <a class="brandbar__logo" href="/" aria-label="GAC Mutawa Alkadi Automotive — Home">
+        <img src="/assets/img/logo.png" alt="GAC Mutawa Alkadi Automotive" />
+      </a>
+      <div class="brandbar__right">
+        <a href="https://api.whatsapp.com/send/?phone=@Model.Settings.WhatsApp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1-.2.3-.6.8-.8 1-.1.1-.3.2-.5 0-.7-.3-1.4-.6-2-1.2-.5-.5-.9-1.1-1.2-1.7-.1-.2 0-.4.1-.5l.4-.5c.1-.1.1-.3.2-.4 0-.2 0-.3 0-.4l-.7-1.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.6.6-.9 1.4-.9 2.2.1 1 .5 1.9 1.1 2.7.9 1.3 2 2.3 3.4 2.9.5.2.9.3 1.3.4.5.1 1 .1 1.4 0 .5-.1 1.4-.6 1.6-1.2.2-.5.2-1 .1-1.1z"/></svg> WhatsApp</a>
+        <a href="tel:@Model.Settings.Phone"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg> @Model.Settings.Phone</a>
+        <div class="lang-switch" data-lang-switch>
+          <button class="lang" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3C9.5 5.7 9.5 18.3 12 21"/></svg>
+            <span>EN</span>
+            <span class="lang__caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="lang-menu" role="listbox">
+            <li><a asp-controller="Culture" asp-action="Set" asp-route-culture="en" asp-route-returnUrl="@Context.Request.Path">English</a></li>
+            <li><a asp-controller="Culture" asp-action="Set" asp-route-culture="ar" asp-route-returnUrl="@Context.Request.Path" lang="ar">عربي</a></li>
+          </ul>
+        </div>
+        <img class="brandbar__franchise" src="/assets/img/mutawa-alkadi.png" alt="Mutawa Alkadi" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Row C: main nav -->
+  <nav class="mainnav" aria-label="Main">
+    <div class="container mainnav__inner">
+      <button class="nav-toggle" data-drawer-open aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+
+      <ul class="menu">
+        @foreach (var item in menu)
+        {
+            if (IsModels(item))
+            {
+                <li class="menu__models">
+                  <a href="/models">@item.Label.Localize()</a>
+                  <div class="megamenu" data-mm>
+                    <div class="container">
+                      <div class="megamenu__tabs">
+                        <button class="megamenu__tab is-active" data-mm-tab="all">All</button>
+                        <button class="megamenu__tab" data-mm-tab="sedan">Sedan</button>
+                        <button class="megamenu__tab" data-mm-tab="suv">SUV</button>
+                        <button class="megamenu__tab" data-mm-tab="ev">EV</button>
+                      </div>
+                      <div class="megamenu__grid">
+                        @foreach (var v in vehicles)
+                        {
+                            <a class="megamenu__item" data-mm-cat="@UrlHelpers.CategoryCss(v.Category)" href="/@v.Slug"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /><span class="mm-name">@v.Name.Localize()</span></a>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </li>
+            }
+            else if (item.Children.Any())
+            {
+                <li class="has-drop">
+                  <a href="#">@item.Label.Localize() <span class="caret">▾</span></a>
+                  <ul class="drop">
+                    @foreach (var c in item.Children)
+                    {
+                        <li><a href="@UrlHelpers.NormalizeUrl(c.Url)">@c.Label.Localize()</a></li>
+                    }
+                  </ul>
+                </li>
+            }
+            else
+            {
+                <li><a href="@UrlHelpers.NormalizeUrl(item.Url)">@item.Label.Localize()</a></li>
+            }
+        }
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile drawer -->
+<div class="drawer" data-drawer>
+  <div class="drawer__panel">
+    <button class="drawer__close" data-drawer-close aria-label="Close menu">×</button>
+    <nav class="drawer__nav">
+      @foreach (var item in menu)
+      {
+          if (IsModels(item))
+          {
+              <div class="drawer__group" data-drawer-group>
+                <button type="button" class="drawer__toggle" aria-expanded="false">@item.Label.Localize() <span class="drawer__chev" aria-hidden="true">▾</span></button>
+                <div class="drawer__sub">
+                  <a href="/models">All Models</a>
+                  @foreach (var v in vehicles)
+                  {
+                      <a href="/@v.Slug">@v.Name.Localize()</a>
+                  }
+                </div>
+              </div>
+          }
+          else if (item.Children.Any())
+          {
+              <div class="drawer__group" data-drawer-group>
+                <button type="button" class="drawer__toggle" aria-expanded="false">@item.Label.Localize() <span class="drawer__chev" aria-hidden="true">▾</span></button>
+                <div class="drawer__sub">
+                  @foreach (var c in item.Children)
+                  {
+                      <a href="@UrlHelpers.NormalizeUrl(c.Url)">@c.Label.Localize()</a>
+                  }
+                </div>
+              </div>
+          }
+          else
+          {
+              <a href="@UrlHelpers.NormalizeUrl(item.Url)">@item.Label.Localize()</a>
+          }
+      }
+      <a href="https://api.whatsapp.com/send/?phone=@Model.Settings.WhatsApp" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="tel:@Model.Settings.Phone">Call @Model.Settings.Phone</a>
+    </nav>
+  </div>
+</div>
