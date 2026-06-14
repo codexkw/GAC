@@ -1,0 +1,210 @@
+using GAC.Core.Content;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace GAC.Infrastructure.Data.Configurations;
+
+internal static class OwnedExtensions
+{
+    public static void OwnsLocalized<TEntity>(
+        this EntityTypeBuilder<TEntity> b,
+        System.Linq.Expressions.Expression<System.Func<TEntity, LocalizedText?>> nav)
+        where TEntity : class
+    {
+        b.OwnsOne(nav, o =>
+        {
+            o.Property(p => p.En);
+            o.Property(p => p.Ar);
+        });
+        b.Navigation(nav).IsRequired();
+    }
+}
+
+public class VehicleConfig : IEntityTypeConfiguration<Vehicle>
+{
+    public void Configure(EntityTypeBuilder<Vehicle> b)
+    {
+        b.HasIndex(v => v.Slug).IsUnique();
+        b.Property(v => v.Slug).HasMaxLength(100).IsRequired();
+        b.Property(v => v.PriceFrom).HasColumnType("decimal(18,2)");
+        b.OwnsLocalized(v => v.Name);
+        b.OwnsLocalized(v => v.Tagline);
+        b.OwnsLocalized(v => v.IntroText);
+        b.OwnsLocalized(v => v.MetaTitle);
+        b.OwnsLocalized(v => v.MetaDescription);
+        b.HasMany(v => v.Images).WithOne().HasForeignKey(i => i.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.Trims).WithOne().HasForeignKey(t => t.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.SpecGroups).WithOne().HasForeignKey(s => s.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.Colors).WithOne().HasForeignKey(c => c.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.Features).WithOne().HasForeignKey(f => f.VehicleId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class VehicleImageConfig : IEntityTypeConfiguration<VehicleImage>
+{
+    public void Configure(EntityTypeBuilder<VehicleImage> b)
+    {
+        b.Property(i => i.Path).HasMaxLength(300).IsRequired();
+        b.OwnsLocalized(i => i.Alt);
+    }
+}
+
+public class TrimConfig : IEntityTypeConfiguration<Trim>
+{
+    public void Configure(EntityTypeBuilder<Trim> b)
+    {
+        b.Property(t => t.Price).HasColumnType("decimal(18,2)");
+        b.OwnsLocalized(t => t.Name);
+        b.OwnsLocalized(t => t.Highlights);
+    }
+}
+
+public class SpecGroupConfig : IEntityTypeConfiguration<SpecGroup>
+{
+    public void Configure(EntityTypeBuilder<SpecGroup> b)
+    {
+        b.OwnsLocalized(s => s.Title);
+        b.HasMany(s => s.Rows).WithOne().HasForeignKey(r => r.SpecGroupId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class SpecRowConfig : IEntityTypeConfiguration<SpecRow>
+{
+    public void Configure(EntityTypeBuilder<SpecRow> b)
+    {
+        b.OwnsLocalized(r => r.Label);
+        b.OwnsLocalized(r => r.Value);
+    }
+}
+
+public class ColorOptionConfig : IEntityTypeConfiguration<ColorOption>
+{
+    public void Configure(EntityTypeBuilder<ColorOption> b)
+    {
+        b.Property(c => c.Hex).HasMaxLength(9);
+        b.OwnsLocalized(c => c.Name);
+    }
+}
+
+public class FeatureSectionConfig : IEntityTypeConfiguration<FeatureSection>
+{
+    public void Configure(EntityTypeBuilder<FeatureSection> b)
+    {
+        b.OwnsLocalized(f => f.Heading);
+        b.OwnsLocalized(f => f.Body);
+    }
+}
+
+public class ContentPageConfig : IEntityTypeConfiguration<ContentPage>
+{
+    public void Configure(EntityTypeBuilder<ContentPage> b)
+    {
+        b.HasIndex(p => p.Slug).IsUnique();
+        b.Property(p => p.Slug).HasMaxLength(100).IsRequired();
+        b.OwnsLocalized(p => p.Title);
+        b.OwnsLocalized(p => p.MetaTitle);
+        b.OwnsLocalized(p => p.MetaDescription);
+        b.HasMany(p => p.Sections).WithOne().HasForeignKey(s => s.ContentPageId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class ContentSectionConfig : IEntityTypeConfiguration<ContentSection>
+{
+    public void Configure(EntityTypeBuilder<ContentSection> b)
+    {
+        b.OwnsLocalized(s => s.Heading);
+        b.OwnsLocalized(s => s.Body);
+    }
+}
+
+public class FormPageConfig : IEntityTypeConfiguration<FormPage>
+{
+    public void Configure(EntityTypeBuilder<FormPage> b)
+    {
+        b.HasIndex(p => p.Slug).IsUnique();
+        b.Property(p => p.Slug).HasMaxLength(100).IsRequired();
+        b.OwnsLocalized(p => p.Title);
+        b.OwnsLocalized(p => p.IntroText);
+        b.OwnsLocalized(p => p.MetaTitle);
+        b.OwnsLocalized(p => p.MetaDescription);
+    }
+}
+
+public class NewsArticleConfig : IEntityTypeConfiguration<NewsArticle>
+{
+    public void Configure(EntityTypeBuilder<NewsArticle> b)
+    {
+        b.HasIndex(n => n.Slug).IsUnique();
+        b.Property(n => n.Slug).HasMaxLength(120).IsRequired();
+        b.OwnsLocalized(n => n.Title);
+        b.OwnsLocalized(n => n.Excerpt);
+        b.OwnsLocalized(n => n.Body);
+    }
+}
+
+public class OfferConfig : IEntityTypeConfiguration<Offer>
+{
+    public void Configure(EntityTypeBuilder<Offer> b)
+    {
+        b.HasIndex(o => o.Slug).IsUnique();
+        b.Property(o => o.Slug).HasMaxLength(120).IsRequired();
+        b.OwnsLocalized(o => o.Title);
+        b.OwnsLocalized(o => o.Body);
+    }
+}
+
+public class LeadConfig : IEntityTypeConfiguration<Lead>
+{
+    public void Configure(EntityTypeBuilder<Lead> b)
+    {
+        b.Property(l => l.Name).HasMaxLength(200).IsRequired();
+        b.HasOne(l => l.Vehicle).WithMany().HasForeignKey(l => l.VehicleId).OnDelete(DeleteBehavior.SetNull);
+        b.HasIndex(l => l.Status);
+        b.HasIndex(l => l.CreatedAt);
+    }
+}
+
+public class HomePageConfig : IEntityTypeConfiguration<HomePage>
+{
+    public void Configure(EntityTypeBuilder<HomePage> b)
+    {
+        b.HasMany(h => h.Slides).WithOne().HasForeignKey(s => s.HomePageId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class HeroSlideConfig : IEntityTypeConfiguration<HeroSlide>
+{
+    public void Configure(EntityTypeBuilder<HeroSlide> b)
+    {
+        b.Property(s => s.ImagePath).HasMaxLength(300).IsRequired();
+        b.OwnsLocalized(s => s.Heading);
+        b.OwnsLocalized(s => s.Subheading);
+        b.OwnsLocalized(s => s.CtaText);
+    }
+}
+
+public class SiteSettingsConfig : IEntityTypeConfiguration<SiteSettings>
+{
+    public void Configure(EntityTypeBuilder<SiteSettings> b)
+    {
+        b.OwnsLocalized(s => s.FooterTagline);
+    }
+}
+
+public class MenuItemConfig : IEntityTypeConfiguration<MenuItem>
+{
+    public void Configure(EntityTypeBuilder<MenuItem> b)
+    {
+        b.OwnsLocalized(m => m.Label);
+        b.HasMany(m => m.Children).WithOne(m => m.Parent!).HasForeignKey(m => m.ParentId).OnDelete(DeleteBehavior.Restrict);
+    }
+}
+
+public class MediaAssetConfig : IEntityTypeConfiguration<MediaAsset>
+{
+    public void Configure(EntityTypeBuilder<MediaAsset> b)
+    {
+        b.Property(m => m.Path).HasMaxLength(300).IsRequired();
+        b.OwnsLocalized(m => m.Alt);
+    }
+}
