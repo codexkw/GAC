@@ -2,7 +2,6 @@ using GAC.Core.Content;
 using GAC.Infrastructure.Data;
 using GAC.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace GAC.Tests;
@@ -11,10 +10,9 @@ public class LeadServiceTests
 {
     private static ApplicationDbContext NewDb(string name)
     {
-        var sp = new ServiceCollection()
-            .AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase(name))
-            .BuildServiceProvider();
-        return sp.GetRequiredService<ApplicationDbContext>();
+        var opts = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(name).Options;
+        return new ApplicationDbContext(opts);
     }
 
     [Fact]
@@ -35,5 +33,6 @@ public class LeadServiceTests
         Assert.Equal("Mr Ada Lovelace", lead.Name);
         Assert.Equal(FormType.TestDrive, lead.FormType);
         Assert.Equal(LeadStatus.New, lead.Status);
+        Assert.True(lead.CreatedAt > DateTimeOffset.MinValue);
     }
 }

@@ -46,12 +46,12 @@ public class SmtpEmailSender : IEmailSender
             msg.Body = new TextPart("plain") { Text = body.ToString() };
 
             using var client = new SmtpClient();
-            var secure = _opt.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
+            var secure = _opt.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None;
             await client.ConnectAsync(_opt.Host, _opt.Port, secure, ct);
             if (!string.IsNullOrWhiteSpace(_opt.Username))
                 await client.AuthenticateAsync(_opt.Username, _opt.Password, ct);
             await client.SendAsync(msg, ct);
-            await client.DisconnectAsync(true, ct);
+            await client.DisconnectAsync(true, CancellationToken.None);
             _log.LogInformation("Lead notification sent for {FormType} to {To}.", lead.FormType, to);
         }
         catch (Exception ex)

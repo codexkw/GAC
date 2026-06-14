@@ -11,6 +11,8 @@ public class LeadService : ILeadService
 
     public async Task CreateAsync(Lead lead, CancellationToken ct = default)
     {
+        if (lead.CreatedAt == default)
+            lead.CreatedAt = DateTimeOffset.UtcNow;
         _db.Leads.Add(lead);
         await _db.SaveChangesAsync(ct);
     }
