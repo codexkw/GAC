@@ -50,7 +50,7 @@ public static class ContentSeeder
     }
 
     // ──────────────────────────────────────────────
-    //  Vehicles (11) + one Hero VehicleImage each
+    //  Vehicles (11) + Hero + Gallery thumbnail VehicleImage each
     // ──────────────────────────────────────────────
     private static async Task SeedVehiclesAsync(ApplicationDbContext db)
     {
@@ -58,17 +58,17 @@ public static class ContentSeeder
 
         var vehicles = new[]
         {
-            MakeVehicle(1, "gs8traveller",    "GS8 Traveller", VehicleCategory.Suv,                     true,  "/assets/img/hero-gs8-traveller.png"),
-            MakeVehicle(2, "gs8",             "GS8",           VehicleCategory.Suv,                     true,  "/assets/img/m-gs8.jpg"),
-            MakeVehicle(3, "gs3emzoom",       "EMZOOM",        VehicleCategory.Suv,                     true,  "/assets/img/hero-gs3-emzoom.jpg"),
-            MakeVehicle(4, "emkoo",           "EMKOO",         VehicleCategory.Suv,                     true,  "/assets/img/m-emkoo.png"),
-            MakeVehicle(5, "empow",           "EMPOW",         VehicleCategory.Sedan,                   true,  "/assets/img/m-empow.png"),
-            MakeVehicle(6, "m8",              "M8",            VehicleCategory.Suv,                     true,  "/assets/img/hero-m8.png"),
-            MakeVehicle(7, "empow-sport",     "EMPOW R",       VehicleCategory.Sedan,                   true,  "/assets/img/hero-empow-sport.jpg"),
-            MakeVehicle(8, "aion-v",          "AION V",        VehicleCategory.Suv | VehicleCategory.Ev, false, "/assets/img/hero-aion-v.jpg"),
-            MakeVehicle(9, "aion-es",         "AION ES",       VehicleCategory.Sedan | VehicleCategory.Ev, false, "/assets/img/hero-aion-es.jpg"),
-            MakeVehicle(10,"hyptec-ht",       "HYPTEC HT",     VehicleCategory.Suv | VehicleCategory.Ev, true,  "/assets/img/m-hyptec-ht.png"),
-            MakeVehicle(11,"gs4",             "GS4 MAX",       VehicleCategory.Suv,                     true,  "/assets/img/hero-gs4.jpg"),
+            MakeVehicle(1, "gs8traveller",    "GS8 Traveller", VehicleCategory.Suv,                     true,  "/assets/img/hero-gs8-traveller.png", "/assets/img/m-gs8-traveller.png"),
+            MakeVehicle(2, "gs8",             "GS8",           VehicleCategory.Suv,                     true,  "/assets/img/m-gs8.jpg",            "/assets/img/m-gs8.jpg"),
+            MakeVehicle(3, "gs3emzoom",       "EMZOOM",        VehicleCategory.Suv,                     true,  "/assets/img/hero-gs3-emzoom.jpg",  "/assets/img/m-gs3-emzoom.png"),
+            MakeVehicle(4, "emkoo",           "EMKOO",         VehicleCategory.Suv,                     true,  "/assets/img/m-emkoo.png",          "/assets/img/m-emkoo.png"),
+            MakeVehicle(5, "empow",           "EMPOW",         VehicleCategory.Sedan,                   true,  "/assets/img/m-empow.png",          "/assets/img/m-empow.png"),
+            MakeVehicle(6, "m8",              "M8",            VehicleCategory.Suv,                     true,  "/assets/img/hero-m8.png",          "/assets/img/m-m8.png"),
+            MakeVehicle(7, "empow-sport",     "EMPOW R",       VehicleCategory.Sedan,                   true,  "/assets/img/hero-empow-sport.jpg", "/assets/img/m-empow-sport.png"),
+            MakeVehicle(8, "aion-v",          "AION V",        VehicleCategory.Suv | VehicleCategory.Ev, false, "/assets/img/hero-aion-v.jpg",      "/assets/img/m-aion-v.png"),
+            MakeVehicle(9, "aion-es",         "AION ES",       VehicleCategory.Sedan | VehicleCategory.Ev, false, "/assets/img/hero-aion-es.jpg",    "/assets/img/m-aion-es.png"),
+            MakeVehicle(10,"hyptec-ht",       "HYPTEC HT",     VehicleCategory.Suv | VehicleCategory.Ev, true,  "/assets/img/m-hyptec-ht.png",     "/assets/img/m-hyptec-ht.png"),
+            MakeVehicle(11,"gs4",             "GS4 MAX",       VehicleCategory.Suv,                     true,  "/assets/img/hero-gs4.jpg",         "/assets/img/m-gs4.png"),
         };
 
         db.Vehicles.AddRange(vehicles);
@@ -76,7 +76,7 @@ public static class ContentSeeder
     }
 
     private static Vehicle MakeVehicle(int sortOrder, string slug, string nameEn,
-        VehicleCategory category, bool isVisible, string heroPath)
+        VehicleCategory category, bool isVisible, string heroPath, string thumbPath)
     {
         return new Vehicle
         {
@@ -91,6 +91,12 @@ public static class ContentSeeder
                 {
                     Kind = VehicleImageKind.Hero,
                     Path = heroPath,
+                    SortOrder = 0
+                },
+                new VehicleImage
+                {
+                    Kind = VehicleImageKind.Gallery,
+                    Path = thumbPath,
                     SortOrder = 0
                 }
             }
@@ -109,14 +115,14 @@ public static class ContentSeeder
             Slides = new List<HeroSlide>
             {
                 MakeSlide(1, "/assets/img/hero-s7.jpg",             "GAC Motor",    null),
-                MakeSlide(2, "/assets/img/hero-gs4.jpg",            "GS4 MAX",      "gs4.html"),
-                MakeSlide(3, "/assets/img/hero-hyptec-ht.jpg",      "HYPTEC HT",    "hyptec-ht.html"),
-                MakeSlide(4, "/assets/img/hero-aion-v.jpg",         "AION V",       "aion-v.html"),
-                MakeSlide(5, "/assets/img/hero-aion-es.jpg",        "AION ES",      "aion-es.html"),
-                MakeSlide(6, "/assets/img/hero-empow-sport.jpg",    "EMPOW R",      "empow-sport.html"),
-                MakeSlide(7, "/assets/img/hero-gs8-traveller.png",  "GS8 Traveller","gs8traveller.html"),
-                MakeSlide(8, "/assets/img/hero-m8.png",             "M8",           "m8.html"),
-                MakeSlide(9, "/assets/img/hero-gs3-emzoom.jpg",     "EMZOOM",       "gs3emzoom.html"),
+                MakeSlide(2, "/assets/img/hero-gs4.jpg",            "GS4 MAX",      "/gs4"),
+                MakeSlide(3, "/assets/img/hero-hyptec-ht.jpg",      "HYPTEC HT",    "/hyptec-ht"),
+                MakeSlide(4, "/assets/img/hero-aion-v.jpg",         "AION V",       "/aion-v"),
+                MakeSlide(5, "/assets/img/hero-aion-es.jpg",        "AION ES",      "/aion-es"),
+                MakeSlide(6, "/assets/img/hero-empow-sport.jpg",    "EMPOW R",      "/empow-sport"),
+                MakeSlide(7, "/assets/img/hero-gs8-traveller.png",  "GS8 Traveller","/gs8traveller"),
+                MakeSlide(8, "/assets/img/hero-m8.png",             "M8",           "/m8"),
+                MakeSlide(9, "/assets/img/hero-gs3-emzoom.jpg",     "EMZOOM",       "/gs3emzoom"),
             }
         };
 
@@ -145,10 +151,10 @@ public static class ContentSeeder
         var items = new[]
         {
             // 1. Home
-            new MenuItem { SortOrder = 1, Label = "Home",           Url = "index.html" },
+            new MenuItem { SortOrder = 1, Label = "Home",           Url = "/" },
 
             // 2. Models
-            new MenuItem { SortOrder = 2, Label = "Models",         Url = "models.html" },
+            new MenuItem { SortOrder = 2, Label = "Models",         Url = "/models" },
 
             // 3. Owners (group)
             new MenuItem
@@ -156,11 +162,11 @@ public static class ContentSeeder
                 SortOrder = 3, Label = "Owners", Url = null,
                 Children = new List<MenuItem>
                 {
-                    new MenuItem { SortOrder = 1, Label = "Book a Service",       Url = "book-a-service.html" },
-                    new MenuItem { SortOrder = 2, Label = "Cost of Service",      Url = "cost-of-service.html" },
-                    new MenuItem { SortOrder = 3, Label = "Warranty",             Url = "warranty.html" },
-                    new MenuItem { SortOrder = 4, Label = "Recall",               Url = "recall-enquiry.html" },
-                    new MenuItem { SortOrder = 5, Label = "Road-Side Assistance", Url = "road-assistance.html" },
+                    new MenuItem { SortOrder = 1, Label = "Book a Service",       Url = "/book-a-service" },
+                    new MenuItem { SortOrder = 2, Label = "Cost of Service",      Url = "/cost-of-service" },
+                    new MenuItem { SortOrder = 3, Label = "Warranty",             Url = "/warranty" },
+                    new MenuItem { SortOrder = 4, Label = "Recall",               Url = "/recall-enquiry" },
+                    new MenuItem { SortOrder = 5, Label = "Road-Side Assistance", Url = "/road-assistance" },
                 }
             },
 
@@ -170,13 +176,13 @@ public static class ContentSeeder
                 SortOrder = 4, Label = "Shopping Tools", Url = null,
                 Children = new List<MenuItem>
                 {
-                    new MenuItem { SortOrder = 1, Label = "Book a Test Drive", Url = "book-a-test-drive.html" },
-                    new MenuItem { SortOrder = 2, Label = "Request a Quote",   Url = "request-a-quote.html" },
+                    new MenuItem { SortOrder = 1, Label = "Book a Test Drive", Url = "/book-a-test-drive" },
+                    new MenuItem { SortOrder = 2, Label = "Request a Quote",   Url = "/request-a-quote" },
                 }
             },
 
             // 5. Locations
-            new MenuItem { SortOrder = 5, Label = "Locations", Url = "contact-us.html" },
+            new MenuItem { SortOrder = 5, Label = "Locations", Url = "/contact-us" },
 
             // 6. More (group)
             new MenuItem
@@ -184,8 +190,8 @@ public static class ContentSeeder
                 SortOrder = 6, Label = "More", Url = null,
                 Children = new List<MenuItem>
                 {
-                    new MenuItem { SortOrder = 1, Label = "Fleet Sales", Url = "fleet.html" },
-                    new MenuItem { SortOrder = 2, Label = "Finance",     Url = "finance.html" },
+                    new MenuItem { SortOrder = 1, Label = "Fleet Sales", Url = "/fleet" },
+                    new MenuItem { SortOrder = 2, Label = "Finance",     Url = "/finance" },
                 }
             },
         };
@@ -195,7 +201,7 @@ public static class ContentSeeder
     }
 
     // ──────────────────────────────────────────────
-    //  Content Pages (8)
+    //  Content Pages (6 — news/offers owned by dedicated controllers)
     // ──────────────────────────────────────────────
     private static async Task SeedContentPagesAsync(ApplicationDbContext db)
     {
@@ -209,8 +215,6 @@ public static class ContentSeeder
             new ContentPage { Slug = "finance",           Title = "Tayseer Finance" },
             new ContentPage { Slug = "cost-of-service",   Title = "Cost of Service" },
             new ContentPage { Slug = "road-assistance",   Title = "Roadside Assistance" },
-            new ContentPage { Slug = "news",              Title = "News" },
-            new ContentPage { Slug = "offers",            Title = "Offers" },
         };
 
         db.ContentPages.AddRange(pages);
