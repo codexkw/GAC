@@ -45,7 +45,11 @@ public class ArabicSeedTests
         var db = sp.GetRequiredService<ApplicationDbContext>();
 
         Assert.Equal(11, await db.Vehicles.CountAsync());
-        var gs8 = await db.Vehicles.SingleAsync(v => v.Slug == "gs8");
-        Assert.Equal("GS8", gs8.Name.Ar); // GS8 has no separate Arabic form; unchanged on 2nd pass
+
+        // A vehicle whose Arabic genuinely differs from English: proves the backfill
+        // guard preserved the distinct Arabic and did NOT clobber English on the 2nd pass.
+        var emzoom = await db.Vehicles.SingleAsync(v => v.Slug == "gs3emzoom");
+        Assert.Equal("إمزوم", emzoom.Name.Ar);
+        Assert.Equal("EMZOOM", emzoom.Name.En);
     }
 }
