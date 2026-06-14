@@ -55,7 +55,7 @@
        ================================================= -->
   <section class="searchblock">
     <div class="container">
-      <h2>Search and Shop Online</h2>
+      <h2>@L["Search and Shop Online"]</h2>
       <form class="searchblock__form" onsubmit="event.preventDefault(); if (this.model.value) window.location.href = this.model.value;">
         <select name="model" aria-label="Model">
           <option value="">Model</option>
@@ -64,7 +64,7 @@
           <option value="/@v.Slug">@v.Name.Localize()</option>
 }
         </select>
-        <button type="submit">Search</button>
+        <button type="submit">@L["Search"]</button>
       </form>
     </div>
   </section>
@@ -77,10 +77,10 @@
       <div class="model-strip__head">
         <div data-tabs>
           <div class="tabs" role="tablist">
-            <button class="tabs__btn is-active" data-tab-btn="all">All</button>
-            <button class="tabs__btn" data-tab-btn="sedan">Sedan</button>
-            <button class="tabs__btn" data-tab-btn="suv">SUV</button>
-            <button class="tabs__btn" data-tab-btn="ev">EV</button>
+            <button class="tabs__btn is-active" data-tab-btn="all">@L["All"]</button>
+            <button class="tabs__btn" data-tab-btn="sedan">@L["Sedan"]</button>
+            <button class="tabs__btn" data-tab-btn="suv">@L["SUV"]</button>
+            <button class="tabs__btn" data-tab-btn="ev">@L["EV"]</button>
           </div>
         </div>
       </div>
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="news__head">
         <div>
-          <h2>News &amp; events</h2>
+          <h2>@L["News & events"]</h2>
           <p>Keep up to date with all the latest news and stories from Mutawa Alkadi Automotive.</p>
         </div>
         <a class="btn btn--ghost" href="/news">Read All News</a>
@@ -235,7 +235,7 @@
           <div class="news-card__body">
             <div class="news-card__date">@n.PublishedOn.ToString("dd MMM yyyy")</div>
             <h3 class="news-card__title">@n.Title.Localize()</h3>
-            <span class="news-card__more">Read More</span>
+            <span class="news-card__more">@L["Read More"]</span>
           </div>
         </a>
 }

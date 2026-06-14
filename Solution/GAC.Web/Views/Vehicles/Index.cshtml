@@ -24,7 +24,7 @@
       <div class="model-grid">
 @foreach (var v in Model)
 {
-        <div class="lineup-card" data-cat="@UrlHelpers.CategoryCss(v.Category)"><a class="lineup-card__media" href="/@v.Slug" aria-label="View details"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></a><div class="lineup-card__body"><div class="lineup-card__name">@v.Name.Localize()</div><div class="lineup-card__tag">@v.Tagline.Localize()</div><div class="lineup-card__actions"><a class="btn btn--accent" href="/@v.Slug">Explore</a><a class="btn btn--ghost" href="/request-a-quote">Quote</a></div></div></div>
+        <div class="lineup-card" data-cat="@UrlHelpers.CategoryCss(v.Category)"><a class="lineup-card__media" href="/@v.Slug" aria-label="View details"><img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" /></a><div class="lineup-card__body"><div class="lineup-card__name">@v.Name.Localize()</div><div class="lineup-card__tag">@v.Tagline.Localize()</div><div class="lineup-card__actions"><a class="btn btn--accent" href="/@v.Slug">@L["Explore"]</a><a class="btn btn--ghost" href="/request-a-quote">@L["Quote"]</a></div></div></div>
 }
       </div>
     </div>

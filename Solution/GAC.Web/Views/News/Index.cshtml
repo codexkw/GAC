@@ -17,7 +17,7 @@
       {
         <a class="listing-card" href="/news/@n.Slug">
           <div class="listing-card__media listing-card__media--photo" style="background-image:url('@n.ImagePath');background-size:cover;background-position:center"><span class="listing-card__cat">News</span></div>
-          <div class="listing-card__body"><div class="listing-card__date">@n.PublishedOn.ToString("dd MMM yyyy")</div><h3 class="listing-card__title">@n.Title.Localize()</h3><span class="listing-card__more">Read More</span></div>
+          <div class="listing-card__body"><div class="listing-card__date">@n.PublishedOn.ToString("dd MMM yyyy")</div><h3 class="listing-card__title">@n.Title.Localize()</h3><span class="listing-card__more">@L["Read More"]</span></div>
         </a>
       }
 
