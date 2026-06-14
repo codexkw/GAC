@@ -31,7 +31,10 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.RequestCultureProviders = [new CookieRequestCultureProvider()];
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services
+    .AddControllersWithViews()
+    .AddViewLocalization();
 
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();

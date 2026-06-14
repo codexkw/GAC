@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="WhatsApp" xml:space="preserve"><value>واتساب</value></data>
+  <data name="Call {0}" xml:space="preserve"><value>اتصل {0}</value></data>
+  <data name="All" xml:space="preserve"><value>الكل</value></data>
+  <data name="Sedan" xml:space="preserve"><value>سيدان</value></data>
+  <data name="SUV" xml:space="preserve"><value>دفع رباعي</value></data>
+  <data name="EV" xml:space="preserve"><value>كهربائية</value></data>
+  <data name="All Models" xml:space="preserve"><value>كل الموديلات</value></data>
+  <data name="English" xml:space="preserve"><value>English</value></data>
+
+  <data name="Chat on WhatsApp" xml:space="preserve"><value>تواصل عبر واتساب</value></data>
+  <data name="Book a Test Drive" xml:space="preserve"><value>احجز تجربة قيادة</value></data>
+  <data name="Test Drive" xml:space="preserve"><value>تجربة قيادة</value></data>
+  <data name="Get Online Quote" xml:space="preserve"><value>اطلب عرض سعر</value></data>
+  <data name="Quote" xml:space="preserve"><value>عرض سعر</value></data>
+  <data name="Download Brochure" xml:space="preserve"><value>حمّل الكتيب</value></data>
+  <data name="Brochure" xml:space="preserve"><value>الكتيب</value></data>
+  <data name="Find Showroom" xml:space="preserve"><value>أوجد المعرض</value></data>
+  <data name="Showroom" xml:space="preserve"><value>المعرض</value></data>
+  <data name="Contact Us" xml:space="preserve"><value>تواصل معنا</value></data>
+  <data name="Contact" xml:space="preserve"><value>تواصل</value></data>
+
+  <data name="Privacy Notice" xml:space="preserve"><value>إشعار الخصوصية</value></data>
+  <data name="Site Map" xml:space="preserve"><value>خريطة الموقع</value></data>
+  <data name="About Us" xml:space="preserve"><value>من نحن</value></data>
+  <data name="Suggestions &amp; Complaints" xml:space="preserve"><value>الاقتراحات والشكاوى</value></data>
+  <data name="Back to Top" xml:space="preserve"><value>العودة للأعلى</value></data>
+
+  <data name="Explore" xml:space="preserve"><value>اكتشف</value></data>
+  <data name="Read More" xml:space="preserve"><value>اقرأ المزيد</value></data>
+  <data name="News" xml:space="preserve"><value>الأخبار</value></data>
+  <data name="Latest News" xml:space="preserve"><value>أحدث الأخبار</value></data>
+  <data name="Find Your GAC" xml:space="preserve"><value>اختر سيارتك من GAC</value></data>
+  <data name="Search" xml:space="preserve"><value>بحث</value></data>
+</root>
