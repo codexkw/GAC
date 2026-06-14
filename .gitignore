@@ -7,6 +7,8 @@ obj/
 *.cache
 publish/
 appsettings.*.local.json
+# Local secrets — real connection string / SMTP creds live here, never committed
+appsettings.Development.json
 
 # Node (build scripts / tooling)
 node_modules/

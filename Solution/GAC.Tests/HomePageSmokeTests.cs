@@ -1,14 +1,24 @@
 using System.Net;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace GAC.Tests;
 
-public class HomePageSmokeTests : IClassFixture<WebApplicationFactory<Program>>
+// Boots the app in the Development environment so it loads the (gitignored)
+// appsettings.Development.json that holds the real DB connection string.
+// The committed appsettings.json only carries a placeholder password.
+public class DevWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+        => builder.UseEnvironment("Development");
+}
 
-    public HomePageSmokeTests(WebApplicationFactory<Program> factory) => _factory = factory;
+public class HomePageSmokeTests : IClassFixture<DevWebApplicationFactory>
+{
+    private readonly DevWebApplicationFactory _factory;
+
+    public HomePageSmokeTests(DevWebApplicationFactory factory) => _factory = factory;
 
     [Fact]
     public async Task Get_Home_ReturnsOk_AndRendersChrome()
