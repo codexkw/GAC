@@ -88,7 +88,7 @@
   <data name="Please enter your first name." xml:space="preserve"><value>الرجاء إدخال الاسم الأول.</value></data>
   <data name="Please enter your last name." xml:space="preserve"><value>الرجاء إدخال اسم العائلة.</value></data>
   <data name="Please enter a valid email." xml:space="preserve"><value>الرجاء إدخال بريد إلكتروني صحيح.</value></data>
-  <data name="Please enter your contact number." xml:space="preserve"><value>الرجاء إدخال رقم التواصل.</value></data>
+  <data name="Please enter your contact number." xml:space="preserve"><value>الرجاء إدخال رقم الجوال.</value></data>
   <data name="Please select your model." xml:space="preserve"><value>الرجاء اختيار الموديل.</value></data>
   <data name="Please select a branch." xml:space="preserve"><value>الرجاء اختيار الفرع.</value></data>
   <data name="Thanks — we received your request." xml:space="preserve"><value>شكراً — تم استلام طلبك.</value></data>

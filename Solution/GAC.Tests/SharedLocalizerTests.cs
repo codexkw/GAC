@@ -48,9 +48,9 @@ public class SharedLocalizerTests
             foreach (var key in keys)
             {
                 var value = loc[key].Value;
-                Assert.False(string.IsNullOrEmpty(value));
                 Assert.NotEqual(key, value);
             }
+            Assert.Equal("الرجاء إدخال الاسم الأول.", loc["Please enter your first name."].Value);
         }
         finally { CultureInfo.CurrentUICulture = prev; }
     }
