@@ -39,6 +39,9 @@ builder.Services
 builder.Services.AddScoped<ISiteService, SiteService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.Configure<GAC.Infrastructure.Services.SmtpOptions>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddScoped<ILeadService, LeadService>();
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 var app = builder.Build();
 
