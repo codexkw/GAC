@@ -31,7 +31,7 @@ public class SmtpEmailSender : IEmailSender
             msg.From.Add(new MailboxAddress(_opt.FromName, _opt.FromEmail));
             msg.To.Add(MailboxAddress.Parse(to));
             if (!string.IsNullOrWhiteSpace(lead.Email))
-                msg.ReplyTo.Add(MailboxAddress.Parse(lead.Email));
+                msg.ReplyTo.Add(new MailboxAddress("", lead.Email));
             msg.Subject = $"New {formTitle} enquiry — {lead.Name}";
 
             var body = new System.Text.StringBuilder();
