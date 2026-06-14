@@ -1,6 +1,8 @@
 using System.Globalization;
 using GAC.Core.Identity;
+using GAC.Core.Services;
 using GAC.Infrastructure.Data;
+using GAC.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,10 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 });
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ISiteService, SiteService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IContentService, ContentService>();
 
 var app = builder.Build();
 
