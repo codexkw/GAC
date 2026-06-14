@@ -1,0 +1,18 @@
+@model GAC.Core.Content.NewsArticle
+@{ ViewData["Title"] = Model.Title.Localize(); }
+<section class="page-hero">
+  <div class="container">
+    <nav class="crumbs"><a href="/">Home</a><span>/</span><a href="/news">News</a><span>/</span>@Model.Title.Localize()</nav>
+    <h1>@Model.Title.Localize()</h1>
+    <p style="max-width:60ch;color:rgba(255,255,255,.75)">@Model.PublishedOn.ToString("dd MMM yyyy")</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container" style="max-width:820px">
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+      <img src="@Model.ImagePath" alt="@Model.Title.Localize()" style="width:100%;height:auto;border-radius:12px;margin-bottom:24px" />
+    }
+    <div class="muted">@Html.Raw(Model.Body.Localize())</div>
+  </div>
+</section>
