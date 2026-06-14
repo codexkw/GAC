@@ -37,15 +37,16 @@
 /* ---- Back-to-top button ---- */
 [dir="rtl"] .back-top, [dir="rtl"] .back-top.back-top { right: auto; left: 20px; }
 
-/* ---- Carousels / sliders: keep LTR track so main.js translateX math holds ---- */
+/* ---- Carousels / sliders: keep LTR track so main.js translateX math holds ----
+   (The hero is an opacity crossfade, not a translateX slider, so it needs no fix.) */
 [dir="rtl"] .carousel__track,
 [dir="rtl"] .newscar__track,
-[dir="rtl"] .hero__track,
+[dir="rtl"] .mp-slider__track,
 [dir="rtl"] [data-carousel] .carousel__track { direction: ltr; }
-/* restore RTL for readable card text */
+/* restore RTL for readable slide content */
 [dir="rtl"] .model-card,
 [dir="rtl"] .listing-card__body,
-[dir="rtl"] .hero__inner { direction: rtl; }
+[dir="rtl"] .mp-slider__track > * { direction: rtl; }
 /* swap prev/next arrow positions */
 [dir="rtl"] .carousel__btn--prev { left: auto; right: -22px; }
 [dir="rtl"] .carousel__btn--next { right: auto; left: -22px; }
