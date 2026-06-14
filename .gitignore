@@ -1,0 +1,16 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.cache
+publish/
+appsettings.*.local.json
+
+# Node (build scripts / tooling)
+node_modules/
+
+# OS
+Thumbs.db
+.DS_Store
