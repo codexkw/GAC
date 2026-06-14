@@ -130,7 +130,7 @@
         else { field.classList.remove('error'); }
       });
       if (ok) {
-        form.innerHTML = '<div style="padding:32px;text-align:center;border:1px solid var(--c-line);border-radius:8px;background:var(--c-bg-2)"><h3 style="margin-bottom:8px">Thanks — we received your request.</h3><p class="muted">A representative will contact you within one business day.</p></div>';
+        form.submit();
       }
     });
     form.querySelectorAll('[required]').forEach((input) => {

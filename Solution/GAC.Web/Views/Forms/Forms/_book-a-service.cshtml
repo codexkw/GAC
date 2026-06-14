@@ -1,4 +1,4 @@
-@model GAC.Core.Content.FormPage
+@model GAC.Web.Models.FormPageViewModel
 
 <div class="crumb-bar">
   <div class="container">
@@ -10,52 +10,54 @@
 <section class="bas-hero" style="background-image:url('/assets/img/book-a-service/hero.jpg')">
   <div class="container">
     <div class="bas-hero__title">
-      <h1>@Model.Title.Localize()</h1>
+      <h1>@Model.Page.Title.Localize()</h1>
     </div>
     <div class="bas-card">
-      <form data-form novalidate>
+      <form data-form novalidate method="post" asp-controller="Forms" asp-action="Submit" asp-route-slug="@Model.Page.Slug">
         <div class="form-grid">
-          <div class="field"><label for="model">Model *</label>
+          <div class="field@(Html.FieldErrorClass("Model"))"><label for="model">Model *</label>
             <select id="model" name="model" required>
               <option value="">Please select ...</option>
-              <option>GN8</option><option>GS8</option><option>GS4</option><option>GS3</option>
-              <option>GA8</option><option>GA4</option><option>EMPOW</option><option>EMPOW R</option>
-              <option>EMZOOM</option><option>EMKOO</option><option>M8</option><option>traveler</option>
-            </select><span class="err">Please select your model.</span>
+              @foreach (var opt in new[] { "GN8", "GS8", "GS4", "GS3", "GA8", "GA4", "EMPOW", "EMPOW R", "EMZOOM", "EMKOO", "M8", "traveler" })
+              {
+                <option selected="@(Model.Input.Model == opt)">@opt</option>
+              }
+            </select><span class="err">@L["Please select your model."]</span>
           </div>
-          <div class="field"><label for="mileage">Current Vehicle Mileage</label><input id="mileage" name="mileage" /></div>
-          <div class="field field-date"><label for="due">Vehicle Service Due Date</label><input id="due" name="dueDate" placeholder="DD/MM/YYYY" /><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-          <div class="field"><label for="branch">Select Branch *</label>
+          <div class="field"><label for="mileage">Current Vehicle Mileage</label><input id="mileage" name="mileage" value="@Model.Input.Mileage" /></div>
+          <div class="field field-date"><label for="due">Vehicle Service Due Date</label><input id="due" name="dueDate" placeholder="DD/MM/YYYY" value="@Model.Input.DueDate" /><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <div class="field@(Html.FieldErrorClass("Branch"))"><label for="branch">Select Branch *</label>
             <select id="branch" name="branch" required>
               <option value="">Please select ...</option>
-              <option>GAC service Center</option>
-              <option>GAC Motors Jeddah, Kilo 3 Branch</option>
-              <option>Jeddah, Al Amal Branch</option>
-              <option>Dammam Branch – Service</option>
-              <option>GAC Motors Al-Madinah Al-Munawarrah Branch</option>
-              <option>GAC Motors Jazan Branch</option>
-            </select><span class="err">Please select a branch.</span>
+              @foreach (var opt in new[] { "GAC service Center", "GAC Motors Jeddah, Kilo 3 Branch", "Jeddah, Al Amal Branch", "Dammam Branch – Service", "GAC Motors Al-Madinah Al-Munawarrah Branch", "GAC Motors Jazan Branch" })
+              {
+                <option selected="@(Model.Input.Branch == opt)">@opt</option>
+              }
+            </select><span class="err">@L["Please select a branch."]</span>
           </div>
-          <div class="field"><label for="title">Title *</label>
+          <div class="field@(Html.FieldErrorClass("Title"))"><label for="title">Title *</label>
             <select id="title" name="title" required>
               <option value="">Please select ...</option>
-              <option>Mr</option><option>Ms</option><option>Mrs</option><option>Miss</option>
-            </select><span class="err">Please select a title.</span>
+              @foreach (var opt in new[] { "Mr", "Ms", "Mrs", "Miss" })
+              {
+                <option selected="@(Model.Input.Title == opt)">@opt</option>
+              }
+            </select><span class="err">@L["Please select a title."]</span>
           </div>
-          <div class="field"><label for="fn">First Name *</label><input id="fn" name="firstName" required /><span class="err">Please enter your first name.</span></div>
-          <div class="field"><label for="ln">Last Name *</label><input id="ln" name="lastName" required /><span class="err">Please enter your last name.</span></div>
-          <div class="field"><label for="em">Email Address *</label><input id="em" name="email" type="email" required /><span class="err">Please enter a valid email.</span></div>
-          <div class="field"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required /><span class="err">Please enter your contact number.</span></div>
-          <div class="field"><label for="msg">Message</label><textarea id="msg" name="message"></textarea></div>
+          <div class="field@(Html.FieldErrorClass("FirstName"))"><label for="fn">First Name *</label><input id="fn" name="firstName" required value="@Model.Input.FirstName" /><span class="err">@L["Please enter your first name."]</span></div>
+          <div class="field@(Html.FieldErrorClass("LastName"))"><label for="ln">Last Name *</label><input id="ln" name="lastName" required value="@Model.Input.LastName" /><span class="err">@L["Please enter your last name."]</span></div>
+          <div class="field@(Html.FieldErrorClass("Email"))"><label for="em">Email Address *</label><input id="em" name="email" type="email" required value="@Model.Input.Email" /><span class="err">@L["Please enter a valid email."]</span></div>
+          <div class="field@(Html.FieldErrorClass("Phone"))"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required value="@Model.Input.Phone" /><span class="err">@L["Please enter your contact number."]</span></div>
+          <div class="field"><label for="msg">Message</label><textarea id="msg" name="message">@Model.Input.Message</textarea></div>
           <div class="bas-disclaimer">
             <p class="title">Privacy statement &amp; legal disclaimer</p>
             <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a></p>
           </div>
           <div class="field-check">
-            <input id="mk" name="marketing" type="checkbox" />
+            <input id="mk" name="marketing" type="checkbox" value="true" checked="@Model.Input.Marketing" />
             <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
           </div>
-          <div class="bas-submit"><button class="btn btn--hero" type="submit">Submit</button></div>
+          <div class="bas-submit"><button class="btn btn--hero" type="submit">@L["Submit"]</button></div>
         </div>
       </form>
     </div>
