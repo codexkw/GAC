@@ -20,7 +20,11 @@ public class PageController : Controller
         if (content != null) { ViewData["Title"] = content.Title.Localize(); return View("~/Views/Content/Page.cshtml", content); }
 
         var form = await _content.GetFormPageBySlugAsync(slug);
-        if (form != null) { ViewData["Title"] = form.Title.Localize(); return View("~/Views/Forms/Page.cshtml", form); }
+        if (form != null)
+        {
+            ViewData["Title"] = form.Title.Localize();
+            return View("~/Views/Forms/Page.cshtml", new GAC.Web.Models.FormPageViewModel { Page = form });
+        }
 
         var vehicle = await _vehicles.GetBySlugAsync(slug);
         if (vehicle != null) { ViewData["Title"] = vehicle.Name.Localize(); return View("~/Views/Vehicles/Detail.cshtml", vehicle); }

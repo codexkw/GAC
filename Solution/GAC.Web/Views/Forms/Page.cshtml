@@ -1,3 +1,17 @@
-@model GAC.Core.Content.FormPage
+@model GAC.Web.Models.FormPageViewModel
 @{ Layout = "_Layout"; }
-<partial name="~/Views/Forms/Forms/_@(Model.Slug).cshtml" model="Model" />
+@if (TempData["FormSubmitted"] != null)
+{
+  <section class="section">
+    <div class="container">
+      <div style="max-width:680px;margin:48px auto;padding:32px;text-align:center;border:1px solid var(--c-line);border-radius:8px;background:var(--c-bg-2)">
+        <h3 style="margin-bottom:8px">@L["Thanks — we received your request."]</h3>
+        <p class="muted">@L["A representative will contact you within one business day."]</p>
+      </div>
+    </div>
+  </section>
+}
+else
+{
+  <partial name="~/Views/Forms/Forms/_@(Model.Page.Slug).cshtml" model="Model" />
+}
