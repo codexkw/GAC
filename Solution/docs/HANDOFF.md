@@ -1,8 +1,8 @@
 # GAC Motors Bilingual CMS — Handoff
 
-**Last updated:** 2026-06-15 (end of Phase 3)
-**Repo:** https://github.com/codexkw/GAC.git (PUBLIC) · branch `main` · latest `06205fc`
-**Stack:** ASP.NET Core 9 MVC, EF Core 9.0.6 (SQL Server), Razor + ViewComponents, xUnit.
+**Last updated:** 2026-06-15 (end of Phase 4)
+**Repo:** https://github.com/codexkw/GAC.git (PUBLIC) · branch `main`
+**Stack:** ASP.NET Core 9 MVC, EF Core 9.0.6 (SQL Server), Razor + ViewComponents, IHtmlLocalizer + .resx, xUnit.
 
 ---
 
@@ -69,9 +69,9 @@ dotnet run --project Solution/GAC.Web # serves the site; Development env loads r
 
 - **Phase 1 — Foundation** ✅ (solution scaffold, EF + Identity, seeded roles/admin, chrome ported, cookie localization). `InitialIdentity` migration applied to live DB.
 - **Phase 2 — Content model** ✅ (18 entities + `LocalizedText`, `AddContentModel` migration applied to live DB, idempotent EN seeder). 15 tests.
-- **Phase 3 — Public rendering & routing** ✅ (this handoff). 60 tests.
-- **Phase 4 — Arabic / RTL** ⏭️ NEXT.
-- **Phase 5 — Forms & leads** · **Phase 6 — Admin area** · **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy** — pending.
+- **Phase 3 — Public rendering & routing** ✅. 60 tests.
+- **Phase 4 — Arabic / RTL** ✅ (this handoff). 67 tests.
+- **Phase 5 — Forms & leads** ⏭️ NEXT · **Phase 6 — Admin area** · **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy** — pending.
 
 ---
 
@@ -105,6 +105,17 @@ ContentPage → FormPage → visible Vehicle → 404. `LegacyHtmlRedirectMiddlew
 
 **Seeder update** (`75692eb`): Menu/HeroSlide URLs now clean; each vehicle gets a Gallery thumbnail
 (`m-*` image); `news`/`offers` removed from `ContentPages` (owned by dedicated controllers).
+
+---
+
+## 5b. Phase 4 — Arabic / RTL — what was built
+
+Plan: `docs/superpowers/plans/2026-06-15-phase4-arabic-rtl.md`. The site is now fully bilingual: language toggles via the cookie (no URL change), `<html dir lang>` flips, and Arabic renders RTL with the Cairo webfont. Verified visually EN+AR on home, `/models`, `/gs8` (mp-* detail), `/contact-us`; 67 tests green.
+
+- **Static UI string localization** — `IHtmlLocalizer<SharedResource>` (`AddLocalization(ResourcesPath="Resources")` + `AddViewLocalization()`; injected globally as `@L` in `_ViewImports`). The marker type `SharedResource` lives in the **assembly-root namespace `GAC.Web`** (NOT `GAC.Web.Resources`) so the base name resolves to `GAC.Web.Resources.SharedResource` — putting it inside a `Resources` namespace doubles the path and silently breaks resolution. Keys ARE the English source text; only `Resources/SharedResource.ar.resx` exists (missing key → English). Used for chrome (Header/Footer) + small view strings (Explore, Read More, tabs, search, hero CTA fallback).
+- **Arabic DB content** — `ContentSeeder.EnsureArabicAsync` (runs at end of `SeedAsync`, every startup): idempotent backfill that sets a `LocalizedText`'s `_Ar` **only when blank**, matched by natural key (slug / SortOrder / English label). Works on the already-seeded dev DB AND fresh DBs; never clobbers admin-edited Arabic (Phase 6). Covers all 8 content types + `Vehicle.Tagline`. All public views already routed text through `.Localize()` in Phase 3, so nothing else was needed.
+- **RTL stylesheet + font** — `_Layout` loads Cairo + `rtl.css` only when `isRtl`. `rtl.css` mirrors the physical-direction rules from `styles.css` under `[dir="rtl"]` (text-align, chrome positioning, badges, borders, action-dock/back-top side, mp-* rules). **Sliders:** `main.js` uses LTR `translateX(-Npx)` math — instead of editing JS, the carousel/news/mp-slider tracks get `direction: ltr` (slide content restored to `rtl`), so the math stays correct. The hero is an opacity crossfade (no translate), so it needs no fix.
+- **What stays English (by scope decision):** the deep hardcoded marketing prose inside the ported `Views/Vehicles/Models/_*.cshtml`, `Views/Content/Pages/_*.cshtml`, `Views/Forms/Forms/_*.cshtml` partials (and their breadcrumbs/section headings). Only their DB-bound `@Model.Title.Localize()` headings + chrome are Arabic. RTL layout still applies. These become editable/translatable via the Phase-6 admin.
 
 ---
 
@@ -162,8 +173,9 @@ Mostly content decisions and later-phase work:
 4. **Menu labels:** top-level group is **"More"** (children Fleet Sales / Finance); the static clone used
    "Fleet Sales" as the top-level label. Owners has 5 children (incl. Road-Side Assistance) vs the static 4.
    Confirm intended labels (editable later via admin).
-5. **`rtl.css` is still an empty placeholder** and all `.Localize()` calls resolve to EN — Arabic content +
-   RTL rules are **Phase 4**.
+5. ~~`rtl.css` empty / content all EN~~ **DONE in Phase 4** — `rtl.css` filled, Cairo loaded, all DB content
+   has Arabic. Remaining gap (intentional): the verbatim marketing prose in the vehicle/content/form body
+   partials stays English until the Phase-6 admin makes it editable (see §5b).
 6. Inert `<!-- FOOTER -->` comments remain in the 8 vehicle partials (harmless).
 7. **Stale rows in the live dev DB** from earlier seeds (e.g. `.html` menu URLs, `news`/`offers` ContentPages):
    harmless because render-time `NormalizeUrl` cleans links and explicit routes win. Fresh DBs get clean data.
@@ -171,10 +183,11 @@ Mostly content decisions and later-phase work:
 
 ---
 
-## 9. Next: Phase 4 — Arabic / RTL
+## 9. Next: Phase 5 — Forms & leads
 
-Scope: fill `rtl.css` (layered RTL overrides), add Arabic webfont (Cairo / Noto Kufi Arabic), seed/enter
-Arabic values into `LocalizedText` fields (vehicles, pages, menu, settings) modelled on `ar.gacmotorsaudi.com`
-(reference captures under `HTML/docs/research`), and do a full EN+AR visual parity pass. Numerals stay Latin
-by default. The `Localize()` plumbing, `dir/lang` switching, and the cookie toggle are already in place —
-Phase 4 is mostly RTL CSS + content translation, not new architecture.
+Scope: make the static forms functional. The 6 `FormPage` partials (book-a-service, book-a-test-drive,
+request-a-quote, contact-us, fleet, recall-enquiry) currently render STATIC (no POST). Phase 5 wires them
+up: bind to view models, POST with anti-forgery, server-side validation (bilingual messages via the
+`SharedResource` resx pattern from Phase 4), persist submissions to the `Lead` entity, an admin Leads inbox
+view (or defer the inbox to Phase 6), and SMTP email notification. The `Lead` entity + `FormType`/`LeadStatus`
+enums already exist (Phase 2). Keep the existing markup/classes (main.js + styles), just make the fields live.
