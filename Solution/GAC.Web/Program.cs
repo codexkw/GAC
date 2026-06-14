@@ -3,6 +3,7 @@ using GAC.Core.Identity;
 using GAC.Core.Services;
 using GAC.Infrastructure.Data;
 using GAC.Infrastructure.Services;
+using GAC.Web.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,8 @@ builder.Services.AddScoped<IContentService, ContentService>();
 
 var app = builder.Build();
 
+app.UseMiddleware<LegacyHtmlRedirectMiddleware>();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -48,6 +51,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRequestLocalization();
 app.UseRouting();
+app.UseStatusCodePagesWithReExecute("/not-found");
 app.UseAuthentication();
 app.UseAuthorization();
 
