@@ -64,6 +64,7 @@ builder.Services.AddScoped<IAdminNewsService, AdminNewsService>();
 builder.Services.AddScoped<IAdminOfferService, AdminOfferService>();
 builder.Services.AddScoped<IAdminMenuService, AdminMenuService>();
 builder.Services.AddScoped<IAdminHomeService, AdminHomeService>();
+builder.Services.AddScoped<IAdminPageService, AdminPageService>();
 builder.Services.AddScoped<IContentService, ContentService>();
 builder.Services.Configure<GAC.Infrastructure.Services.SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 builder.Services.AddScoped<ILeadService, LeadService>();

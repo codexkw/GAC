@@ -1,0 +1,29 @@
+@model IReadOnlyList<GAC.Core.Content.FormPage>
+@{
+    ViewData["Title"] = "Form Pages";
+}
+<h1>Form Pages</h1>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Slug</th>
+            <th>Form type</th>
+            <th>Title</th>
+            <th>Visible?</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Slug</td>
+                <td>@p.FormType</td>
+                <td>@p.Title.Localize()</td>
+                <td>@(p.IsVisible ? "Yes" : "No")</td>
+                <td><a asp-action="Edit" asp-route-id="@p.Id">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

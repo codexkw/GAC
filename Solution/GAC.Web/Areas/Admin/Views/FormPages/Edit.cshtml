@@ -1,0 +1,37 @@
+@model GAC.Core.Content.FormPage
+@using GAC.Web.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Edit page";
+}
+<p><a asp-action="Index">&larr; Back to form pages</a></p>
+
+<h1>Edit page</h1>
+
+<form method="post" asp-action="Save">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Slug" />
+    <input type="hidden" asp-for="FormType" />
+
+    <div class="adm-field">
+        <label>Slug</label>
+        <div>@Model.Slug</div>
+    </div>
+
+    <div class="adm-field">
+        <label>Form type</label>
+        <div>@Model.FormType</div>
+    </div>
+
+    <div class="adm-field">
+        <label><input asp-for="IsVisible" /> Visible</label>
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = Model.Title.En, ValueAr = Model.Title.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Intro text", NameEn = "IntroText.En", NameAr = "IntroText.Ar", ValueEn = Model.IntroText.En, ValueAr = Model.IntroText.Ar, Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta title", NameEn = "MetaTitle.En", NameAr = "MetaTitle.Ar", ValueEn = Model.MetaTitle.En, ValueAr = Model.MetaTitle.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta description", NameEn = "MetaDescription.En", NameAr = "MetaDescription.Ar", ValueEn = Model.MetaDescription.En, ValueAr = Model.MetaDescription.Ar, Multiline = true }' />
+
+    <p class="adm-note">Page body is edited in Phase 6b.</p>
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>
