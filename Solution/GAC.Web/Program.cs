@@ -78,6 +78,8 @@ builder.Services.Configure<GAC.Core.Services.MediaOptions>(opt =>
         opt.Root = Path.Combine(builder.Environment.WebRootPath ?? "wwwroot", "uploads");
 });
 builder.Services.AddScoped<IMediaService, MediaService>();
+builder.Services.Configure<GAC.Web.Infrastructure.AnalyticsOptions>(
+    builder.Configuration.GetSection("Analytics"));
 
 var app = builder.Build();
 
