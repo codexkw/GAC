@@ -1959,3 +1959,7 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
 
 /* WhatsApp now lives inside .action-dock as .action-dock__item--wa
    (was a separate fixed .wa-float button — removed). */
+
+/* ---------- Skip-to-content link (a11y) ---------- */
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:#fff;color:#000;padding:8px 16px;border-radius:0 0 6px 0}
+.skip-link:focus{left:0}

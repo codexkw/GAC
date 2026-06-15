@@ -48,8 +48,11 @@
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=@Analytics.Value.GtmContainerId"
             height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
+    <a href="#main-content" class="skip-link">@L["Skip to main content"]</a>
     <vc:header />
-    @RenderBody()
+    <main id="main-content">
+        @RenderBody()
+    </main>
     <vc:footer />
     <a href="#page-wrap" class="back-top" data-back-top aria-label="Back to top">↑</a>
     <script src="~/assets/js/main.js" asp-append-version="true"></script>
