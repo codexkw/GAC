@@ -1,4 +1,5 @@
 using GAC.Core.Content;
+using GAC.Web.Infrastructure;
 using Xunit;
 
 namespace GAC.Tests;
@@ -9,5 +10,47 @@ public class VehicleContentTests
     public void FeatureSection_DefaultLayout_IsImageLeft()
     {
         Assert.Equal(FeatureLayout.ImageLeft, new FeatureSection().Layout);
+    }
+
+    [Fact]
+    public void HasStructuredContent_FalseWhenAllEmpty()
+    {
+        Assert.False(VehicleContent.HasStructuredContent(new Vehicle()));
+    }
+
+    [Fact]
+    public void HasStructuredContent_TrueWhenAnyFeature()
+    {
+        var v = new Vehicle();
+        v.Features.Add(new FeatureSection());
+        Assert.True(VehicleContent.HasStructuredContent(v));
+    }
+
+    [Fact]
+    public void HasStructuredContent_TrueWhenAnyTrimSpecOrColor()
+    {
+        var withTrim = new Vehicle(); withTrim.Trims.Add(new Trim());
+        var withSpec = new Vehicle(); withSpec.SpecGroups.Add(new SpecGroup());
+        var withColor = new Vehicle(); withColor.Colors.Add(new ColorOption());
+        Assert.True(VehicleContent.HasStructuredContent(withTrim));
+        Assert.True(VehicleContent.HasStructuredContent(withSpec));
+        Assert.True(VehicleContent.HasStructuredContent(withColor));
+    }
+
+    [Theory]
+    [InlineData(FeatureLayout.ImageLeft, "mp-feature")]
+    [InlineData(FeatureLayout.ImageRight, "mp-feature mp-feature--reverse")]
+    [InlineData(FeatureLayout.Banner, "mp-feature mp-feature--banner")]
+    [InlineData(FeatureLayout.TextOnly, "mp-feature mp-feature--text")]
+    public void FeatureLayoutCss_MapsEachVariant(FeatureLayout layout, string expected)
+    {
+        Assert.Equal(expected, VehicleContent.FeatureLayoutCss(layout));
+    }
+
+    [Fact]
+    public void ShowsImage_FalseForTextOnly()
+    {
+        Assert.False(VehicleContent.ShowsImage(FeatureLayout.TextOnly));
+        Assert.True(VehicleContent.ShowsImage(FeatureLayout.ImageLeft));
     }
 }
