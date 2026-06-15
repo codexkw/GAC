@@ -8,13 +8,21 @@ namespace GAC.Infrastructure.Services;
 public class AdminVehicleService : IAdminVehicleService
 {
     private readonly ApplicationDbContext _db;
-    public AdminVehicleService(ApplicationDbContext db) => _db = db;
+    private readonly IHtmlSanitizerService _sanitizer;
+    public AdminVehicleService(ApplicationDbContext db, IHtmlSanitizerService sanitizer)
+    { _db = db; _sanitizer = sanitizer; }
 
     public async Task<IReadOnlyList<Vehicle>> ListAsync(CancellationToken ct = default)
         => await _db.Vehicles.OrderBy(v => v.SortOrder).ToListAsync(ct);
 
     public async Task<Vehicle?> GetAsync(int id, CancellationToken ct = default)
-        => await _db.Vehicles.Include(v => v.Images).FirstOrDefaultAsync(v => v.Id == id, ct);
+        => await _db.Vehicles
+            .Include(v => v.Images)
+            .Include(v => v.Features)
+            .Include(v => v.SpecGroups).ThenInclude(g => g.Rows)
+            .Include(v => v.Colors)
+            .Include(v => v.Trims)
+            .FirstOrDefaultAsync(v => v.Id == id, ct);
 
     public async Task<bool> SlugExistsAsync(string slug, int? exceptId = null, CancellationToken ct = default)
         => await _db.Vehicles.AnyAsync(v => v.Slug == slug && (exceptId == null || v.Id != exceptId), ct);
@@ -99,4 +107,56 @@ public class AdminVehicleService : IAdminVehicleService
         await _db.SaveChangesAsync(ct);
         return true;
     }
+
+    public async Task<FeatureSection?> GetFeatureAsync(int featureId, CancellationToken ct = default)
+        => await _db.Set<FeatureSection>().FirstOrDefaultAsync(f => f.Id == featureId, ct);
+
+    public async Task<int> AddFeatureAsync(int vehicleId, FeatureSection feature, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        feature.VehicleId = vehicleId;
+        feature.Body = Sanitize(feature.Body);
+        feature.SortOrder = await _db.Set<FeatureSection>().CountAsync(f => f.VehicleId == vehicleId, ct);
+        _db.Set<FeatureSection>().Add(feature);
+        await _db.SaveChangesAsync(ct);
+        return feature.Id;
+    }
+
+    public async Task<bool> UpdateFeatureAsync(FeatureSection feature, CancellationToken ct = default)
+    {
+        var existing = await _db.Set<FeatureSection>().FirstOrDefaultAsync(f => f.Id == feature.Id, ct);
+        if (existing is null) return false;
+        existing.Heading = feature.Heading;
+        existing.Body = Sanitize(feature.Body);
+        existing.ImagePath = feature.ImagePath;
+        existing.Layout = feature.Layout;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    public async Task<bool> RemoveFeatureAsync(int featureId, CancellationToken ct = default)
+    {
+        var f = await _db.Set<FeatureSection>().FindAsync([featureId], ct);
+        if (f is null) return false;
+        _db.Set<FeatureSection>().Remove(f);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    public async Task<bool> MoveFeatureAsync(int featureId, int direction, CancellationToken ct = default)
+    {
+        var f = await _db.Set<FeatureSection>().FindAsync([featureId], ct);
+        if (f is null) return false;
+        var siblings = await _db.Set<FeatureSection>()
+            .Where(x => x.VehicleId == f.VehicleId).OrderBy(x => x.SortOrder).ToListAsync(ct);
+        var idx = siblings.FindIndex(x => x.Id == featureId);
+        var swap = idx + direction;
+        if (swap < 0 || swap >= siblings.Count) return false;
+        (siblings[idx].SortOrder, siblings[swap].SortOrder) = (siblings[swap].SortOrder, siblings[idx].SortOrder);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    private LocalizedText Sanitize(LocalizedText body)
+        => new() { En = _sanitizer.Sanitize(body.En), Ar = _sanitizer.Sanitize(body.Ar) };
 }

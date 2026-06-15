@@ -14,4 +14,11 @@ public interface IAdminVehicleService
     Task<int> AddImageAsync(int vehicleId, string path, VehicleImageKind kind, CancellationToken ct = default);
     Task<bool> RemoveImageAsync(int imageId, CancellationToken ct = default);
     Task<bool> MoveImageAsync(int imageId, int direction, CancellationToken ct = default);
+
+    // Feature blocks
+    Task<FeatureSection?> GetFeatureAsync(int featureId, CancellationToken ct = default);
+    Task<int> AddFeatureAsync(int vehicleId, FeatureSection feature, CancellationToken ct = default);
+    Task<bool> UpdateFeatureAsync(FeatureSection feature, CancellationToken ct = default);
+    Task<bool> RemoveFeatureAsync(int featureId, CancellationToken ct = default);
+    Task<bool> MoveFeatureAsync(int featureId, int direction, CancellationToken ct = default);
 }

@@ -11,11 +11,14 @@ public class AdminVehicleServiceTests
     private static ApplicationDbContext NewDb(string n) =>
         new(new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(n).Options);
 
+    private static AdminVehicleService NewSvc(ApplicationDbContext db)
+        => new(db, new HtmlSanitizerService());
+
     [Fact]
     public async Task Create_Then_Get_RoundTrips()
     {
         var db = NewDb(nameof(Create_Then_Get_RoundTrips));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "x1", Name = "X1", SortOrder = 5, IsVisible = true });
         var v = await svc.GetAsync(id);
         Assert.NotNull(v);
@@ -26,7 +29,7 @@ public class AdminVehicleServiceTests
     public async Task SlugExists_DetectsDuplicate_IgnoringSelf()
     {
         var db = NewDb(nameof(SlugExists_DetectsDuplicate_IgnoringSelf));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "dup", Name = "D" });
         Assert.True(await svc.SlugExistsAsync("dup"));
         Assert.False(await svc.SlugExistsAsync("dup", exceptId: id));
@@ -36,7 +39,7 @@ public class AdminVehicleServiceTests
     public async Task Move_SwapsSortOrder()
     {
         var db = NewDb(nameof(Move_SwapsSortOrder));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var a = await svc.CreateAsync(new Vehicle { Slug = "a", Name = "A", SortOrder = 1 });
         var b = await svc.CreateAsync(new Vehicle { Slug = "b", Name = "B", SortOrder = 2 });
         Assert.True(await svc.MoveAsync(b, -1));
@@ -48,7 +51,7 @@ public class AdminVehicleServiceTests
     public async Task AddImage_Then_Remove()
     {
         var db = NewDb(nameof(AddImage_Then_Remove));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "img", Name = "I" });
         var imgId = await svc.AddImageAsync(id, "/uploads/a.png", VehicleImageKind.Gallery);
         Assert.Equal(1, await db.VehicleImages.CountAsync());
@@ -60,7 +63,7 @@ public class AdminVehicleServiceTests
     public async Task Delete_Removes()
     {
         var db = NewDb(nameof(Delete_Removes));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "del", Name = "D" });
         Assert.True(await svc.DeleteAsync(id));
         Assert.Null(await db.Vehicles.FindAsync(id));
@@ -70,7 +73,7 @@ public class AdminVehicleServiceTests
     public async Task Update_ChangesFields_AndPreservesImages()
     {
         var db = NewDb(nameof(Update_ChangesFields_AndPreservesImages));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "u1", Name = "Old", SortOrder = 1 });
         await svc.AddImageAsync(id, "/uploads/keep.png", VehicleImageKind.Hero);
 
@@ -93,7 +96,7 @@ public class AdminVehicleServiceTests
     public async Task UpdateAsync_PersistsBodyHtml()
     {
         var db = NewDb(nameof(UpdateAsync_PersistsBodyHtml));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "body", Name = "Body", SortOrder = 1 });
 
         var ok = await svc.UpdateAsync(new Vehicle
@@ -111,7 +114,7 @@ public class AdminVehicleServiceTests
     public async Task Update_ReturnsFalse_WhenMissing()
     {
         var db = NewDb(nameof(Update_ReturnsFalse_WhenMissing));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         Assert.False(await svc.UpdateAsync(new Vehicle { Id = 4242, Slug = "nope", Name = "N" }));
     }
 
@@ -119,7 +122,7 @@ public class AdminVehicleServiceTests
     public async Task MoveImage_SwapsWithinVehicle()
     {
         var db = NewDb(nameof(MoveImage_SwapsWithinVehicle));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var id = await svc.CreateAsync(new Vehicle { Slug = "mi", Name = "M" });
         var first = await svc.AddImageAsync(id, "/uploads/1.png", VehicleImageKind.Gallery);  // SortOrder 0
         var second = await svc.AddImageAsync(id, "/uploads/2.png", VehicleImageKind.Gallery); // SortOrder 1
@@ -133,7 +136,7 @@ public class AdminVehicleServiceTests
     public async Task Move_OutOfBounds_ReturnsFalse()
     {
         var db = NewDb(nameof(Move_OutOfBounds_ReturnsFalse));
-        var svc = new AdminVehicleService(db);
+        var svc = NewSvc(db);
         var only = await svc.CreateAsync(new Vehicle { Slug = "solo", Name = "S", SortOrder = 0 });
         Assert.False(await svc.MoveAsync(only, -1)); // already at top
         Assert.False(await svc.MoveAsync(only, 1));  // already at bottom
