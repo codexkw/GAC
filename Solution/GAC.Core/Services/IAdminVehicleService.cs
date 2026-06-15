@@ -21,4 +21,19 @@ public interface IAdminVehicleService
     Task<bool> UpdateFeatureAsync(FeatureSection feature, CancellationToken ct = default);
     Task<bool> RemoveFeatureAsync(int featureId, CancellationToken ct = default);
     Task<bool> MoveFeatureAsync(int featureId, int direction, CancellationToken ct = default);
+
+    // Spec groups + rows
+    Task<int> AddSpecGroupAsync(int vehicleId, LocalizedText title, CancellationToken ct = default);
+    Task<bool> RemoveSpecGroupAsync(int groupId, CancellationToken ct = default);
+    Task<bool> MoveSpecGroupAsync(int groupId, int direction, CancellationToken ct = default);
+    Task<int> AddSpecRowAsync(int groupId, LocalizedText label, LocalizedText value, CancellationToken ct = default);
+    Task<bool> RemoveSpecRowAsync(int rowId, CancellationToken ct = default);
+    // Colours
+    Task<int> AddColorAsync(int vehicleId, LocalizedText name, string hex, string? imagePath, CancellationToken ct = default);
+    Task<bool> RemoveColorAsync(int colorId, CancellationToken ct = default);
+    Task<bool> MoveColorAsync(int colorId, int direction, CancellationToken ct = default);
+    // Trims
+    Task<int> AddTrimAsync(int vehicleId, Trim trim, CancellationToken ct = default);
+    Task<bool> RemoveTrimAsync(int trimId, CancellationToken ct = default);
+    Task<bool> MoveTrimAsync(int trimId, int direction, CancellationToken ct = default);
 }

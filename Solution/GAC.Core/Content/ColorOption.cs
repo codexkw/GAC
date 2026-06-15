@@ -1,6 +1,6 @@
 namespace GAC.Core.Content;
 
-public class ColorOption
+public class ColorOption : IOrderable
 {
     public int Id { get; set; }
     public int VehicleId { get; set; }

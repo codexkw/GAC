@@ -80,4 +80,45 @@ public class AdminVehicleSectionsTests
         Assert.Equal(0, (await svc.GetFeatureAsync(b))!.SortOrder);
         Assert.Equal(1, (await svc.GetFeatureAsync(a))!.SortOrder);
     }
+
+    [Fact]
+    public async Task SpecGroup_And_Row_AddRemove()
+    {
+        var db = NewDb(nameof(SpecGroup_And_Row_AddRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "s", Name = "S" });
+        var gid = await svc.AddSpecGroupAsync(vid, new LocalizedText { En = "Engine" });
+        var rid = await svc.AddSpecRowAsync(gid, new LocalizedText { En = "Power" }, new LocalizedText { En = "200hp" });
+        Assert.Equal(1, await db.Set<SpecGroup>().CountAsync());
+        Assert.Equal(1, await db.Set<SpecRow>().CountAsync());
+        Assert.True(await svc.RemoveSpecRowAsync(rid));
+        Assert.True(await svc.RemoveSpecGroupAsync(gid));
+        Assert.Equal(0, await db.Set<SpecRow>().CountAsync());
+    }
+
+    [Fact]
+    public async Task Color_AddMoveRemove()
+    {
+        var db = NewDb(nameof(Color_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "c", Name = "C" });
+        var a = await svc.AddColorAsync(vid, new LocalizedText { En = "Red" }, "#ff0000", null);
+        var b = await svc.AddColorAsync(vid, new LocalizedText { En = "Blue" }, "#0000ff", null);
+        Assert.True(await svc.MoveColorAsync(b, -1));
+        Assert.Equal(0, (await db.Set<ColorOption>().FindAsync(b))!.SortOrder);
+        Assert.True(await svc.RemoveColorAsync(a));
+        Assert.Equal(1, await db.Set<ColorOption>().CountAsync());
+    }
+
+    [Fact]
+    public async Task Trim_AddRemove()
+    {
+        var db = NewDb(nameof(Trim_AddRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "t", Name = "T" });
+        var id = await svc.AddTrimAsync(vid, new Trim { Name = "GT", Price = 100000m });
+        Assert.Equal(1, await db.Set<Trim>().CountAsync());
+        Assert.True(await svc.RemoveTrimAsync(id));
+        Assert.Equal(0, await db.Set<Trim>().CountAsync());
+    }
 }

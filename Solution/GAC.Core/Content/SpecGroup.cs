@@ -1,6 +1,6 @@
 namespace GAC.Core.Content;
 
-public class SpecGroup
+public class SpecGroup : IOrderable
 {
     public int Id { get; set; }
     public int VehicleId { get; set; }

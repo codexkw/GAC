@@ -1,6 +1,6 @@
 namespace GAC.Core.Content;
 
-public class Trim
+public class Trim : IOrderable
 {
     public int Id { get; set; }
     public int VehicleId { get; set; }

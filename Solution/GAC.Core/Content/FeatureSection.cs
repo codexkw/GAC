@@ -1,6 +1,6 @@
 namespace GAC.Core.Content;
 
-public class FeatureSection
+public class FeatureSection : IOrderable
 {
     public int Id { get; set; }
     public int VehicleId { get; set; }
