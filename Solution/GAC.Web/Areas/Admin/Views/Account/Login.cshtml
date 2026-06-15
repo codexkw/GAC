@@ -1,0 +1,19 @@
+@model GAC.Web.Areas.Admin.Models.LoginViewModel
+@{ ViewData["Title"] = "Sign in"; Layout = "_AdminLayout"; }
+<div class="adm-login">
+    <h1>GAC Admin</h1>
+    <form method="post" action="/admin/login">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="ReturnUrl" />
+        <div asp-validation-summary="All" class="adm-error"></div>
+        <div class="adm-field">
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" autocomplete="username" />
+        </div>
+        <div class="adm-field">
+            <label asp-for="Password">Password</label>
+            <input asp-for="Password" type="password" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="adm-btn">Sign in</button>
+    </form>
+</div>

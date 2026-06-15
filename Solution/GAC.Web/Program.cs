@@ -23,6 +23,23 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/admin/login";
+    options.AccessDeniedPath = "/admin/denied";
+    options.LogoutPath = "/admin/logout";
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(GAC.Web.Areas.Admin.AdminPolicies.ContentEditor,
+        p => p.RequireRole(GAC.Core.Identity.Roles.Admin, GAC.Core.Identity.Roles.Editor));
+    options.AddPolicy(GAC.Web.Areas.Admin.AdminPolicies.LeadsAccess,
+        p => p.RequireRole(GAC.Core.Identity.Roles.Admin, GAC.Core.Identity.Roles.Sales));
+    options.AddPolicy(GAC.Web.Areas.Admin.AdminPolicies.AdminOnly,
+        p => p.RequireRole(GAC.Core.Identity.Roles.Admin));
+});
+
 var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("ar") };
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
@@ -64,6 +81,10 @@ app.UseRouting();
 app.UseStatusCodePagesWithReExecute("/not-found");
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

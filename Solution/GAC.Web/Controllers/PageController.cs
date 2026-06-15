@@ -13,7 +13,9 @@ public class PageController : Controller
 
     // Catch-all single-segment slug. A literal attribute route like "/models" or "/news"
     // is more specific and wins over this parameter route, so dedicated controllers are safe.
-    [HttpGet("/{slug}")]
+    // Exclude "admin" so the Admin area's conventional route (not an attribute route) can win;
+    // attribute routes otherwise take precedence over conventional routes.
+    [HttpGet("/{slug:regex(^(?!(?i:admin)$).*$)}")]
     public async Task<IActionResult> Show(string slug)
     {
         var content = await _content.GetContentPageBySlugAsync(slug);

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GAC Admin — @ViewData["Title"]</title>
+    <link rel="stylesheet" href="/assets/css/admin.css" />
+</head>
+<body class="adm">
+    <header class="adm-top">
+        <a class="adm-brand" href="/Admin">GAC Admin</a>
+        <div class="adm-spacer"></div>
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <span class="adm-user">@User.Identity!.Name</span>
+            <form method="post" action="/admin/logout" class="adm-logoutform">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="adm-logout">Log out</button>
+            </form>
+        }
+    </header>
+    <div class="adm-body">
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <partial name="_AdminNav" />
+        }
+        <main class="adm-main">
+            @if (TempData["Flash"] != null)
+            {
+                <div class="adm-flash">@TempData["Flash"]</div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+    <script src="/assets/js/admin.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

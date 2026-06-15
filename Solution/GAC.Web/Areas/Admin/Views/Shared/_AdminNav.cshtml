@@ -1,0 +1,23 @@
+<nav class="adm-nav">
+    <a href="/Admin">Dashboard</a>
+    @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Sales))
+    {
+        <a href="/Admin/Leads">Leads</a>
+    }
+    @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Editor))
+    {
+        <a href="/Admin/Vehicles">Vehicles</a>
+        <a href="/Admin/Menu">Menu</a>
+        <a href="/Admin/HomeContent">Hero Slides</a>
+        <a href="/Admin/News">News</a>
+        <a href="/Admin/Offers">Offers</a>
+        <a href="/Admin/ContentPages">Content Pages</a>
+        <a href="/Admin/FormPages">Form Pages</a>
+        <a href="/Admin/Media">Media</a>
+    }
+    @if (User.IsInRole(Roles.Admin))
+    {
+        <a href="/Admin/Settings">Site Settings</a>
+        <a href="/Admin/Users">Users</a>
+    }
+</nav>
