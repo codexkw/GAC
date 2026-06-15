@@ -50,7 +50,12 @@ public class UsersController : Controller
             foreach (var e in res.Errors) ModelState.AddModelError("", e.Description);
             ViewBag.Roles = RoleSelect(m.Role); return View(m);
         }
-        await _users.AddToRoleAsync(user, m.Role);
+        var roleRes = await _users.AddToRoleAsync(user, m.Role);
+        if (!roleRes.Succeeded)
+        {
+            foreach (var e in roleRes.Errors) ModelState.AddModelError("", e.Description);
+            ViewBag.Roles = RoleSelect(m.Role); return View(m);
+        }
         TempData["Flash"] = "User created.";
         return RedirectToAction(nameof(Index));
     }
@@ -76,12 +81,41 @@ public class UsersController : Controller
         if (u is null) return NotFound();
         if (!ModelState.IsValid) { ViewBag.Roles = RoleSelect(m.Role); return View(m); }
 
+        var current = await _users.GetRolesAsync(u);
+        var isSelf = u.Id == _users.GetUserId(User);
+        var wasAdmin = current.Contains(Roles.Admin);
+        var willBeAdmin = m.Role == Roles.Admin;
+
+        if (isSelf && m.Disabled)
+            ModelState.AddModelError("", "You cannot disable your own account.");
+        if (isSelf && wasAdmin && !willBeAdmin)
+            ModelState.AddModelError("", "You cannot remove your own administrator role.");
+        if (wasAdmin && (!willBeAdmin || m.Disabled))
+        {
+            var adminCount = (await _users.GetUsersInRoleAsync(Roles.Admin)).Count;
+            if (adminCount <= 1)
+                ModelState.AddModelError("", "Cannot remove or disable the last administrator.");
+        }
+        if (!ModelState.IsValid) { ViewBag.Roles = RoleSelect(m.Role); return View(m); }
+
         u.DisplayName = m.DisplayName;
         await _users.UpdateAsync(u);
 
-        var current = await _users.GetRolesAsync(u);
-        await _users.RemoveFromRolesAsync(u, current);
-        await _users.AddToRoleAsync(u, m.Role);
+        if (!current.Contains(m.Role) || current.Count != 1)
+        {
+            var removeRes = await _users.RemoveFromRolesAsync(u, current);
+            if (!removeRes.Succeeded)
+            {
+                foreach (var e in removeRes.Errors) ModelState.AddModelError("", e.Description);
+                ViewBag.Roles = RoleSelect(m.Role); return View(m);
+            }
+            var addRes = await _users.AddToRoleAsync(u, m.Role);
+            if (!addRes.Succeeded)
+            {
+                foreach (var e in addRes.Errors) ModelState.AddModelError("", e.Description);
+                ViewBag.Roles = RoleSelect(m.Role); return View(m);
+            }
+        }
 
         await _users.SetLockoutEnabledAsync(u, true);
         await _users.SetLockoutEndDateAsync(u, m.Disabled ? DateTimeOffset.MaxValue : null);
