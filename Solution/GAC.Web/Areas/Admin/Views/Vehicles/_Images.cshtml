@@ -1,0 +1,45 @@
+@model GAC.Core.Content.Vehicle
+
+<h2>Images</h2>
+
+<div class="adm-picker-grid">
+    @foreach (var img in Model.Images.OrderBy(i => i.SortOrder))
+    {
+        <div class="adm-picker-item">
+            <img src="@img.Path" class="adm-picker-thumb" alt="" />
+            <div>@img.Kind</div>
+            <form asp-action="MoveImage" method="post" style="display:inline">
+                <input type="hidden" name="imageId" value="@img.Id" />
+                <input type="hidden" name="vehicleId" value="@Model.Id" />
+                <input type="hidden" name="direction" value="-1" />
+                <button type="submit" class="adm-btn" title="Move up">&uarr;</button>
+            </form>
+            <form asp-action="MoveImage" method="post" style="display:inline">
+                <input type="hidden" name="imageId" value="@img.Id" />
+                <input type="hidden" name="vehicleId" value="@Model.Id" />
+                <input type="hidden" name="direction" value="1" />
+                <button type="submit" class="adm-btn" title="Move down">&darr;</button>
+            </form>
+            <form asp-action="RemoveImage" method="post" style="display:inline"
+                  onsubmit="return confirm('Remove this image?')">
+                <input type="hidden" name="imageId" value="@img.Id" />
+                <input type="hidden" name="vehicleId" value="@Model.Id" />
+                <button type="submit" class="adm-btn adm-btn--danger">Remove</button>
+            </form>
+        </div>
+    }
+</div>
+
+<form asp-action="AddImage" method="post" class="adm-field">
+    <input type="hidden" name="vehicleId" value="@Model.Id" />
+    <label>Image path</label>
+    <input type="text" name="path" data-media-input />
+    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+    <select name="kind">
+        @foreach (var item in Html.GetEnumSelectList<VehicleImageKind>())
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+    <button type="submit" class="adm-btn">Add</button>
+</form>

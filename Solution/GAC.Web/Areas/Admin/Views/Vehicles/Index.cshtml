@@ -1,0 +1,52 @@
+@model IReadOnlyList<GAC.Core.Content.Vehicle>
+@{
+    ViewData["Title"] = "Vehicles";
+}
+<h1>Vehicles</h1>
+
+<p><a asp-action="Create" class="adm-btn">New vehicle</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Order</th>
+            <th>Slug</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Visible</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td>
+                    @v.SortOrder
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@v.Id" />
+                        <input type="hidden" name="direction" value="-1" />
+                        <button type="submit" class="adm-btn" title="Move up">&uarr;</button>
+                    </form>
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@v.Id" />
+                        <input type="hidden" name="direction" value="1" />
+                        <button type="submit" class="adm-btn" title="Move down">&darr;</button>
+                    </form>
+                </td>
+                <td>@v.Slug</td>
+                <td>@v.Name.Localize()</td>
+                <td>@v.Category</td>
+                <td>@(v.IsVisible ? "Yes" : "No")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@v.Id">Edit</a>
+                    <form asp-action="Delete" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this vehicle?')">
+                        <input type="hidden" name="id" value="@v.Id" />
+                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

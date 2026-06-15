@@ -1,0 +1,59 @@
+@model GAC.Core.Content.Vehicle
+@using GAC.Web.Areas.Admin.Models
+@{
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "New vehicle" : "Edit vehicle";
+}
+<p><a asp-action="Index">&larr; Back to vehicles</a></p>
+
+<h1>@(isNew ? "New vehicle" : "Edit vehicle")</h1>
+
+<form method="post" asp-action="Save">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="adm-error"></div>
+
+    <div class="adm-field">
+        <label asp-for="Slug">Slug</label>
+        <input asp-for="Slug" />
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Name", NameEn = "Name.En", NameAr = "Name.Ar", ValueEn = Model.Name.En, ValueAr = Model.Name.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Tagline", NameEn = "Tagline.En", NameAr = "Tagline.Ar", ValueEn = Model.Tagline.En, ValueAr = Model.Tagline.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Intro text", NameEn = "IntroText.En", NameAr = "IntroText.Ar", ValueEn = Model.IntroText.En, ValueAr = Model.IntroText.Ar, Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta title", NameEn = "MetaTitle.En", NameAr = "MetaTitle.Ar", ValueEn = Model.MetaTitle.En, ValueAr = Model.MetaTitle.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta description", NameEn = "MetaDescription.En", NameAr = "MetaDescription.Ar", ValueEn = Model.MetaDescription.En, ValueAr = Model.MetaDescription.Ar, Multiline = true }' />
+
+    <div class="adm-field">
+        <label asp-for="PriceFrom">Price from</label>
+        <input asp-for="PriceFrom" type="number" step="any" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="BrochurePdf">Brochure PDF</label>
+        <input asp-for="BrochurePdf" />
+    </div>
+
+    <div class="adm-field">
+        <span class="adm-localized__label">Category</span>
+        <label><input type="checkbox" name="Category" value="Sedan" checked="@Model.Category.HasFlag(VehicleCategory.Sedan)" /> Sedan</label>
+        <label><input type="checkbox" name="Category" value="Suv" checked="@Model.Category.HasFlag(VehicleCategory.Suv)" /> SUV</label>
+        <label><input type="checkbox" name="Category" value="Ev" checked="@Model.Category.HasFlag(VehicleCategory.Ev)" /> EV</label>
+    </div>
+
+    <div class="adm-field">
+        <label><input asp-for="IsVisible" /> Visible</label>
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="SortOrder">Sort order</label>
+        <input asp-for="SortOrder" type="number" />
+    </div>
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>
+
+@if (!isNew)
+{
+    <partial name="_Images" model="Model" />
+    <partial name="_PickerModal" />
+}
