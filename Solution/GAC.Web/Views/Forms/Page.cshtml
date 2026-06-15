@@ -11,6 +11,10 @@
     </div>
   </section>
 }
+else if (Model.Page.FormType == GAC.Core.Content.FormType.Contact)
+{
+  @Html.Raw(Model.Page.BodyHtml.Localize())
+}
 else
 {
   <partial name="~/Views/Forms/Forms/_@(Model.Page.Slug).cshtml" model="Model" />

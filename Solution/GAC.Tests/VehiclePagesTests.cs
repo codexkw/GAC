@@ -21,6 +21,8 @@ public class VehiclePagesTests : IClassFixture<DevWebApplicationFactory>
     {
         var res = await _factory.CreateClient().GetAsync(url);
         Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+        var html = await res.Content.ReadAsStringAsync();
+        Assert.Contains("mp-hero", html);
     }
 
     [Theory]

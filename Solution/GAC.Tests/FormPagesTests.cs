@@ -19,4 +19,14 @@ public class FormPagesTests : IClassFixture<DevWebApplicationFactory>
         var res = await _factory.CreateClient().GetAsync(url);
         Assert.Equal(HttpStatusCode.OK, res.StatusCode);
     }
+
+    [Fact]
+    public async Task ContactUs_RendersDirectoryBody_FromDb()
+    {
+        var res = await _factory.CreateClient().GetAsync("/contact-us");
+        Assert.Equal(System.Net.HttpStatusCode.OK, res.StatusCode);
+        var html = await res.Content.ReadAsStringAsync();
+        Assert.Contains("dir-grid", html);
+        Assert.DoesNotContain("data-form", html);
+    }
 }
