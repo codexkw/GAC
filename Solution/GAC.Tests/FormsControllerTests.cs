@@ -49,9 +49,12 @@ public class FormsControllerTests
     private static FormsController Build(FakeContent content, FakeLeads leads, IEmailSender email)
     {
         var c = new FormsController(content, new FakeVehicles(), leads, email, new PassThroughLoc(), NullLogger<FormsController>.Instance);
+        var httpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext();
+        httpContext.Request.Scheme = "https";
+        httpContext.Request.Host = new Microsoft.AspNetCore.Http.HostString("localhost");
+        c.ControllerContext = new ControllerContext { HttpContext = httpContext };
         c.TempData = new Microsoft.AspNetCore.Mvc.ViewFeatures.TempDataDictionary(
-            new Microsoft.AspNetCore.Http.DefaultHttpContext(),
-            new FakeTempDataProvider());
+            httpContext, new FakeTempDataProvider());
         return c;
     }
     private sealed class FakeTempDataProvider : Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataProvider

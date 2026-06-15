@@ -1,4 +1,5 @@
 using GAC.Core.Services;
+using GAC.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GAC.Web.Controllers;
@@ -9,5 +10,9 @@ public class VehiclesController : Controller
     public VehiclesController(IVehicleService vehicles) => _vehicles = vehicles;
 
     [HttpGet("/models")]
-    public async Task<IActionResult> Index() => View(await _vehicles.GetVisibleAsync());
+    public async Task<IActionResult> Index()
+    {
+        ViewData["Seo"] = SeoBuilder.ForListing("Models", "/models");
+        return View(await _vehicles.GetVisibleAsync());
+    }
 }

@@ -1,6 +1,7 @@
 using System.Globalization;
 using GAC.Core.Content;
 using GAC.Core.Services;
+using GAC.Web.Infrastructure;
 using GAC.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -34,7 +35,7 @@ public class FormsController : Controller
 
         if (!ModelState.IsValid)
         {
-            ViewData["Title"] = form.Title.Localize();
+            ViewData["Seo"] = SeoBuilder.ForFormPage(form, $"{Request.Scheme}://{Request.Host}");
             return View("~/Views/Forms/Page.cshtml", new FormPageViewModel { Page = form, Input = input });
         }
 
