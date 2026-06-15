@@ -38,7 +38,9 @@ public class AccountController : Controller
             return View(model);
         }
 
-        return Redirect(string.IsNullOrEmpty(model.ReturnUrl) ? "/Admin" : model.ReturnUrl);
+        if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+            return Redirect(model.ReturnUrl);
+        return Redirect("/Admin");
     }
 
     [HttpPost("/admin/logout")]
