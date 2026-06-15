@@ -1,0 +1,25 @@
+@using GAC.Web.Infrastructure
+@model GAC.Core.Content.Vehicle
+@if (Model.Features.Count > 0)
+{
+    <section class="mp-section">
+      <div class="container">
+        @foreach (var f in Model.Features.OrderBy(x => x.SortOrder))
+        {
+            <div class="@VehicleContent.FeatureLayoutCss(f.Layout)">
+              @if (VehicleContent.ShowsImage(f.Layout) && !string.IsNullOrWhiteSpace(f.ImagePath))
+              {
+                  <div class="mp-feature__media"><img src="@f.ImagePath" alt="@f.Heading.Localize()" /></div>
+              }
+              <div class="mp-feature__body">
+                @if (!string.IsNullOrWhiteSpace(f.Heading.Localize()))
+                {
+                    <h3 class="mp-feature__title">@f.Heading.Localize()</h3>
+                }
+                @Html.Raw(f.Body.Localize())
+              </div>
+            </div>
+        }
+      </div>
+    </section>
+}

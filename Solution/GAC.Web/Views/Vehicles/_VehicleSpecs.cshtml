@@ -1,0 +1,23 @@
+@model GAC.Core.Content.Vehicle
+@if (Model.SpecGroups.Count > 0)
+{
+    <section class="mp-section mp-section--grey">
+      <div class="container">
+        @foreach (var g in Model.SpecGroups.OrderBy(x => x.SortOrder))
+        {
+            <div class="mp-specs">
+              @if (!string.IsNullOrWhiteSpace(g.Title.Localize()))
+              {
+                  <h3 class="mp-specs__title">@g.Title.Localize()</h3>
+              }
+              <table class="mp-specs__table">
+                @foreach (var r in g.Rows.OrderBy(x => x.SortOrder))
+                {
+                    <tr><th class="mp-specs__label">@r.Label.Localize()</th><td class="mp-specs__value">@r.Value.Localize()</td></tr>
+                }
+              </table>
+            </div>
+        }
+      </div>
+    </section>
+}

@@ -1,3 +1,16 @@
+@using GAC.Web.Infrastructure
 @model GAC.Core.Content.Vehicle
 @{ Layout = "_Layout"; }
-@Html.Raw(Model.BodyHtml.Localize())
+
+@if (VehicleContent.HasStructuredContent(Model))
+{
+    <partial name="_VehicleHero" model="Model" />
+    <partial name="_VehicleFeatures" model="Model" />
+    <partial name="_VehicleSpecs" model="Model" />
+    <partial name="_VehicleColors" model="Model" />
+    <partial name="_VehicleTrims" model="Model" />
+}
+else
+{
+    @Html.Raw(Model.BodyHtml.Localize())
+}

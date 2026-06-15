@@ -1,0 +1,24 @@
+@model GAC.Core.Content.Vehicle
+@if (Model.Colors.Count > 0)
+{
+    <section class="mp-section">
+      <div class="container">
+        <div class="mp-colors">
+          @foreach (var c in Model.Colors.OrderBy(x => x.SortOrder))
+          {
+              <div class="mp-color">
+                @if (!string.IsNullOrWhiteSpace(c.ImagePath))
+                {
+                    <img class="mp-color__img" src="@c.ImagePath" alt="@c.Name.Localize()" />
+                }
+                else
+                {
+                    <span class="mp-color__chip" style="background:@c.Hex"></span>
+                }
+                <span class="mp-color__name">@c.Name.Localize()</span>
+              </div>
+          }
+        </div>
+      </div>
+    </section>
+}

@@ -1,0 +1,34 @@
+@model GAC.Core.Content.Vehicle
+@if (Model.Trims.Count > 0)
+{
+    <section class="mp-section" id="trims">
+      <div class="container">
+        <div class="mp-trims" style="gap:var(--space-7); flex-wrap:wrap;">
+          @foreach (var t in Model.Trims.OrderBy(x => x.SortOrder))
+          {
+              <article class="mp-trim">
+                <div class="mp-trim__body">
+                  <p class="mp-trim__model">@Model.Name.Localize()</p>
+                  <h3 class="mp-trim__name">@t.Name.Localize()</h3>
+                  @if (t.Price.HasValue)
+                  {
+                      <ul class="mp-trim__price"><li>@t.Price.Value.ToString("N0") @L["SAR"]</li></ul>
+                  }
+                  @if (!string.IsNullOrWhiteSpace(t.Highlights.Localize()))
+                  {
+                      <div class="mp-trim__highlights">@Html.Raw(t.Highlights.Localize())</div>
+                  }
+                  <div class="mp-trim__cta">
+                    <a class="btn btn--trim" href="#enquiry">@L["Book a Test Drive"]</a>
+                    @if (!string.IsNullOrWhiteSpace(t.SpecPdf))
+                    {
+                        <a class="btn btn--trim" href="@t.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a>
+                    }
+                  </div>
+                </div>
+              </article>
+          }
+        </div>
+      </div>
+    </section>
+}

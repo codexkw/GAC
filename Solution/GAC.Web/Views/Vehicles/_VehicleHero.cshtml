@@ -1,0 +1,30 @@
+@using GAC.Core.Content
+@model GAC.Core.Content.Vehicle
+@{
+    var hero = Model.Images.FirstOrDefault(i => i.Kind == VehicleImageKind.Hero)
+               ?? Model.Images.OrderBy(i => i.SortOrder).FirstOrDefault();
+}
+<section class="mp-hero">
+  <a class="mp-hero__link" href="#enquiry" aria-label="@L["Book a Test Drive"]">
+    @if (hero != null)
+    {
+        <img class="mp-hero__img" src="@hero.Path" alt="@Model.Name.Localize()" />
+    }
+    <div class="mp-hero__overlay">
+      <div class="container">
+        <h1 class="mp-hero__title">@Model.Name.Localize()</h1>
+        @if (!string.IsNullOrWhiteSpace(Model.Tagline.Localize()))
+        {
+            <p class="mp-hero__sub">@Model.Tagline.Localize()</p>
+        }
+        <span class="btn btn--hero">@L["Book a Test Drive"]</span>
+      </div>
+    </div>
+  </a>
+</section>
+@if (!string.IsNullOrWhiteSpace(Model.IntroText.Localize()))
+{
+    <section class="mp-section">
+      <div class="container"><p class="mp-head__body">@Model.IntroText.Localize()</p></div>
+    </section>
+}
