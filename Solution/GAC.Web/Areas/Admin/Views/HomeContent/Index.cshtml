@@ -1,0 +1,53 @@
+@model IReadOnlyList<GAC.Core.Content.HeroSlide>
+@{
+    ViewData["Title"] = "Hero Slides";
+}
+<h1>Hero Slides</h1>
+
+<p><a asp-action="Create" class="adm-btn">New slide</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Heading</th>
+            <th>Order</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(s.ImagePath))
+                    {
+                        <img src="@s.ImagePath" class="adm-picker-thumb" />
+                    }
+                </td>
+                <td>@s.Heading.Localize()</td>
+                <td>
+                    @s.SortOrder
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@s.Id" />
+                        <input type="hidden" name="direction" value="-1" />
+                        <button type="submit" class="adm-btn" title="Move up">&uarr;</button>
+                    </form>
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@s.Id" />
+                        <input type="hidden" name="direction" value="1" />
+                        <button type="submit" class="adm-btn" title="Move down">&darr;</button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@s.Id">Edit</a>
+                    <form asp-action="Delete" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this slide?')">
+                        <input type="hidden" name="id" value="@s.Id" />
+                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

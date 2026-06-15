@@ -70,4 +70,14 @@ public class AdminAuthTests : IClassFixture<AdminWebApplicationFactory>
         var res = await _factory.ClientForRole(role).GetAsync("/Admin/Menu");
         Assert.Equal(expected, res.StatusCode);
     }
+
+    [Theory]
+    [InlineData(Roles.Admin, HttpStatusCode.OK)]
+    [InlineData(Roles.Editor, HttpStatusCode.OK)]
+    [InlineData(Roles.Sales, HttpStatusCode.Found)]
+    public async Task HeroSlides_AccessByRole(string role, HttpStatusCode expected)
+    {
+        var res = await _factory.ClientForRole(role).GetAsync("/Admin/HomeContent");
+        Assert.Equal(expected, res.StatusCode);
+    }
 }

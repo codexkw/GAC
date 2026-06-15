@@ -1,0 +1,32 @@
+@model GAC.Core.Content.HeroSlide
+@using GAC.Web.Areas.Admin.Models
+@{
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "New slide" : "Edit slide";
+}
+<p><a asp-action="Index">&larr; Back to hero slides</a></p>
+
+<h1>@(isNew ? "New slide" : "Edit slide")</h1>
+
+<form method="post" asp-action="Save">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="adm-field">
+        <label asp-for="ImagePath">Image</label>
+        <input asp-for="ImagePath" data-media-input />
+        <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "Heading.En", NameAr = "Heading.Ar", ValueEn = Model.Heading.En, ValueAr = Model.Heading.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Subheading", NameEn = "Subheading.En", NameAr = "Subheading.Ar", ValueEn = Model.Subheading.En, ValueAr = Model.Subheading.Ar, Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "CTA text", NameEn = "CtaText.En", NameAr = "CtaText.Ar", ValueEn = Model.CtaText.En, ValueAr = Model.CtaText.Ar }' />
+
+    <div class="adm-field">
+        <label asp-for="CtaLink">CTA link</label>
+        <input asp-for="CtaLink" />
+    </div>
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>
+
+<partial name="_PickerModal" />
