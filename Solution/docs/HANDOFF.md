@@ -172,7 +172,7 @@ Spec: `docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6. The previo
 | `/models` | `VehiclesController.Index` | `Views/Vehicles/Index.cshtml` |
 | `/news`, `/news/{slug}` | `NewsController` | `Views/News/Index.cshtml`, `Detail.cshtml` |
 | `/offers` | `OffersController.Index` | `Views/Offers/Index.cshtml` |
-| `/{slug}` (catch-all) | `PageController.Show` → ContentPage \| FormPage \| visible Vehicle \| 404 | container view → `_{slug}` partial |
+| `/{slug}` (catch-all) | `PageController.Show` → ContentPage \| FormPage \| visible Vehicle \| 404 | generic view → `@Html.Raw(BodyHtml)` (Phase 6b; functional form pages still dispatch to `_{slug}` partial) |
 | `/not-found` | `HomeController.NotFoundPage` | `Views/Shared/NotFound.cshtml` |
 | `*.html` | `LegacyHtmlRedirectMiddleware` | 301 → clean URL |
 | `POST /forms/{slug}` | `FormsController.Submit` | persists `Lead`, PRG → `/{slug}` (Phase 5) |
@@ -182,7 +182,7 @@ Spec: `docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6. The previo
 
 Precedence: literal attribute routes (`/models`, `/news`, `/offers`, `/not-found`) and the conventional
 route (`/`, `/Culture/Set`) beat the single-segment `/{slug}`. Hidden vehicles (`aion-v`, `aion-es`,
-`IsVisible=false`) have no partial and return 404 (service filters them out — no 500).
+`IsVisible=false`) return 404 (service filters them out before rendering — no 500; they also have no seed body).
 
 ---
 
