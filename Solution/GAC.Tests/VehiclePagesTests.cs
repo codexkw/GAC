@@ -10,6 +10,7 @@ public class VehiclePagesTests : IClassFixture<DevWebApplicationFactory>
 
     [Theory]
     [InlineData("/gs8traveller")]
+    [InlineData("/gs8")]
     [InlineData("/gs3emzoom")]
     [InlineData("/emkoo")]
     [InlineData("/empow")]

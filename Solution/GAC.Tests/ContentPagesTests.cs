@@ -14,6 +14,7 @@ public class ContentPagesTests : IClassFixture<DevWebApplicationFactory>
     [InlineData("/finance")]
     [InlineData("/cost-of-service")]
     [InlineData("/road-assistance")]
+    [InlineData("/about")]
     public async Task ContentPages_Render200(string url)
     {
         var res = await _factory.CreateClient().GetAsync(url);

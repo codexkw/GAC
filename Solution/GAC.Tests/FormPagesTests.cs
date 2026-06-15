@@ -14,6 +14,7 @@ public class FormPagesTests : IClassFixture<DevWebApplicationFactory>
     [InlineData("/contact-us")]
     [InlineData("/fleet")]
     [InlineData("/recall-enquiry")]
+    [InlineData("/book-a-service")]
     public async Task FormPages_Render200(string url)
     {
         var res = await _factory.CreateClient().GetAsync(url);
