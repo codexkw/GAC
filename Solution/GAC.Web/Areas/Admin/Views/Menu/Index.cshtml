@@ -1,0 +1,50 @@
+@model IReadOnlyList<GAC.Core.Content.MenuItem>
+@{
+    ViewData["Title"] = "Menu";
+}
+<h1>Menu</h1>
+
+<p><a asp-action="Create" class="adm-btn">New item</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Label</th>
+            <th>Url</th>
+            <th>Parent</th>
+            <th>Order</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@(m.ParentId != null ? "— " : "")@m.Label.Localize()</td>
+                <td>@m.Url</td>
+                <td>@m.Parent?.Label.Localize()</td>
+                <td>
+                    @m.SortOrder
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@m.Id" />
+                        <input type="hidden" name="direction" value="-1" />
+                        <button type="submit" class="adm-btn" title="Move up">&uarr;</button>
+                    </form>
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@m.Id" />
+                        <input type="hidden" name="direction" value="1" />
+                        <button type="submit" class="adm-btn" title="Move down">&darr;</button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@m.Id">Edit</a>
+                    <form asp-action="Delete" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this menu item (and its children)?')">
+                        <input type="hidden" name="id" value="@m.Id" />
+                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
