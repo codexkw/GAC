@@ -26,6 +26,15 @@ public class SitemapRobotsTests : IClassFixture<DevWebApplicationFactory>
         Assert.Contains(locs, l => l.EndsWith("/gs8"));     // a visible vehicle
         Assert.DoesNotContain(locs, l => l.EndsWith("/aion-v"));  // hidden vehicle excluded
         Assert.All(locs, l => Assert.StartsWith("http", l)); // absolute
+
+        // New code paths: content page, form page, and news article inclusion + lastmod.
+        Assert.Contains(locs, l => l.EndsWith("/about"));          // a visible content page
+        Assert.Contains(locs, l => l.EndsWith("/contact-us"));     // a visible form page
+        Assert.Contains(locs, l => l.Contains("/news/"));          // a published news article
+
+        var lastmods = doc.Descendants(ns + "lastmod").Select(e => e.Value).ToList();
+        Assert.NotEmpty(lastmods);                                  // news entries carry <lastmod>
+        Assert.All(lastmods, m => Assert.Matches(@"^\d{4}-\d{2}-\d{2}$", m));
     }
 
     [Fact]
