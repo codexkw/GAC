@@ -1,0 +1,56 @@
+@model GAC.Core.Content.SiteSettings
+@using GAC.Web.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Site settings";
+}
+
+<h1>Site settings</h1>
+
+<form method="post" asp-action="Save">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="adm-error"></div>
+
+    <div class="adm-field">
+        <label asp-for="Phone">Phone</label>
+        <input asp-for="Phone" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="WhatsApp">WhatsApp</label>
+        <input asp-for="WhatsApp" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="InstagramUrl">Instagram URL</label>
+        <input asp-for="InstagramUrl" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="FacebookUrl">Facebook URL</label>
+        <input asp-for="FacebookUrl" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="TiktokUrl">TikTok URL</label>
+        <input asp-for="TiktokUrl" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="SnapchatUrl">Snapchat URL</label>
+        <input asp-for="SnapchatUrl" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="XUrl">X URL</label>
+        <input asp-for="XUrl" />
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Footer tagline", NameEn = "FooterTagline.En", NameAr = "FooterTagline.Ar", ValueEn = Model.FooterTagline.En, ValueAr = Model.FooterTagline.Ar }' />
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>
