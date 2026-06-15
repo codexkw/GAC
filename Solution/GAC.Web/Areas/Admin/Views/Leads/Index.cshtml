@@ -1,0 +1,83 @@
+@model IReadOnlyList<GAC.Core.Content.Lead>
+@{
+    ViewData["Title"] = "Leads";
+    var formType = ViewData["formType"] as FormType?;
+    var status = ViewData["status"] as LeadStatus?;
+    var from = ViewData["from"] as DateOnly?;
+    var to = ViewData["to"] as DateOnly?;
+}
+<h1>Leads</h1>
+
+<form method="get" class="adm-filter">
+    <label>
+        Form type
+        <select name="formType">
+            <option value="">(all)</option>
+            @foreach (var item in Html.GetEnumSelectList<FormType>())
+            {
+                if (formType.HasValue && item.Value == ((int)formType.Value).ToString())
+                {
+                    <option value="@item.Value" selected>@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <label>
+        Status
+        <select name="status">
+            <option value="">(all)</option>
+            @foreach (var item in Html.GetEnumSelectList<LeadStatus>())
+            {
+                if (status.HasValue && item.Value == ((int)status.Value).ToString())
+                {
+                    <option value="@item.Value" selected>@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <label>
+        From
+        <input type="date" name="from" value="@(from?.ToString("yyyy-MM-dd"))" />
+    </label>
+    <label>
+        To
+        <input type="date" name="to" value="@(to?.ToString("yyyy-MM-dd"))" />
+    </label>
+    <button type="submit" class="adm-btn">Filter</button>
+</form>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Created</th>
+            <th>Name</th>
+            <th>Form type</th>
+            <th>Status</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var l in Model)
+        {
+            <tr>
+                <td>@l.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@l.Name</td>
+                <td>@l.FormType</td>
+                <td>@l.Status</td>
+                <td>@l.Phone</td>
+                <td>@l.Email</td>
+                <td><a asp-action="Details" asp-route-id="@l.Id">View</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -30,4 +30,14 @@ public class AdminAuthTests : IClassFixture<AdminWebApplicationFactory>
         var res = await _factory.ClientForRole(null).GetAsync("/admin/login");
         Assert.Equal(HttpStatusCode.OK, res.StatusCode);
     }
+
+    [Theory]
+    [InlineData(Roles.Admin, HttpStatusCode.OK)]
+    [InlineData(Roles.Sales, HttpStatusCode.OK)]
+    [InlineData(Roles.Editor, HttpStatusCode.Found)] // Editor lacks LeadsAccess → redirected to AccessDenied
+    public async Task Leads_AccessByRole(string role, HttpStatusCode expected)
+    {
+        var res = await _factory.ClientForRole(role).GetAsync("/Admin/Leads");
+        Assert.Equal(expected, res.StatusCode);
+    }
 }

@@ -1,0 +1,46 @@
+@model GAC.Core.Content.Lead
+@{ ViewData["Title"] = "Lead detail"; }
+
+<p><a asp-action="Index">&larr; Back to leads</a></p>
+
+<h1>Lead #@Model.Id</h1>
+
+<dl class="adm-dl">
+    <dt>Name</dt><dd>@Model.Name</dd>
+    <dt>Form type</dt><dd>@Model.FormType</dd>
+    <dt>Status</dt><dd>@Model.Status</dd>
+    <dt>Phone</dt><dd>@Model.Phone</dd>
+    <dt>Email</dt><dd>@Model.Email</dd>
+    <dt>Message</dt><dd>@Model.Message</dd>
+    <dt>Vehicle</dt><dd>@Model.Vehicle?.Name.Localize()</dd>
+    <dt>Preferred date</dt><dd>@(Model.PreferredDate?.ToString("yyyy-MM-dd"))</dd>
+    <dt>Branch</dt><dd>@Model.Branch</dd>
+    <dt>Source page</dt><dd>@Model.SourcePage</dd>
+    <dt>Created</dt><dd>@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+</dl>
+
+<form asp-action="SetStatus" method="post" class="adm-statusform">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <label>
+        Status
+        <select name="status">
+            @foreach (var item in Html.GetEnumSelectList<LeadStatus>())
+            {
+                if (item.Value == ((int)Model.Status).ToString())
+                {
+                    <option value="@item.Value" selected>@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            }
+        </select>
+    </label>
+    <button type="submit" class="adm-btn">Update</button>
+</form>
+
+<form asp-action="Delete" method="post" class="adm-deleteform" onsubmit="return confirm('Delete this lead?')">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+</form>
