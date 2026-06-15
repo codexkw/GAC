@@ -104,4 +104,21 @@ public class SeoBuilderTests
         // System.Text.Json's default encoder escapes '<' to <.
         Assert.Contains("\\u003C", seo.JsonLd[0]);
     }
+
+    [Fact]
+    public void ForVehicle_NoImage_UsesDefaultOgImage()
+    {
+        var v = new Vehicle { Slug = "gs8", Name = "GS8" }; // no Images
+        Assert.Equal("/assets/img/logo.png", SeoBuilder.ForVehicle(v, "https://x.test").OgImage);
+    }
+
+    [Fact]
+    public void ForListing_SetsTitleCanonicalAndNoJsonLd()
+    {
+        var seo = SeoBuilder.ForListing("Models", "/models");
+        Assert.Equal("Models", seo.Title);
+        Assert.Equal("/models", seo.CanonicalPath);
+        Assert.Equal("website", seo.OgType);
+        Assert.Empty(seo.JsonLd);
+    }
 }
