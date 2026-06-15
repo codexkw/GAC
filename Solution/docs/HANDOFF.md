@@ -1,6 +1,6 @@
 # GAC Motors Bilingual CMS — Handoff
 
-**Last updated:** 2026-06-15 (end of Phase 6a)
+**Last updated:** 2026-06-15 (end of Phase 6b)
 **Repo:** https://github.com/codexkw/GAC.git (PUBLIC) · branch `main`
 **Stack:** ASP.NET Core 9 MVC, EF Core 9.0.6 (SQL Server), Razor + ViewComponents, IHtmlLocalizer + .resx, xUnit.
 
@@ -10,7 +10,7 @@
 
 A custom bilingual (English + Arabic, RTL) CMS that replaces the original static HTML pixel-clone of
 `en/ar.gacmotorsaudi.com`. Frontend renders server-side from the database; an admin panel (later phase)
-will manage all content. Built in **8 phases**; **Phases 1–5 and 6a are complete and pushed** (admin panel live; Phase 6b next).
+will manage all content. Built in **8 phases**; **Phases 1–5, 6a and 6b are complete and pushed** (admin panel live, including editable HTML page bodies). Phase 6 (admin) is now complete; **Phase 7 (Polish/QA/SEO)** is next.
 
 | Decision | Choice |
 |---|---|
@@ -55,7 +55,7 @@ GAC/
 From repo root `C:\Users\anas-\source\repos\GAC`:
 ```bash
 dotnet build Solution/GAC.sln -c Debug
-dotnet test  Solution/GAC.sln        # 83 tests; integration tests need DB reachable
+dotnet test  Solution/GAC.sln        # 171 tests; integration tests need DB reachable
 dotnet run --project Solution/GAC.Web # serves the site; Development env loads real conn string
 ```
 - App **seeds at startup** (idempotent): `DbSeeder` (roles + admin) then `ContentSeeder` (EN content). It does **NOT** run migrations.
@@ -72,8 +72,9 @@ dotnet run --project Solution/GAC.Web # serves the site; Development env loads r
 - **Phase 3 — Public rendering & routing** ✅. 60 tests.
 - **Phase 4 — Arabic / RTL** ✅. 67 tests.
 - **Phase 5 — Forms & leads** ✅. 83 tests.
-- **Phase 6a — Admin area (foundation + CRUD)** ✅ (this handoff). 163 tests.
-- **Phase 6b — Admin area (editable HTML bodies)** ⏭️ NEXT · **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy** — pending.
+- **Phase 6a — Admin area (foundation + CRUD)** ✅. 163 tests.
+- **Phase 6b — Admin area (editable HTML bodies)** ✅ (this handoff). `AddBodyHtml` migration applied to the GAC DB. 171 tests.
+- **Phase 7 — Polish/QA/SEO** ⏭️ NEXT · **Phase 8 — Deploy** — pending.
 
 ---
 
@@ -151,6 +152,18 @@ A new auth-gated **`GAC.Web/Areas/Admin`** (route prefix `/admin`, conventional 
 
 ---
 
+## 5e. Phase 6b — Admin area (editable HTML bodies) — what was built
+
+Spec: `docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6. The previously-hardcoded detail/prose pages are now DB-driven and admin-editable as raw HTML; nothing changed visually (bodies seeded verbatim from the old partials). 171 tests green.
+
+- **Schema:** owned `LocalizedText BodyHtml` (`BodyHtml_En`/`BodyHtml_Ar`) added to **`Vehicle`**, **`ContentPage`**, and **`FormPage`** (for the contact-us "Locate Us" directory). Migration **`20260615104433_AddBodyHtml`** — the FIRST Phase-6 migration — **generated AND applied to the GAC DB** (apps do not auto-migrate).
+- **Seed bodies:** the markup from the 9 vehicle + 6 content + 1 contact-us partials is now embedded under `GAC.Infrastructure/SeedContent/{vehicles,content,forms}/<slug>.html` (embedded resources). `ContentSeeder.EnsureBodiesAsync` (runs at startup) **idempotently backfills `BodyHtml.En` only when blank**, matched by slug. Arabic bodies start blank → English fallback at render.
+- **Generic templates:** `Views/Vehicles/Detail.cshtml`, `Views/Content/Page.cshtml`, and `Views/Forms/Page.cshtml` now render `@Html.Raw(Model.BodyHtml.Localize())`. The 16 per-slug body partials (`Views/{Vehicles/Models,Content/Pages,Forms/Forms}/_*.cshtml`) were **deleted**; the markup (custom classes, `mp-*`, sliders, tabs, `data-*`) is preserved inside the body so `main.js` keeps working. `Forms/Page.cshtml` **branches on `FormType.Contact`** (renders the body only; all other form types still render the body **plus** their functional lead form). The **5 functional lead-form partials** (book-a-service, book-a-test-drive, request-a-quote, fleet, recall-enquiry) **remain**.
+- **Admin editing:** a raw-HTML body field (`_LocalizedField` with `Code = true`, En/Ar) was added to the **Vehicles**, **ContentPages**, and **FormPages** editors (FormPages only for `FormType.Contact`); the corresponding admin services now persist `BodyHtml`. `BodyHtml` is `@Html.Raw`-rendered → **trusted, admin-only** content (never user input).
+- **Accepted tradeoff:** the `BodyHtml` holds the **whole page** including its hero/title markup. So the structured `Name`/`Images` fields still drive `/models` + the mega-menu (and remain editable there), but **editing a detail page's hero image or H1 title means editing the HTML body** (those are duplicated in the body markup). Arabic bodies are blank → English fallback until an editor translates them. The structured vehicle children (`SpecGroups`/`Trims`/`Colors`/`FeatureSection`) remain intentionally unmanaged (superseded by the body).
+
+---
+
 ## 6. Routing map
 
 | URL | Handler | Source |
@@ -209,8 +222,8 @@ Mostly content decisions and later-phase work:
    "Fleet Sales" as the top-level label. Owners has 5 children (incl. Road-Side Assistance) vs the static 4.
    Confirm intended labels (editable later via admin).
 5. ~~`rtl.css` empty / content all EN~~ **DONE in Phase 4** — `rtl.css` filled, Cairo loaded, all DB content
-   has Arabic. Remaining gap (intentional): the verbatim marketing prose in the vehicle/content/form body
-   partials stays English until the Phase-6 admin makes it editable (see §5b).
+   has Arabic. The verbatim marketing prose now lives in the editable `BodyHtml` (Phase 6b); its Arabic is
+   blank → English fallback until an editor translates it (see §5e + deferred #15).
 6. Inert `<!-- FOOTER -->` comments remain in the 8 vehicle partials (harmless).
 8. **Rejected/forged POSTs surface as `405 Method Not Allowed` (not 400).** When a form POST fails anti-forgery (or any 4xx), `UseStatusCodePagesWithReExecute("/not-found")` re-executes the original POST against the GET-only `/not-found` page → 405. Security/function are unaffected (valid token → processed; missing/invalid token → rejected, no lead). Only the error page shown for a forged POST is affected — a path normal users never hit. Tidy later if desired (e.g. dedicated antiforgery error handling).
 9. **One real "E2E Verify" lead row** (`Email='e2e.verify@example.com'`, FormType TestDrive) was inserted into the live DB during Phase-5 live verification and NOT deleted (deleting from the shared prod DB wasn't authorized). Remove it via the Phase-6 admin or a manual `DELETE FROM Leads WHERE Email='e2e.verify@example.com'`.
@@ -231,30 +244,24 @@ Mostly content decisions and later-phase work:
 14. **Minor admin hardening (non-blocking):** `AdminMenuService.UpdateAsync` doesn't re-validate `ParentId`
     against self/descendant on a hand-crafted POST (UI prevents it; 2-level menu); `Admin/Media/List` is unpaged;
     `DashboardController` lacks `[AutoValidateAntiforgeryToken]` (harmless — it has no POST).
+15. **Arabic page bodies untranslated (Phase 6b).** The `BodyHtml.Ar` of every vehicle/content/contact-us page
+    is blank → English fallback renders. Translate them via the admin raw-HTML editor (En/Ar code field) when an
+    editor is available. Content-only; not a code task.
+16. **`FormsController.Submit` accepts POSTs for `FormType.Contact` slugs (low risk, pre-existing).** contact-us
+    has no form — today only the **view** omits it; a hand-crafted POST to `/forms/contact-us` would still create a
+    `Contact` lead. Optional hardening: reject/ignore `FormType.Contact` server-side in `Submit`.
+17. **Optional raw-HTML editor niceties.** The Phase-6b body editor is a plain `Code = true` textarea. Optional
+    client-side polish (syntax highlighting, validation) could be added; purely cosmetic.
 
 ---
 
-## 9. Next: Phase 6b — Admin area (editable HTML bodies)
+## 9. Next: Phase 7 — Polish / QA / SEO
 
-Phase 6a (above) delivered the admin foundation + CRUD over everything already DB-driven. Phase 6b makes the
-currently-hardcoded detail/prose pages admin-editable, per the spec
-(`docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6):
+**Phase 6 (admin) is now complete** — 6a delivered the foundation + CRUD over everything already DB-driven, and
+6b (see §5e) made the previously-hardcoded detail/prose pages admin-editable as raw HTML. All admin content
+management is in place; `AddBodyHtml` is applied to the GAC DB.
 
-1. **Migration `AddBodyHtml`** — add a `BodyHtml` (`LocalizedText` → `BodyHtml_En`/`BodyHtml_Ar`) column to
-   **`Vehicle`**, **`ContentPage`**, and **`FormPage`** (for the contact-us "Locate Us" directory). This is the
-   FIRST Phase-6 migration — apply it to prod (`dotnet ef database update`).
-2. **One-time content migration** (`ContentSeeder.EnsureBodiesAsync`, idempotent — set `_En` only when blank):
-   transcribe the markup from the 9 vehicle + 6 content + contact-us partials into the DB so nothing changes
-   visually. Arabic bodies start blank → English fallback.
-3. **Generic templates** — `Views/Vehicles/Detail.cshtml`, `Views/Content/Page.cshtml`, and the contact-us branch
-   render `@Html.Raw(Model.BodyHtml.Localize())`; delete the 9 + 6 + 1 per-slug partials. `main.js` keeps working
-   because the exact markup (custom classes, `mp-*`, sliders, tabs, `data-*`) is preserved.
-4. **Admin editing** — add a **raw-HTML code-editor** field (En/Ar; the `_LocalizedField` partial already supports
-   `Code = true`) to the Vehicles, ContentPages, and FormPages editors.
-
-`BodyHtml` is `@Html.Raw`-rendered → **trusted, admin-only** content (never user input). The structured vehicle
-children (`SpecGroups`/`Trims`/`Colors`/`FeatureSection`) remain intentionally unmanaged (superseded by the body).
-
-**Then:** Phase 7 (Polish/QA/SEO) · Phase 8 (Deploy). Before go-live also clear the deferred items in §8
-(esp. #1 hidden AION hero slides, #9 the `e2e.verify@example.com` lead — removable now via the Leads admin,
-#11 change the admin password + deploy).
+Remaining roadmap: **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy**. Before go-live also clear the deferred
+items in §8 — especially #1 (hidden AION hero slides), #9 (the `e2e.verify@example.com` lead — removable now via
+the Leads admin), #11 (change the admin password + deploy), and #15 (translate the blank Arabic page bodies via
+the new admin raw-HTML editor).
