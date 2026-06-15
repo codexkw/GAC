@@ -131,4 +131,22 @@
   <data name="Electric" xml:space="preserve"><value>كهربائية</value></data>
   <data name="Not sure which model?" xml:space="preserve"><value>غير متأكد من الموديل المناسب؟</value></data>
   <data name="Book a test drive or talk to a GAC product specialist and we'll help you compare the range." xml:space="preserve"><value>احجز تجربة قيادة أو تحدّث إلى أحد مختصي منتجات جي إيه سي وسنساعدك على مقارنة التشكيلة.</value></data>
+
+  <data name="Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="You are here:" xml:space="preserve"><value>أنت هنا:</value></data>
+  <data name="Homepage" xml:space="preserve"><value>الصفحة الرئيسية</value></data>
+  <data name="Please select ..." xml:space="preserve"><value>الرجاء الاختيار ...</value></data>
+  <data name="Current Vehicle Mileage" xml:space="preserve"><value>ممشى السيارة الحالي</value></data>
+  <data name="Vehicle Service Due Date" xml:space="preserve"><value>تاريخ استحقاق صيانة السيارة</value></data>
+  <data name="DD/MM/YYYY" xml:space="preserve"><value>يوم/شهر/سنة</value></data>
+  <data name="Select Branch" xml:space="preserve"><value>اختر الفرع</value></data>
+  <data name="Title" xml:space="preserve"><value>اللقب</value></data>
+  <data name="First Name" xml:space="preserve"><value>الاسم الأول</value></data>
+  <data name="Last Name" xml:space="preserve"><value>اسم العائلة</value></data>
+  <data name="Email Address" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Contact Number" xml:space="preserve"><value>رقم الجوال</value></data>
+  <data name="Message" xml:space="preserve"><value>الرسالة</value></data>
+  <data name="Privacy statement &amp; legal disclaimer" xml:space="preserve"><value>بيان الخصوصية وإخلاء المسؤولية القانوني</value></data>
+  <data name="I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at &lt;a href='/privacy-policy'&gt;our Privacy Policy&lt;/a&gt;" xml:space="preserve"><value>أقرّ وأفهم أنه سيتم مشاركة معلوماتي مع شركة مطوع القاضي للسيارات والشركات التابعة لها أو أطراف أخرى وفقاً لما يقتضيه القانون لأغراض الامتثال أو حملات السلامة أو الاستفسارات الحكومية أو الإجراءات القانونية المماثلة. كما قد تُشارَك معلوماتي لأغراض البحث وتطوير المنتجات وإدارة علاقات العملاء لتقديم الدعم. يوضّح بيان الخصوصية كيفية تعامل AAC وجي إيه سي مع المعلومات الشخصية التي تتم مشاركتها معنا في &lt;a href='/privacy-policy'&gt;سياسة الخصوصية الخاصة بنا&lt;/a&gt;</value></data>
+  <data name="I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information." xml:space="preserve"><value>أرغب في تلقّي أي معلومات تسويقية أو مشاركة معلوماتي مع أطراف ثالثة لغرض تزويدي بالمعلومات التسويقية.</value></data>
 </root>
