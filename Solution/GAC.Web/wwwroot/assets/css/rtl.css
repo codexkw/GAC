@@ -101,3 +101,6 @@
 [dir="rtl"] .mp-card__title::after { right: auto; left: var(--space-5); }
 /* styles.css:1845 .crumb-bar .crumb-back optical offset margin-left:-6px */
 [dir="rtl"] .crumb-bar .crumb-back { margin-left: 0; margin-right: -6px; }
+/* styles.css .skip-link uses physical left; mirror to the start (right) edge in RTL */
+[dir="rtl"] .skip-link{left:auto;right:-9999px;border-radius:0 0 0 6px}
+[dir="rtl"] .skip-link:focus{right:0}
