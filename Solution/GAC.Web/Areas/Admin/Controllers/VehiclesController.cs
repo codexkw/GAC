@@ -58,4 +58,30 @@ public class VehiclesController : Controller
 
     [HttpPost] public async Task<IActionResult> MoveImage(int imageId, int vehicleId, int direction)
     { await _svc.MoveImageAsync(imageId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    public async Task<IActionResult> FeatureEdit(int vehicleId, int? id)
+    {
+        var feature = id is null
+            ? new FeatureSection { VehicleId = vehicleId }
+            : await _svc.GetFeatureAsync(id.Value);
+        if (feature is null) return NotFound();
+        feature.VehicleId = vehicleId;
+        return View(feature);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> FeatureSave(int vehicleId, FeatureSection feature)
+    {
+        feature.VehicleId = vehicleId;
+        if (feature.Id == 0) await _svc.AddFeatureAsync(vehicleId, feature);
+        else await _svc.UpdateFeatureAsync(feature);
+        TempData["Flash"] = "Feature saved.";
+        return RedirectToAction(nameof(Edit), new { id = vehicleId });
+    }
+
+    [HttpPost] public async Task<IActionResult> RemoveFeature(int featureId, int vehicleId)
+    { await _svc.RemoveFeatureAsync(featureId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> MoveFeature(int featureId, int vehicleId, int direction)
+    { await _svc.MoveFeatureAsync(featureId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }

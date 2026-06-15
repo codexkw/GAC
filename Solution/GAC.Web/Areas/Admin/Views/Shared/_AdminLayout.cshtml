@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GAC Admin — @ViewData["Title"]</title>
     <link rel="stylesheet" href="/assets/css/admin.css" />
+    @await RenderSectionAsync("Head", required: false)
 </head>
 <body class="adm">
     <header class="adm-top">

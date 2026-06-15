@@ -180,3 +180,13 @@ a { color: #1666c2; }
     cursor: pointer;
 }
 .adm-picker-thumb:hover { border-color: #1666c2; }
+
+/* Trix: limit toolbar to bold/italic/list/link for non-tech editors */
+trix-toolbar .trix-button-group--text-tools .trix-button--icon-strike,
+trix-toolbar .trix-button-group--block-tools .trix-button--icon-heading-1,
+trix-toolbar .trix-button-group--block-tools .trix-button--icon-quote,
+trix-toolbar .trix-button-group--block-tools .trix-button--icon-code,
+trix-toolbar .trix-button-group--block-tools .trix-button--icon-decrease-nesting-level,
+trix-toolbar .trix-button-group--block-tools .trix-button--icon-increase-nesting-level,
+trix-toolbar .trix-button-group--file-tools { display: none; }
+.adm-trix { min-height: 160px; background: #fff; }

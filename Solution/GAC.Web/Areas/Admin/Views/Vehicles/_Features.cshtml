@@ -1,0 +1,38 @@
+@model GAC.Core.Content.Vehicle
+<h2>Feature sections</h2>
+<table class="adm-table">
+  <thead><tr><th>Order</th><th>Heading</th><th>Layout</th><th></th></tr></thead>
+  <tbody>
+    @foreach (var f in Model.Features.OrderBy(x => x.SortOrder))
+    {
+        <tr>
+          <td>
+            <form asp-action="MoveFeature" method="post" style="display:inline">
+              <input type="hidden" name="featureId" value="@f.Id" />
+              <input type="hidden" name="vehicleId" value="@Model.Id" />
+              <input type="hidden" name="direction" value="-1" />
+              <button type="submit" class="adm-btn" title="Move up">&uarr;</button>
+            </form>
+            <form asp-action="MoveFeature" method="post" style="display:inline">
+              <input type="hidden" name="featureId" value="@f.Id" />
+              <input type="hidden" name="vehicleId" value="@Model.Id" />
+              <input type="hidden" name="direction" value="1" />
+              <button type="submit" class="adm-btn" title="Move down">&darr;</button>
+            </form>
+          </td>
+          <td>@f.Heading.En</td>
+          <td>@f.Layout</td>
+          <td>
+            <a asp-area="Admin" asp-action="FeatureEdit" asp-route-vehicleId="@Model.Id" asp-route-id="@f.Id">Edit</a>
+            <form asp-action="RemoveFeature" method="post" style="display:inline"
+                  onsubmit="return confirm('Remove this feature?')">
+              <input type="hidden" name="featureId" value="@f.Id" />
+              <input type="hidden" name="vehicleId" value="@Model.Id" />
+              <button type="submit" class="adm-btn adm-btn--danger">Remove</button>
+            </form>
+          </td>
+        </tr>
+    }
+  </tbody>
+</table>
+<p><a asp-area="Admin" asp-action="FeatureEdit" asp-route-vehicleId="@Model.Id" class="adm-btn">Add feature section</a></p>

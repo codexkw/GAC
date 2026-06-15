@@ -1,0 +1,58 @@
+@using GAC.Core.Content
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model GAC.Core.Content.FeatureSection
+@{
+    ViewData["Title"] = Model.Id == 0 ? "New feature" : "Edit feature";
+}
+@section Head { <link rel="stylesheet" href="/assets/vendor/trix/trix.css" /> }
+
+<p><a asp-area="Admin" asp-action="Edit" asp-route-id="@Model.VehicleId">&larr; Back to vehicle</a></p>
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" asp-action="FeatureSave">
+  <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+  <input type="hidden" asp-for="Id" />
+
+  <div class="adm-field adm-localized">
+    <span class="adm-localized__label">Heading</span>
+    <div class="adm-localized__pair">
+      <div><label>English</label><input name="Heading.En" value="@Model.Heading.En" /></div>
+      <div dir="rtl"><label>Arabic</label><input name="Heading.Ar" value="@Model.Heading.Ar" /></div>
+    </div>
+  </div>
+
+  <div class="adm-field">
+    <label>Layout</label>
+    <select asp-for="Layout" asp-items="Html.GetEnumSelectList<FeatureLayout>()"></select>
+  </div>
+
+  <div class="adm-field">
+    <label>Image</label>
+    <span style="display:flex;gap:.5rem;align-items:center">
+      <input type="text" name="ImagePath" value="@Model.ImagePath" data-media-input />
+      <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+    </span>
+  </div>
+
+  <div class="adm-field adm-localized">
+    <span class="adm-localized__label">Body</span>
+    <div class="adm-localized__pair">
+      <div>
+        <label>English</label>
+        <input type="hidden" id="bodyEn" name="Body.En" value="@Model.Body.En" />
+        <trix-editor input="bodyEn" class="adm-trix"></trix-editor>
+      </div>
+      <div dir="rtl">
+        <label>Arabic</label>
+        <input type="hidden" id="bodyAr" name="Body.Ar" value="@Model.Body.Ar" />
+        <trix-editor input="bodyAr" class="adm-trix" dir="rtl"></trix-editor>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="adm-btn">Save feature</button>
+</form>
+
+<partial name="_PickerModal" />
+
+@section Scripts { <script src="/assets/vendor/trix/trix.umd.min.js"></script> }
