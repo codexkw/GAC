@@ -1,3 +1,4 @@
+using System.Reflection;
 using GAC.Core.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ public static class ContentSeeder
         await SeedNewsArticlesAsync(db);
         await SeedOffersAsync(db);
         await EnsureArabicAsync(db);
+        await EnsureBodiesAsync(db);
     }
 
     // ──────────────────────────────────────────────
@@ -176,6 +178,63 @@ public static class ContentSeeder
         }
 
         if (changed) await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  HTML body backfill (Phase 6b). Idempotent: only sets a row's English
+    //  BodyHtml when it is currently blank. Arabic left null → English fallback
+    //  at render time. Source markup is embedded under SeedContent/<area>/<slug>.html.
+    // ──────────────────────────────────────────────
+    private static async Task EnsureBodiesAsync(ApplicationDbContext db)
+    {
+        var changed = false;
+
+        foreach (var v in await db.Vehicles.ToListAsync())
+        {
+            if (!string.IsNullOrWhiteSpace(v.BodyHtml?.En)) continue;
+            var html = ReadSeedBody("vehicles", v.Slug);
+            if (html is null) continue; // hidden vehicles have no seed body
+            v.BodyHtml = new LocalizedText { En = html };
+            changed = true;
+        }
+
+        foreach (var p in await db.ContentPages.ToListAsync())
+        {
+            if (!string.IsNullOrWhiteSpace(p.BodyHtml?.En)) continue;
+            var html = ReadSeedBody("content", p.Slug);
+            if (html is null) continue;
+            p.BodyHtml = new LocalizedText { En = html };
+            changed = true;
+        }
+
+        // Only the contact-us "Locate Us" directory has a body; the 5 functional
+        // form pages keep their server-rendered partials.
+        foreach (var f in await db.FormPages.ToListAsync())
+        {
+            if (!string.IsNullOrWhiteSpace(f.BodyHtml?.En)) continue;
+            var html = ReadSeedBody("forms", f.Slug);
+            if (html is null) continue;
+            f.BodyHtml = new LocalizedText { En = html };
+            changed = true;
+        }
+
+        if (changed) await db.SaveChangesAsync();
+    }
+
+    private static readonly Assembly SeedAssembly = typeof(ContentSeeder).Assembly;
+
+    /// <summary>Reads SeedContent/&lt;area&gt;/&lt;slug&gt;.html as an embedded resource, or null if absent.
+    /// Matches case-insensitively and treats '-'/'_' as equivalent to tolerate manifest-name mangling.</summary>
+    private static string? ReadSeedBody(string area, string slug)
+    {
+        static string Norm(string s) => s.Replace('-', '_').ToLowerInvariant();
+        var wanted = Norm($".SeedContent.{area}.{slug}.html");
+        var name = SeedAssembly.GetManifestResourceNames()
+            .FirstOrDefault(n => Norm(n).EndsWith(wanted, StringComparison.Ordinal));
+        if (name is null) return null;
+        using var stream = SeedAssembly.GetManifestResourceStream(name)!;
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd();
     }
 
     // ──────────────────────────────────────────────
