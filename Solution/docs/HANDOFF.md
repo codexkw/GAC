@@ -1,6 +1,6 @@
 # GAC Motors Bilingual CMS — Handoff
 
-**Last updated:** 2026-06-15 (end of Phase 5)
+**Last updated:** 2026-06-15 (end of Phase 6a)
 **Repo:** https://github.com/codexkw/GAC.git (PUBLIC) · branch `main`
 **Stack:** ASP.NET Core 9 MVC, EF Core 9.0.6 (SQL Server), Razor + ViewComponents, IHtmlLocalizer + .resx, xUnit.
 
@@ -10,7 +10,7 @@
 
 A custom bilingual (English + Arabic, RTL) CMS that replaces the original static HTML pixel-clone of
 `en/ar.gacmotorsaudi.com`. Frontend renders server-side from the database; an admin panel (later phase)
-will manage all content. Built in **8 phases**; **Phases 1–3 are complete and pushed.**
+will manage all content. Built in **8 phases**; **Phases 1–5 and 6a are complete and pushed** (admin panel live; Phase 6b next).
 
 | Decision | Choice |
 |---|---|
@@ -71,8 +71,9 @@ dotnet run --project Solution/GAC.Web # serves the site; Development env loads r
 - **Phase 2 — Content model** ✅ (18 entities + `LocalizedText`, `AddContentModel` migration applied to live DB, idempotent EN seeder). 15 tests.
 - **Phase 3 — Public rendering & routing** ✅. 60 tests.
 - **Phase 4 — Arabic / RTL** ✅. 67 tests.
-- **Phase 5 — Forms & leads** ✅ (this handoff). 83 tests.
-- **Phase 6 — Admin area** ⏭️ NEXT · **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy** — pending.
+- **Phase 5 — Forms & leads** ✅. 83 tests.
+- **Phase 6a — Admin area (foundation + CRUD)** ✅ (this handoff). 163 tests.
+- **Phase 6b — Admin area (editable HTML bodies)** ⏭️ NEXT · **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy** — pending.
 
 ---
 
@@ -137,6 +138,19 @@ Plan: `docs/superpowers/plans/2026-06-15-phase5-forms-leads.md`. The 5 lead-capt
 
 ---
 
+## 5d. Phase 6a — Admin area (foundation + CRUD) — what was built
+
+Spec: `docs/superpowers/specs/2026-06-15-phase6-admin-design.md`. Plan: `docs/superpowers/plans/2026-06-15-phase6a-admin-foundation-crud.md`.
+A new auth-gated **`GAC.Web/Areas/Admin`** (route prefix `/admin`, conventional area route `{area:exists}/{controller=Dashboard}/{action=Index}/{id?}`) with its own `_AdminLayout` (NOT the public chrome). 163 tests green; built via subagent-driven development (each task spec- + quality-reviewed). **No schema change** — all entities already existed.
+
+- **Auth & roles:** `ConfigureApplicationCookie` (`LoginPath=/admin/login`, `AccessDeniedPath=/admin/denied`, `LogoutPath=/admin/logout`). Three authorization policies (`AdminPolicies.cs`): **`ContentEditor`** = Admin∪Editor, **`LeadsAccess`** = Admin∪Sales, **`AdminOnly`** = Admin. **Admin is a superset** (in every policy). `AccountController` = login/logout/denied (login `ReturnUrl` guarded by `Url.IsLocalUrl`). Seeded admin `admin@gacsaudi.local` / `ChangeMe!2026`.
+- **Admin write-services** (NEW; separate from the read-only public services, which are untouched): `IAdminLeadService`, `IAdminVehicleService`, `IAdminMenuService`, `IAdminHomeService`, `IAdminNewsService`, `IAdminOfferService`, `IAdminPageService`, `IAdminSettingsService` (Core ifaces + Infra impls, all `AddScoped`), plus `IMediaService`. Users use `UserManager`/`RoleManager` directly (no service). Admin services use **tracked** EF + `SaveChangesAsync`; lists include hidden/unpublished rows.
+- **What each section manages:** Leads (list/filter by FormType/Status/date, detail, status New→Contacted→Closed, delete) · Vehicles (meta + bilingual fields + visibility + SortOrder move + category flags + images add/remove/reorder → **drives `/models` + the mega-menu**) · Menu (tree CRUD + reorder + parent → header nav) · Hero slides · News · Offers · Content/Form page metadata (Title/Intro/Meta/IsVisible — **edit-only**; bodies come in 6b) · Site settings (Admin only) · Users (Admin only — create/edit, single role, disable via lockout, password reset; **guards against self-disable and removing the last Admin**).
+- **Shared UX:** `_LocalizedField` partial renders En+Ar inputs per `LocalizedText` (field names `Foo.En`/`Foo.Ar` bind the owned type). **Media library + reusable picker** (`MediaService` → uploads to `Media:Root` config, default `wwwroot/uploads`, served by `UseStaticFiles`; image-only allow-list by extension AND content-type, GUID filenames, 5 MB cap; `X-Content-Type-Options: nosniff` now set on all static files). The picker modal (`_PickerModal`) is included on the 4 image-bearing edit views (Vehicles/HomeContent/News/Offers); `admin.js` wires `[data-media-pick]`→`[data-media-input]`.
+- **Gotchas confirmed this phase:** (1) **Razor compiles at BUILD time** here — a malformed `.cshtml` fails `dotnet build` (the earlier "runtime Razor" note was wrong). (2) The `/{slug}` catch-all in `PageController` now carries a regex constraint `^(?!(?i:admin)$).*$` so the bare `/Admin` root isn't swallowed; multi-segment `/Admin/*` were always fine. (3) Tests authenticate via a `TestAuthHandler` (`X-Test-Role` header) wired in `AdminWebApplicationFactory` — it overrides only the default *authenticate* scheme, leaving the Identity cookie as the *challenge* scheme so anonymous → 302 `/admin/login`.
+
+---
+
 ## 6. Routing map
 
 | URL | Handler | Source |
@@ -150,6 +164,8 @@ Plan: `docs/superpowers/plans/2026-06-15-phase5-forms-leads.md`. The 5 lead-capt
 | `*.html` | `LegacyHtmlRedirectMiddleware` | 301 → clean URL |
 | `POST /forms/{slug}` | `FormsController.Submit` | persists `Lead`, PRG → `/{slug}` (Phase 5) |
 | `/Culture/Set` | `CultureController.Set` | sets language cookie |
+| `/admin/login`, `/admin/logout`, `/admin/denied` | `Areas/Admin/AccountController` | attribute-routed (Phase 6a) |
+| `/Admin`, `/Admin/{controller}/{action}/{id?}` | `Areas/Admin/*Controller` | conventional area route; auth-gated by policy (Phase 6a) |
 
 Precedence: literal attribute routes (`/models`, `/news`, `/offers`, `/not-found`) and the conventional
 route (`/`, `/Culture/Set`) beat the single-segment `/{slug}`. Hidden vehicles (`aion-v`, `aion-es`,
@@ -202,16 +218,43 @@ Mostly content decisions and later-phase work:
 7. **Stale rows in the live dev DB** from earlier seeds (e.g. `.html` menu URLs, `news`/`offers` ContentPages):
    harmless because render-time `NormalizeUrl` cleans links and explicit routes win. Fresh DBs get clean data.
    Only re-seeds on an empty table (idempotent guards).
+11. **Admin migration not yet applied to prod / no admin deploy.** Phase 6a added NO migration (all entities
+    pre-existed), so no `dotnet ef database update` is needed for it. But the admin code is committed, not deployed.
+    Change the seeded admin password (`ChangeMe!2026`) before exposing `/admin` publicly.
+12. **`NormalizeUrl` accepts `javascript:`-scheme URLs** (menu `Url`, hero `CtaLink`, etc.) — admin-authored,
+    Razor attribute-encodes them, but a `javascript:`/`data:` scheme survives encoding in an `href`. Admin-only
+    input, low risk; cheap defense-in-depth = add a scheme allow-list (`/`,`http:`,`https:`,`tel:`,`mailto:`,`#`)
+    in `UrlHelpers.NormalizeUrl` (benefits all public rendering). Deferred.
+13. **News `Detail.cshtml` renders `Body` via `@Html.Raw`** — ContentEditors authoring news bodies is now a
+    deliberate **trusted-HTML** decision (aligns with Phase 6b's editable-HTML-body direction). If untrusted
+    editors are ever added, sanitize on render.
+14. **Minor admin hardening (non-blocking):** `AdminMenuService.UpdateAsync` doesn't re-validate `ParentId`
+    against self/descendant on a hand-crafted POST (UI prevents it; 2-level menu); `Admin/Media/List` is unpaged;
+    `DashboardController` lacks `[AutoValidateAntiforgeryToken]` (harmless — it has no POST).
 
 ---
 
-## 9. Next: Phase 6 — Admin area
+## 9. Next: Phase 6b — Admin area (editable HTML bodies)
 
-Scope: build `Areas/Admin` (auth-gated, roles Admin/Editor/Sales already seeded) to manage content and
-leads. Core pieces: (a) **Leads inbox** — list/filter the `Lead` rows (by FormType/Status/date), view detail,
-change `LeadStatus` (New→Contacted→Closed); this was intentionally deferred from Phase 5. (b) **Content CRUD**
-for the structured types — Vehicles (+children), HomePage/HeroSlides, ContentPages, FormPages, News, Offers,
-SiteSettings, MenuItems — editing both `LocalizedText` `_En`/`_Ar` fields so the verbatim English marketing
-prose currently baked into the `Views/**/_*.cshtml` partials becomes DB-driven and translatable (see §5b/§8).
-(c) Media upload to the configurable storage root. Identity + login + roles exist since Phase 1
-(`admin@gacsaudi.local` / `ChangeMe!2026` — change before go-live). Edits go live immediately (no draft/versioning).
+Phase 6a (above) delivered the admin foundation + CRUD over everything already DB-driven. Phase 6b makes the
+currently-hardcoded detail/prose pages admin-editable, per the spec
+(`docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6):
+
+1. **Migration `AddBodyHtml`** — add a `BodyHtml` (`LocalizedText` → `BodyHtml_En`/`BodyHtml_Ar`) column to
+   **`Vehicle`**, **`ContentPage`**, and **`FormPage`** (for the contact-us "Locate Us" directory). This is the
+   FIRST Phase-6 migration — apply it to prod (`dotnet ef database update`).
+2. **One-time content migration** (`ContentSeeder.EnsureBodiesAsync`, idempotent — set `_En` only when blank):
+   transcribe the markup from the 9 vehicle + 6 content + contact-us partials into the DB so nothing changes
+   visually. Arabic bodies start blank → English fallback.
+3. **Generic templates** — `Views/Vehicles/Detail.cshtml`, `Views/Content/Page.cshtml`, and the contact-us branch
+   render `@Html.Raw(Model.BodyHtml.Localize())`; delete the 9 + 6 + 1 per-slug partials. `main.js` keeps working
+   because the exact markup (custom classes, `mp-*`, sliders, tabs, `data-*`) is preserved.
+4. **Admin editing** — add a **raw-HTML code-editor** field (En/Ar; the `_LocalizedField` partial already supports
+   `Code = true`) to the Vehicles, ContentPages, and FormPages editors.
+
+`BodyHtml` is `@Html.Raw`-rendered → **trusted, admin-only** content (never user input). The structured vehicle
+children (`SpecGroups`/`Trims`/`Colors`/`FeatureSection`) remain intentionally unmanaged (superseded by the body).
+
+**Then:** Phase 7 (Polish/QA/SEO) · Phase 8 (Deploy). Before go-live also clear the deferred items in §8
+(esp. #1 hidden AION hero slides, #9 the `e2e.verify@example.com` lead — removable now via the Leads admin,
+#11 change the admin password + deploy).
