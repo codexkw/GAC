@@ -24,12 +24,16 @@ public class AdminSettingsServiceTests
     [Fact]
     public async Task Update_PersistsFields_AndKeepsSingleton()
     {
-        var db = NewDb(nameof(Update_PersistsFields_AndKeepsSingleton));
+        var name = nameof(Update_PersistsFields_AndKeepsSingleton);
+        var db = NewDb(name);
         var svc = new AdminSettingsService(db);
         await svc.UpdateAsync(new SiteSettings { Phone = "999", FooterTagline = "Tag" });
-        var s = await svc.GetAsync();
+
+        // Re-read through a fresh context bound to the same in-memory database.
+        using var verify = NewDb(name);
+        var s = await verify.SiteSettings.SingleAsync();
         Assert.Equal("999", s.Phone);
         Assert.Equal("Tag", s.FooterTagline.En);
-        Assert.Equal(1, await db.SiteSettings.CountAsync());
+        Assert.Equal(1, await verify.SiteSettings.CountAsync());
     }
 }
