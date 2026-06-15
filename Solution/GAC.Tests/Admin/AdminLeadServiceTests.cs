@@ -33,11 +33,59 @@ public class AdminLeadServiceTests
     [Fact]
     public async Task SetStatus_Updates()
     {
-        var db = NewDb(nameof(SetStatus_Updates)); await Seed(db);
+        var name = nameof(SetStatus_Updates);
+        var db = NewDb(name); await Seed(db);
         var svc = new AdminLeadService(db);
         var id = (await db.Leads.FirstAsync()).Id;
         Assert.True(await svc.SetStatusAsync(id, LeadStatus.Closed));
-        Assert.Equal(LeadStatus.Closed, (await db.Leads.FindAsync(id))!.Status);
+
+        using var verify = NewDb(name);
+        Assert.Equal(LeadStatus.Closed, (await verify.Leads.FindAsync(id))!.Status);
+    }
+
+    [Fact]
+    public async Task List_FiltersByFormType()
+    {
+        var db = NewDb(nameof(List_FiltersByFormType)); await Seed(db);
+        var svc = new AdminLeadService(db);
+        var rows = await svc.ListAsync(new LeadFilter(FormType.Quote, null, null, null));
+        Assert.Single(rows);
+        Assert.Equal("B", rows[0].Name);
+    }
+
+    [Fact]
+    public async Task List_FiltersByDateRange_InclusiveBoundaries()
+    {
+        var db = NewDb(nameof(List_FiltersByDateRange_InclusiveBoundaries)); await Seed(db);
+        var svc = new AdminLeadService(db);
+
+        // From only: 2026-06-01 lead is before From and excluded; 2026-06-10 lead included (From inclusive of its day).
+        var fromOnly = await svc.ListAsync(new LeadFilter(null, null, new DateOnly(2026, 6, 10), null));
+        Assert.Single(fromOnly);
+        Assert.Equal("B", fromOnly[0].Name);
+
+        // To only: lead created 2026-06-01T00:00Z is included when To = 2026-06-01 (To covers the whole day via < To.AddDays(1)).
+        var toOnly = await svc.ListAsync(new LeadFilter(null, null, null, new DateOnly(2026, 6, 1)));
+        Assert.Single(toOnly);
+        Assert.Equal("A", toOnly[0].Name);
+
+        // Window between the two leads returns nothing.
+        var between = await svc.ListAsync(new LeadFilter(null, null, new DateOnly(2026, 6, 2), new DateOnly(2026, 6, 9)));
+        Assert.Empty(between);
+    }
+
+    [Fact]
+    public async Task Get_ReturnsLead_OrNull()
+    {
+        var db = NewDb(nameof(Get_ReturnsLead_OrNull)); await Seed(db);
+        var svc = new AdminLeadService(db);
+        var seeded = await db.Leads.FirstAsync();
+
+        var found = await svc.GetAsync(seeded.Id);
+        Assert.NotNull(found);
+        Assert.Equal(seeded.Name, found!.Name);
+
+        Assert.Null(await svc.GetAsync(999999));
     }
 
     [Fact]
