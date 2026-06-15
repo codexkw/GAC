@@ -9,9 +9,9 @@ namespace GAC.Infrastructure.Services;
 public class MediaService : IMediaService
 {
     private static readonly HashSet<string> AllowedExt =
-        new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg" };
+        new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
     private static readonly HashSet<string> AllowedCt =
-        new(StringComparer.OrdinalIgnoreCase) { "image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml" };
+        new(StringComparer.OrdinalIgnoreCase) { "image/jpeg", "image/png", "image/webp", "image/gif" };
 
     private readonly ApplicationDbContext _db;
     private readonly MediaOptions _opt;
@@ -26,7 +26,7 @@ public class MediaService : IMediaService
     {
         var ext = Path.GetExtension(originalFileName);
         if (string.IsNullOrEmpty(ext) || !AllowedExt.Contains(ext) || !AllowedCt.Contains(contentType))
-            return new MediaUploadResult(false, null, "Only image files (jpg, png, webp, gif, svg) are allowed.");
+            return new MediaUploadResult(false, null, "Only image files (jpg, png, webp, gif) are allowed.");
         if (length <= 0 || length > _opt.MaxBytes)
             return new MediaUploadResult(false, null, $"File must be between 1 byte and {_opt.MaxBytes / 1024} KB.");
 
