@@ -29,7 +29,7 @@ public class VehiclesController : Controller
     {
         if (string.IsNullOrWhiteSpace(vehicle.Slug))
             ModelState.AddModelError(nameof(vehicle.Slug), "Slug is required.");
-        if (await _svc.SlugExistsAsync(vehicle.Slug ?? "", vehicle.Id == 0 ? null : vehicle.Id))
+        else if (await _svc.SlugExistsAsync(vehicle.Slug, vehicle.Id == 0 ? null : vehicle.Id))
             ModelState.AddModelError(nameof(vehicle.Slug), "That slug is already in use.");
         if (!ModelState.IsValid) return View("Edit", vehicle);
 

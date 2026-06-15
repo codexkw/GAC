@@ -68,6 +68,7 @@ public class AdminVehicleService : IAdminVehicleService
 
     public async Task<int> AddImageAsync(int vehicleId, string path, VehicleImageKind kind, CancellationToken ct = default)
     {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
         var nextOrder = await _db.VehicleImages.Where(i => i.VehicleId == vehicleId).CountAsync(ct);
         var img = new VehicleImage { VehicleId = vehicleId, Path = path, Kind = kind, SortOrder = nextOrder };
         _db.VehicleImages.Add(img);
