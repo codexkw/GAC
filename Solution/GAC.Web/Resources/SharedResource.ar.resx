@@ -95,4 +95,30 @@
   <data name="A representative will contact you within one business day." xml:space="preserve"><value>سيتواصل معك أحد ممثلينا خلال يوم عمل واحد.</value></data>
   <data name="Submit" xml:space="preserve"><value>إرسال</value></data>
   <data name="Skip to main content" xml:space="preserve"><value>تخطَّ إلى المحتوى الرئيسي</value></data>
+
+  <data name="Model" xml:space="preserve"><value>الموديل</value></data>
+  <data name="Promotions" xml:space="preserve"><value>العروض الترويجية</value></data>
+  <data name="Latest Offers" xml:space="preserve"><value>أحدث العروض</value></data>
+  <data name="Discover our extensive selection of GAC offers and promotions from Mutawa Alkadi Automotive." xml:space="preserve"><value>اكتشف تشكيلتنا الواسعة من عروض وتخفيضات جي إيه سي من مطوع القاضي للسيارات.</value></data>
+  <data name="Buy now, pay after 2 years" xml:space="preserve"><value>اشترِ الآن وادفع بعد سنتين</value></data>
+  <data name="0% interest" xml:space="preserve"><value>بدون فوائد</value></data>
+  <data name="View Offers" xml:space="preserve"><value>اطّلع على العروض</value></data>
+
+  <data name="Our showrooms" xml:space="preserve"><value>معارضنا</value></data>
+  <data name="Locations" xml:space="preserve"><value>المواقع</value></data>
+  <data name="Mutawa Alkadi Automotive has a strong presence across Kuwait with a number of showrooms that stretch across the country." xml:space="preserve"><value>تتمتع مطوع القاضي للسيارات بحضور قوي في جميع أنحاء الكويت من خلال عدد من المعارض المنتشرة في كل أرجاء البلاد.</value></data>
+  <data name="Find Us" xml:space="preserve"><value>أوجدنا</value></data>
+
+  <data name="Aftersales" xml:space="preserve"><value>خدمة ما بعد البيع</value></data>
+  <data name="Book a service" xml:space="preserve"><value>احجز صيانة</value></data>
+  <data name="We are here to help make sure your GAC is running smoothly so you can continue to drive worry-free." xml:space="preserve"><value>نحن هنا لمساعدتك في الحفاظ على سيارتك جي إيه سي بأفضل حال لتواصل القيادة دون قلق.</value></data>
+  <data name="Book Now" xml:space="preserve"><value>احجز الآن</value></data>
+
+  <data name="GAC" xml:space="preserve"><value>جي إيه سي</value></data>
+  <data name="Parts &amp; Accessories" xml:space="preserve"><value>قطع الغيار والإكسسوارات</value></data>
+  <data name="Browse our range of GAC accessories which are most suited to your needs, including functional and practical accessories." xml:space="preserve"><value>تصفّح مجموعتنا من إكسسوارات جي إيه سي الأنسب لاحتياجاتك، بما في ذلك الإكسسوارات العملية والوظيفية.</value></data>
+  <data name="Discover More" xml:space="preserve"><value>اكتشف المزيد</value></data>
+
+  <data name="Keep up to date with all the latest news and stories from Mutawa Alkadi Automotive." xml:space="preserve"><value>ابقَ على اطّلاع بآخر الأخبار والقصص من مطوع القاضي للسيارات.</value></data>
+  <data name="Read All News" xml:space="preserve"><value>اقرأ كل الأخبار</value></data>
 </root>
