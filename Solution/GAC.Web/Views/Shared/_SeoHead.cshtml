@@ -34,5 +34,5 @@
 <meta name="twitter:image" content="@ogImage" />
 @foreach (var ld in seo.JsonLd)
 {
-    <script type="application/ld+json">@Html.Raw(ld)</script>
+    @Html.Raw($"<script type=\"application/ld+json\">{ld}</script>")
 }

@@ -46,4 +46,28 @@ public class SeoHeadTests : IClassFixture<DevWebApplicationFactory>
         Assert.Contains("name=\"robots\"", html);
         Assert.Contains("noindex", html);
     }
+
+    [Fact]
+    public async Task Home_EmitsAutoDealerJsonLd()
+    {
+        var html = await GetHtml("/");
+        Assert.Contains("application/ld+json", html);
+        Assert.Contains("\"@type\":\"AutoDealer\"", html);
+    }
+
+    [Fact]
+    public async Task VehiclePage_EmitsCarJsonLd()
+    {
+        var html = await GetHtml("/gs8");
+        Assert.Contains("\"@type\":\"Car\"", html);
+    }
+
+    [Fact]
+    public async Task JsonLd_DoesNotContainRawScriptClose()
+    {
+        var html = await GetHtml("/gs8");
+        var idx = html.IndexOf("application/ld+json", System.StringComparison.Ordinal);
+        Assert.True(idx >= 0);
+        Assert.Contains("\"@context\":\"https://schema.org\"", html);
+    }
 }
