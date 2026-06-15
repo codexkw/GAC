@@ -1,0 +1,38 @@
+@using System.Globalization
+@using GAC.Web.Infrastructure
+@{
+    var seo = ViewData["Seo"] as GAC.Web.Models.SeoData ?? new GAC.Web.Models.SeoData();
+    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var ogLocale = culture == "ar" ? "ar_SA" : "en_US";
+    var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+
+    var titleText = string.IsNullOrWhiteSpace(seo.Title) ? null : seo.Title;
+    var fullTitle = titleText is null ? SeoBuilder.SiteName : $"{titleText} - {SeoBuilder.SiteName}";
+    var desc = string.IsNullOrWhiteSpace(seo.Description) ? SeoBuilder.DefaultDescription : seo.Description;
+    var canonical = SeoBuilder.Abs(baseUrl, string.IsNullOrWhiteSpace(seo.CanonicalPath)
+        ? Context.Request.Path.ToString() : seo.CanonicalPath);
+    var ogImage = SeoBuilder.Abs(baseUrl, string.IsNullOrWhiteSpace(seo.OgImage)
+        ? SeoBuilder.DefaultOgImage : seo.OgImage);
+}
+<title>@fullTitle</title>
+<meta name="description" content="@desc" />
+<link rel="canonical" href="@canonical" />
+@if (!string.IsNullOrWhiteSpace(seo.Robots))
+{
+    <meta name="robots" content="@seo.Robots" />
+}
+<meta property="og:site_name" content="@SeoBuilder.SiteName" />
+<meta property="og:title" content="@(titleText ?? SeoBuilder.SiteName)" />
+<meta property="og:description" content="@desc" />
+<meta property="og:type" content="@seo.OgType" />
+<meta property="og:url" content="@canonical" />
+<meta property="og:image" content="@ogImage" />
+<meta property="og:locale" content="@ogLocale" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="@(titleText ?? SeoBuilder.SiteName)" />
+<meta name="twitter:description" content="@desc" />
+<meta name="twitter:image" content="@ogImage" />
+@foreach (var ld in seo.JsonLd)
+{
+    <script type="application/ld+json">@Html.Raw(ld)</script>
+}
