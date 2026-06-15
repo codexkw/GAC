@@ -12,6 +12,7 @@ public class Vehicle
     public LocalizedText Name { get; set; } = new();
     public LocalizedText Tagline { get; set; } = new();
     public LocalizedText IntroText { get; set; } = new();
+    public LocalizedText BodyHtml { get; set; } = new();
 
     public string? BrochurePdf { get; set; }
 

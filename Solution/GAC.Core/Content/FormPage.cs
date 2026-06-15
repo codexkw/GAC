@@ -8,6 +8,7 @@ public class FormPage
     public bool IsVisible { get; set; } = true;
     public LocalizedText Title { get; set; } = new();
     public LocalizedText IntroText { get; set; } = new();
+    public LocalizedText BodyHtml { get; set; } = new();
     public LocalizedText MetaTitle { get; set; } = new();
     public LocalizedText MetaDescription { get; set; } = new();
 }

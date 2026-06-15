@@ -30,6 +30,7 @@ public class VehicleConfig : IEntityTypeConfiguration<Vehicle>
         b.OwnsLocalized(v => v.Name);
         b.OwnsLocalized(v => v.Tagline);
         b.OwnsLocalized(v => v.IntroText);
+        b.OwnsLocalized(v => v.BodyHtml);
         b.OwnsLocalized(v => v.MetaTitle);
         b.OwnsLocalized(v => v.MetaDescription);
         b.HasMany(v => v.Images).WithOne().HasForeignKey(i => i.VehicleId).OnDelete(DeleteBehavior.Cascade);
@@ -102,6 +103,7 @@ public class ContentPageConfig : IEntityTypeConfiguration<ContentPage>
         b.HasIndex(p => p.Slug).IsUnique();
         b.Property(p => p.Slug).HasMaxLength(100).IsRequired();
         b.OwnsLocalized(p => p.Title);
+        b.OwnsLocalized(p => p.BodyHtml);
         b.OwnsLocalized(p => p.MetaTitle);
         b.OwnsLocalized(p => p.MetaDescription);
         b.HasMany(p => p.Sections).WithOne().HasForeignKey(s => s.ContentPageId).OnDelete(DeleteBehavior.Cascade);
@@ -125,6 +127,7 @@ public class FormPageConfig : IEntityTypeConfiguration<FormPage>
         b.Property(p => p.Slug).HasMaxLength(100).IsRequired();
         b.OwnsLocalized(p => p.Title);
         b.OwnsLocalized(p => p.IntroText);
+        b.OwnsLocalized(p => p.BodyHtml);
         b.OwnsLocalized(p => p.MetaTitle);
         b.OwnsLocalized(p => p.MetaDescription);
     }
