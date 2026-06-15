@@ -1,0 +1,30 @@
+@model GAC.Web.Areas.Admin.Models.LocalizedFieldModel
+<div class="adm-field adm-localized">
+    <span class="adm-localized__label">@Model.Label</span>
+    <div class="adm-localized__pair">
+        <div>
+            <label>English</label>
+            @if (Model.Multiline || Model.Code)
+            {
+                <textarea name="@Model.NameEn" rows="@(Model.Code ? 18 : 4)"
+                          class="@(Model.Code ? "adm-code" : "")">@Model.ValueEn</textarea>
+            }
+            else
+            {
+                <input name="@Model.NameEn" value="@Model.ValueEn" />
+            }
+        </div>
+        <div dir="rtl">
+            <label>Arabic</label>
+            @if (Model.Multiline || Model.Code)
+            {
+                <textarea name="@Model.NameAr" rows="@(Model.Code ? 18 : 4)"
+                          class="@(Model.Code ? "adm-code" : "")">@Model.ValueAr</textarea>
+            }
+            else
+            {
+                <input name="@Model.NameAr" value="@Model.ValueAr" />
+            }
+        </div>
+    </div>
+</div>

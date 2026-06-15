@@ -64,6 +64,13 @@ builder.Services.Configure<GAC.Infrastructure.Services.SmtpOptions>(builder.Conf
 builder.Services.AddScoped<ILeadService, LeadService>();
 builder.Services.AddScoped<IAdminLeadService, AdminLeadService>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.Configure<GAC.Core.Services.MediaOptions>(opt =>
+{
+    builder.Configuration.GetSection("Media").Bind(opt);
+    if (string.IsNullOrWhiteSpace(opt.Root))
+        opt.Root = Path.Combine(builder.Environment.WebRootPath ?? "wwwroot", "uploads");
+});
+builder.Services.AddScoped<IMediaService, MediaService>();
 
 var app = builder.Build();
 

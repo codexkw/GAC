@@ -1,0 +1,29 @@
+@model IReadOnlyList<GAC.Core.Content.MediaAsset>
+@{
+    ViewData["Title"] = "Media library";
+}
+<h1>Media library</h1>
+
+@if (TempData["Flash"] is string flash)
+{
+    <p class="adm-flash">@flash</p>
+}
+
+<form method="post" asp-action="Upload" enctype="multipart/form-data" class="adm-field">
+    <input type="file" name="file" accept="image/*" />
+    <button type="submit" class="adm-btn">Upload</button>
+</form>
+
+<div class="adm-picker-grid">
+    @foreach (var m in Model)
+    {
+        <div class="adm-picker-item">
+            <img src="@m.Path" class="adm-picker-thumb" alt="@m.OriginalFileName" />
+            <div class="adm-code">@m.Path</div>
+            <form method="post" asp-action="Delete" onsubmit="return confirm('Delete this image?');">
+                <input type="hidden" name="id" value="@m.Id" />
+                <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+            </form>
+        </div>
+    }
+</div>
