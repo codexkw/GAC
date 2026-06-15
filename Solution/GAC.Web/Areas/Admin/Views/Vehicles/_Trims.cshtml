@@ -1,0 +1,41 @@
+@model GAC.Core.Content.Vehicle
+<h2>Trims</h2>
+<table class="adm-table">
+  <thead><tr><th>Order</th><th>Name</th><th>Price</th><th></th></tr></thead>
+  <tbody>
+    @foreach (var t in Model.Trims.OrderBy(x => x.SortOrder))
+    {
+        <tr>
+          <td>
+            <form asp-action="MoveTrim" method="post" style="display:inline">
+              <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+              <button class="adm-btn">&uarr;</button>
+            </form>
+            <form asp-action="MoveTrim" method="post" style="display:inline">
+              <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+              <button class="adm-btn">&darr;</button>
+            </form>
+          </td>
+          <td>@t.Name.En</td>
+          <td>@(t.Price?.ToString("N0"))</td>
+          <td>
+            <form asp-action="RemoveTrim" method="post" style="display:inline" onsubmit="return confirm('Remove trim?')">
+              <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+              <button class="adm-btn adm-btn--danger">Remove</button>
+            </form>
+          </td>
+        </tr>
+    }
+  </tbody>
+</table>
+<form asp-action="AddTrim" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="nameEn" placeholder="Name (EN)" /><input name="nameAr" placeholder="Name (AR)" dir="rtl" />
+  <input type="number" step="any" name="price" placeholder="Price" />
+  <input name="highlightsEn" placeholder="Highlights (EN)" /><input name="highlightsAr" placeholder="Highlights (AR)" dir="rtl" />
+  <span style="display:inline-flex;gap:.4rem;align-items:center">
+    <input type="text" name="specPdf" placeholder="Spec PDF (optional)" data-media-input />
+    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+  </span>
+  <button class="adm-btn">Add trim</button>
+</form>

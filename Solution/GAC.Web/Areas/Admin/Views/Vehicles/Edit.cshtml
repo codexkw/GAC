@@ -22,7 +22,10 @@
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Intro text", NameEn = "IntroText.En", NameAr = "IntroText.Ar", ValueEn = Model.IntroText.En, ValueAr = Model.IntroText.Ar, Multiline = true }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta title", NameEn = "MetaTitle.En", NameAr = "MetaTitle.Ar", ValueEn = Model.MetaTitle.En, ValueAr = Model.MetaTitle.Ar }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta description", NameEn = "MetaDescription.En", NameAr = "MetaDescription.Ar", ValueEn = Model.MetaDescription.En, ValueAr = Model.MetaDescription.Ar, Multiline = true }' />
-    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Page body (HTML)", NameEn = "BodyHtml.En", NameAr = "BodyHtml.Ar", ValueEn = Model.BodyHtml.En, ValueAr = Model.BodyHtml.Ar, Code = true }' />
+    <details class="adm-field">
+      <summary>Advanced — raw HTML body (legacy / escape hatch)</summary>
+      <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Page body (HTML)", NameEn = "BodyHtml.En", NameAr = "BodyHtml.Ar", ValueEn = Model.BodyHtml.En, ValueAr = Model.BodyHtml.Ar, Code = true }' />
+    </details>
 
     <div class="adm-field">
         <label asp-for="PriceFrom">Price from</label>
@@ -57,5 +60,8 @@
 {
     <partial name="_Images" model="Model" />
     <partial name="_Features" model="Model" />
+    <partial name="_SpecGroups" model="Model" />
+    <partial name="_Colors" model="Model" />
+    <partial name="_Trims" model="Model" />
     <partial name="_PickerModal" />
 }

@@ -1,0 +1,36 @@
+@model GAC.Core.Content.Vehicle
+<h2>Specifications</h2>
+@foreach (var g in Model.SpecGroups.OrderBy(x => x.SortOrder))
+{
+    <div class="adm-card">
+      <h3>@g.Title.En
+        <form asp-action="RemoveSpecGroup" method="post" style="display:inline" onsubmit="return confirm('Remove group and its rows?')">
+          <input type="hidden" name="groupId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <button class="adm-btn adm-btn--danger">Remove group</button>
+        </form>
+      </h3>
+      <table class="adm-table">
+        @foreach (var r in g.Rows.OrderBy(x => x.SortOrder))
+        {
+            <tr><td>@r.Label.En</td><td>@r.Value.En</td>
+              <td>
+                <form asp-action="RemoveSpecRow" method="post" style="display:inline">
+                  <input type="hidden" name="rowId" value="@r.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+                  <button class="adm-btn adm-btn--danger">Remove</button>
+                </form>
+              </td></tr>
+        }
+      </table>
+      <form asp-action="AddSpecRow" method="post" class="adm-inline">
+        <input type="hidden" name="groupId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+        <input name="labelEn" placeholder="Label (EN)" /><input name="labelAr" placeholder="Label (AR)" dir="rtl" />
+        <input name="valueEn" placeholder="Value (EN)" /><input name="valueAr" placeholder="Value (AR)" dir="rtl" />
+        <button class="adm-btn">Add row</button>
+      </form>
+    </div>
+}
+<form asp-action="AddSpecGroup" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="titleEn" placeholder="Group title (EN)" /><input name="titleAr" placeholder="Group title (AR)" dir="rtl" />
+  <button class="adm-btn">Add spec group</button>
+</form>

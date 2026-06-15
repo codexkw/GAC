@@ -84,4 +84,38 @@ public class VehiclesController : Controller
 
     [HttpPost] public async Task<IActionResult> MoveFeature(int featureId, int vehicleId, int direction)
     { await _svc.MoveFeatureAsync(featureId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddSpecGroup(int vehicleId, string? titleEn, string? titleAr)
+    { await _svc.AddSpecGroupAsync(vehicleId, new() { En = titleEn, Ar = titleAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveSpecGroup(int groupId, int vehicleId)
+    { await _svc.RemoveSpecGroupAsync(groupId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveSpecGroup(int groupId, int vehicleId, int direction)
+    { await _svc.MoveSpecGroupAsync(groupId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> AddSpecRow(int groupId, int vehicleId, string? labelEn, string? labelAr, string? valueEn, string? valueAr)
+    { await _svc.AddSpecRowAsync(groupId, new() { En = labelEn, Ar = labelAr }, new() { En = valueEn, Ar = valueAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveSpecRow(int rowId, int vehicleId)
+    { await _svc.RemoveSpecRowAsync(rowId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddColor(int vehicleId, string? nameEn, string? nameAr, string hex, string? imagePath)
+    { await _svc.AddColorAsync(vehicleId, new() { En = nameEn, Ar = nameAr }, hex, imagePath); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveColor(int colorId, int vehicleId)
+    { await _svc.RemoveColorAsync(colorId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveColor(int colorId, int vehicleId, int direction)
+    { await _svc.MoveColorAsync(colorId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddTrim(int vehicleId, string? nameEn, string? nameAr, decimal? price, string? highlightsEn, string? highlightsAr, string? specPdf)
+    {
+        await _svc.AddTrimAsync(vehicleId, new Trim
+        {
+            Name = new() { En = nameEn, Ar = nameAr },
+            Price = price,
+            Highlights = new() { En = highlightsEn, Ar = highlightsAr },
+            SpecPdf = specPdf
+        });
+        return RedirectToAction(nameof(Edit), new { id = vehicleId });
+    }
+    [HttpPost] public async Task<IActionResult> RemoveTrim(int trimId, int vehicleId)
+    { await _svc.RemoveTrimAsync(trimId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveTrim(int trimId, int vehicleId, int direction)
+    { await _svc.MoveTrimAsync(trimId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }
