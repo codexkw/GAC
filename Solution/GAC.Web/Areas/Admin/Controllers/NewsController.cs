@@ -1,0 +1,57 @@
+using GAC.Core.Content;
+using GAC.Core.Services;
+using GAC.Web.Areas.Admin;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GAC.Web.Areas.Admin.Controllers;
+
+[Area("Admin")]
+[Authorize(Policy = AdminPolicies.ContentEditor)]
+[AutoValidateAntiforgeryToken]
+public class NewsController : Controller
+{
+    private readonly IAdminNewsService _svc;
+    public NewsController(IAdminNewsService svc) => _svc = svc;
+
+    public async Task<IActionResult> Index() => View(await _svc.ListAsync());
+
+    public IActionResult Create() =>
+        View("Edit", new NewsArticle { IsPublished = true, PublishedOn = DateOnly.FromDateTime(DateTime.UtcNow) });
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var a = await _svc.GetAsync(id);
+        return a is null ? NotFound() : View(a);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Save(NewsArticle a)
+    {
+        if (string.IsNullOrWhiteSpace(a.Slug))
+            ModelState.AddModelError(nameof(a.Slug), "Slug is required.");
+        else if (await _svc.SlugExistsAsync(a.Slug, a.Id == 0 ? null : a.Id))
+            ModelState.AddModelError(nameof(a.Slug), "That slug is already in use.");
+        if (!ModelState.IsValid) return View("Edit", a);
+
+        if (a.Id == 0)
+        {
+            await _svc.CreateAsync(a);
+            TempData["Flash"] = "Article created.";
+        }
+        else
+        {
+            await _svc.UpdateAsync(a);
+            TempData["Flash"] = "Article saved.";
+        }
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _svc.DeleteAsync(id);
+        TempData["Flash"] = "Article deleted.";
+        return RedirectToAction(nameof(Index));
+    }
+}

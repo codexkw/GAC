@@ -1,0 +1,47 @@
+@model GAC.Core.Content.NewsArticle
+@using GAC.Web.Areas.Admin.Models
+@{
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "New article" : "Edit article";
+}
+<p><a asp-action="Index">&larr; Back to news</a></p>
+
+<h1>@(isNew ? "New article" : "Edit article")</h1>
+
+<form method="post" asp-action="Save">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="adm-error"></div>
+
+    <div class="adm-field">
+        <label asp-for="Slug">Slug</label>
+        <input asp-for="Slug" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="PublishedOn">Published on</label>
+        <input asp-for="PublishedOn" type="date" />
+    </div>
+
+    <div class="adm-field">
+        <label><input asp-for="IsPublished" /> Published</label>
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="SortOrder">Sort order</label>
+        <input asp-for="SortOrder" type="number" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="ImagePath">Image</label>
+        <input asp-for="ImagePath" data-media-input />
+        <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = Model.Title.En, ValueAr = Model.Title.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Excerpt", NameEn = "Excerpt.En", NameAr = "Excerpt.Ar", ValueEn = Model.Excerpt.En, ValueAr = Model.Excerpt.Ar, Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Body", NameEn = "Body.En", NameAr = "Body.Ar", ValueEn = Model.Body.En, ValueAr = Model.Body.Ar, Multiline = true }' />
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>
+
+<partial name="_PickerModal" />

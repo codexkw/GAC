@@ -1,0 +1,36 @@
+@model IReadOnlyList<GAC.Core.Content.NewsArticle>
+@{
+    ViewData["Title"] = "News";
+}
+<h1>News</h1>
+
+<p><a asp-action="Create" class="adm-btn">New article</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Published on</th>
+            <th>Title</th>
+            <th>Published?</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.PublishedOn.ToString("yyyy-MM-dd")</td>
+                <td>@a.Title.Localize()</td>
+                <td>@(a.IsPublished ? "Yes" : "No")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@a.Id">Edit</a>
+                    <form asp-action="Delete" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this article?')">
+                        <input type="hidden" name="id" value="@a.Id" />
+                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

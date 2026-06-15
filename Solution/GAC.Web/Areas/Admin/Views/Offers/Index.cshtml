@@ -1,0 +1,36 @@
+@model IReadOnlyList<GAC.Core.Content.Offer>
+@{
+    ViewData["Title"] = "Offers";
+}
+<h1>Offers</h1>
+
+<p><a asp-action="Create" class="adm-btn">New offer</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Active?</th>
+            <th>Valid until</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Title.Localize()</td>
+                <td>@(o.IsActive ? "Yes" : "No")</td>
+                <td>@(o.ValidUntil?.ToString("yyyy-MM-dd"))</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@o.Id">Edit</a>
+                    <form asp-action="Delete" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this offer?')">
+                        <input type="hidden" name="id" value="@o.Id" />
+                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
