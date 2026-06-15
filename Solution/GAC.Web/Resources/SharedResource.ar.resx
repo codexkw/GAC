@@ -121,4 +121,14 @@
 
   <data name="Keep up to date with all the latest news and stories from Mutawa Alkadi Automotive." xml:space="preserve"><value>ابقَ على اطّلاع بآخر الأخبار والقصص من مطوع القاضي للسيارات.</value></data>
   <data name="Read All News" xml:space="preserve"><value>اقرأ كل الأخبار</value></data>
+
+  <data name="Home" xml:space="preserve"><value>الرئيسية</value></data>
+  <data name="Models" xml:space="preserve"><value>الموديلات</value></data>
+  <data name="The Lineup" xml:space="preserve"><value>التشكيلة</value></data>
+  <data name="SUVs, sedans and pure-electric powertrains. Use the filters to narrow by body type." xml:space="preserve"><value>سيارات دفع رباعي وسيدان ومحركات كهربائية بالكامل. استخدم عوامل التصفية لتضييق النتائج حسب نوع الهيكل.</value></data>
+  <data name="Sedans" xml:space="preserve"><value>سيدان</value></data>
+  <data name="SUVs" xml:space="preserve"><value>دفع رباعي</value></data>
+  <data name="Electric" xml:space="preserve"><value>كهربائية</value></data>
+  <data name="Not sure which model?" xml:space="preserve"><value>غير متأكد من الموديل المناسب؟</value></data>
+  <data name="Book a test drive or talk to a GAC product specialist and we'll help you compare the range." xml:space="preserve"><value>احجز تجربة قيادة أو تحدّث إلى أحد مختصي منتجات جي إيه سي وسنساعدك على مقارنة التشكيلة.</value></data>
 </root>
