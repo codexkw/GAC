@@ -57,4 +57,31 @@ public class AdminHomeServiceTests
         Assert.True(await svc.DeleteSlideAsync(id));
         Assert.Equal(0, await db.HeroSlides.CountAsync());
     }
+
+    [Fact]
+    public async Task Update_ReturnsFalse_WhenMissing()
+    {
+        var db = NewDb(nameof(Update_ReturnsFalse_WhenMissing));
+        var svc = new AdminHomeService(db);
+        Assert.False(await svc.UpdateSlideAsync(new HeroSlide { Id = 4242, Heading = "X", ImagePath = "/x.jpg" }));
+    }
+
+    [Fact]
+    public async Task Delete_ReturnsFalse_WhenMissing()
+    {
+        var db = NewDb(nameof(Delete_ReturnsFalse_WhenMissing));
+        var svc = new AdminHomeService(db);
+        Assert.False(await svc.DeleteSlideAsync(4242));
+    }
+
+    [Fact]
+    public async Task Move_OutOfBounds_ReturnsFalse()
+    {
+        var db = NewDb(nameof(Move_OutOfBounds_ReturnsFalse));
+        var svc = new AdminHomeService(db);
+        var only = await svc.CreateSlideAsync(new HeroSlide { Heading = "S", ImagePath = "/s.jpg" });
+        Assert.False(await svc.MoveSlideAsync(only, -1)); // top
+        Assert.False(await svc.MoveSlideAsync(only, 1));  // bottom
+        Assert.False(await svc.MoveSlideAsync(999999, -1)); // not found
+    }
 }

@@ -27,6 +27,13 @@ public class HomeContentController : Controller
     [HttpPost]
     public async Task<IActionResult> Save(HeroSlide slide)
     {
+        if (string.IsNullOrWhiteSpace(slide.ImagePath))
+            ModelState.AddModelError(nameof(slide.ImagePath), "Image is required.");
+        if (string.IsNullOrWhiteSpace(slide.Heading?.En))
+            ModelState.AddModelError("Heading.En", "Heading (English) is required.");
+        if (!ModelState.IsValid)
+            return View("Edit", slide);
+
         if (slide.Id == 0)
         {
             await _svc.CreateSlideAsync(slide);

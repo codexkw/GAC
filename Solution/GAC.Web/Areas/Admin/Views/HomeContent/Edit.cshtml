@@ -10,6 +10,7 @@
 
 <form method="post" asp-action="Save">
     <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="adm-error"></div>
 
     <div class="adm-field">
         <label asp-for="ImagePath">Image</label>
