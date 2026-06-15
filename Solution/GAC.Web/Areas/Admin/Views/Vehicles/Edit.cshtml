@@ -4,7 +4,7 @@
     var isNew = Model.Id == 0;
     ViewData["Title"] = isNew ? "New vehicle" : "Edit vehicle";
 }
-<p><a asp-action="Index">&larr; Back to vehicles</a></p>
+<p><a asp-area="Admin" asp-action="Index">&larr; Back to vehicles</a></p>
 
 <h1>@(isNew ? "New vehicle" : "Edit vehicle")</h1>
 

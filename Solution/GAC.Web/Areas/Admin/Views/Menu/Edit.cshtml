@@ -5,7 +5,7 @@
     var isNew = Model.Id == 0;
     ViewData["Title"] = isNew ? "New menu item" : "Edit menu item";
 }
-<p><a asp-action="Index">&larr; Back to menu</a></p>
+<p><a asp-area="Admin" asp-action="Index">&larr; Back to menu</a></p>
 
 <h1>@(isNew ? "New menu item" : "Edit menu item")</h1>
 

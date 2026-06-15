@@ -1,7 +1,7 @@
 @model GAC.Core.Content.Lead
 @{ ViewData["Title"] = "Lead detail"; }
 
-<p><a asp-action="Index">&larr; Back to leads</a></p>
+<p><a asp-area="Admin" asp-action="Index">&larr; Back to leads</a></p>
 
 <h1>Lead #@Model.Id</h1>
 

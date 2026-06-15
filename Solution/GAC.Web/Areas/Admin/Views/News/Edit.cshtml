@@ -4,7 +4,7 @@
     var isNew = Model.Id == 0;
     ViewData["Title"] = isNew ? "New article" : "Edit article";
 }
-<p><a asp-action="Index">&larr; Back to news</a></p>
+<p><a asp-area="Admin" asp-action="Index">&larr; Back to news</a></p>
 
 <h1>@(isNew ? "New article" : "Edit article")</h1>
 
