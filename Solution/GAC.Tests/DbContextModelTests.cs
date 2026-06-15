@@ -30,7 +30,10 @@ public class DbContextModelTests
         foreach (var clr in new[] { typeof(GAC.Core.Content.Vehicle), typeof(GAC.Core.Content.ContentPage), typeof(GAC.Core.Content.FormPage) })
         {
             var et = ctx.Model.FindEntityType(clr)!;
-            Assert.NotNull(et.FindNavigation("BodyHtml"));
+            var nav = et.FindNavigation("BodyHtml")!;
+            Assert.NotNull(nav);
+            Assert.NotNull(nav.TargetEntityType.FindProperty("En"));
+            Assert.NotNull(nav.TargetEntityType.FindProperty("Ar"));
         }
     }
 }
