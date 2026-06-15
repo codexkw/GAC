@@ -21,6 +21,7 @@ public class AdminPageService : IAdminPageService
         var e = await _db.ContentPages.FirstOrDefaultAsync(p => p.Id == page.Id, ct);
         if (e is null) return false;
         e.Title = page.Title; e.MetaTitle = page.MetaTitle; e.MetaDescription = page.MetaDescription;
+        e.BodyHtml = page.BodyHtml;
         e.IsVisible = page.IsVisible;
         await _db.SaveChangesAsync(ct);
         return true;
@@ -37,6 +38,7 @@ public class AdminPageService : IAdminPageService
         var e = await _db.FormPages.FirstOrDefaultAsync(p => p.Id == page.Id, ct);
         if (e is null) return false;
         e.Title = page.Title; e.IntroText = page.IntroText;
+        e.BodyHtml = page.BodyHtml;
         e.MetaTitle = page.MetaTitle; e.MetaDescription = page.MetaDescription; e.IsVisible = page.IsVisible;
         await _db.SaveChangesAsync(ct);
         return true;

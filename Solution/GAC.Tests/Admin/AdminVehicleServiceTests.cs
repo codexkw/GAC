@@ -90,6 +90,24 @@ public class AdminVehicleServiceTests
     }
 
     [Fact]
+    public async Task UpdateAsync_PersistsBodyHtml()
+    {
+        var db = NewDb(nameof(UpdateAsync_PersistsBodyHtml));
+        var svc = new AdminVehicleService(db);
+        var id = await svc.CreateAsync(new Vehicle { Slug = "body", Name = "Body", SortOrder = 1 });
+
+        var ok = await svc.UpdateAsync(new Vehicle
+        {
+            Id = id, Slug = "body", Name = "Body",
+            BodyHtml = new LocalizedText { En = "<p>new body</p>" }
+        });
+
+        Assert.True(ok);
+        var reloaded = await svc.GetAsync(id);
+        Assert.Equal("<p>new body</p>", reloaded!.BodyHtml.En);
+    }
+
+    [Fact]
     public async Task Update_ReturnsFalse_WhenMissing()
     {
         var db = NewDb(nameof(Update_ReturnsFalse_WhenMissing));

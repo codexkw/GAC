@@ -39,6 +39,7 @@ public class AdminVehicleService : IAdminVehicleService
         existing.Name = vehicle.Name;
         existing.Tagline = vehicle.Tagline;
         existing.IntroText = vehicle.IntroText;
+        existing.BodyHtml = vehicle.BodyHtml;
         existing.MetaTitle = vehicle.MetaTitle;
         existing.MetaDescription = vehicle.MetaDescription;
         await _db.SaveChangesAsync(ct);

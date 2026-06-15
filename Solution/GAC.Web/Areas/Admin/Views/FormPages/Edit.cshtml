@@ -31,7 +31,14 @@
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta title", NameEn = "MetaTitle.En", NameAr = "MetaTitle.Ar", ValueEn = Model.MetaTitle.En, ValueAr = Model.MetaTitle.Ar }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta description", NameEn = "MetaDescription.En", NameAr = "MetaDescription.Ar", ValueEn = Model.MetaDescription.En, ValueAr = Model.MetaDescription.Ar, Multiline = true }' />
 
-    <p class="adm-note">Page body is edited in Phase 6b.</p>
+    @if (Model.FormType == GAC.Core.Content.FormType.Contact)
+    {
+        <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Page body (HTML)", NameEn = "BodyHtml.En", NameAr = "BodyHtml.Ar", ValueEn = Model.BodyHtml.En, ValueAr = Model.BodyHtml.Ar, Code = true }' />
+    }
+    else
+    {
+        <p class="adm-note">This page renders a functional lead form; only its title, intro and meta are editable.</p>
+    }
 
     <button type="submit" class="adm-btn">Save</button>
 </form>
