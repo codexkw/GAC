@@ -1,6 +1,6 @@
 # GAC Motors Bilingual CMS — Handoff
 
-**Last updated:** 2026-06-15 (end of Phase 6b)
+**Last updated:** 2026-06-15 (end of Phase 7)
 **Repo:** https://github.com/codexkw/GAC.git (PUBLIC) · branch `main`
 **Stack:** ASP.NET Core 9 MVC, EF Core 9.0.6 (SQL Server), Razor + ViewComponents, IHtmlLocalizer + .resx, xUnit.
 
@@ -10,7 +10,7 @@
 
 A custom bilingual (English + Arabic, RTL) CMS that replaces the original static HTML pixel-clone of
 `en/ar.gacmotorsaudi.com`. Frontend renders server-side from the database; an admin panel (later phase)
-will manage all content. Built in **8 phases**; **Phases 1–5, 6a and 6b are complete and pushed** (admin panel live, including editable HTML page bodies). Phase 6 (admin) is now complete; **Phase 7 (Polish/QA/SEO)** is next.
+will manage all content. Built in **8 phases**; **Phases 1–5, 6a, 6b and 7 are complete and pushed** (admin panel live; SEO/sitemap/analytics + accessibility done). **Phase 8 (Deploy)** is next.
 
 | Decision | Choice |
 |---|---|
@@ -73,8 +73,9 @@ dotnet run --project Solution/GAC.Web # serves the site; Development env loads r
 - **Phase 4 — Arabic / RTL** ✅. 67 tests.
 - **Phase 5 — Forms & leads** ✅. 83 tests.
 - **Phase 6a — Admin area (foundation + CRUD)** ✅. 163 tests.
-- **Phase 6b — Admin area (editable HTML bodies)** ✅ (this handoff). `AddBodyHtml` migration applied to the GAC DB. 171 tests.
-- **Phase 7 — Polish/QA/SEO** ⏭️ NEXT · **Phase 8 — Deploy** — pending.
+- **Phase 6b — Admin area (editable HTML bodies)** ✅. `AddBodyHtml` migration applied to the GAC DB. 171 tests.
+- **Phase 7 — Polish/QA/SEO** ✅ (this handoff). **No migration** (additive-only). 201 tests.
+- **Phase 8 — Deploy** ⏭️ NEXT.
 
 ---
 
@@ -164,6 +165,18 @@ Spec: `docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6. The previo
 
 ---
 
+## 5f. Phase 7 — Polish/QA/SEO — what was built
+
+Spec: `docs/superpowers/specs/2026-06-15-phase7-polish-qa-seo-design.md`. Plan: `docs/superpowers/plans/2026-06-15-phase7-polish-qa-seo.md`. Commits `669e485..0a5f568`. **Additive-only — NO migration, no entity change** (the only Core/Infra delta is two read-only `IContentService` methods). 201 tests green; built via subagent-driven development (each task spec- + quality-reviewed; final holistic review = READY TO PUSH).
+
+- **SEO metadata pipeline:** `GAC.Web/Models/SeoData.cs` (POCO carried in `ViewData["Seo"]`) + pure, unit-tested `GAC.Web/Infrastructure/SeoBuilder.cs` (absolute-URL composer `Abs`, `FirstNonBlank`, per-entity factories `ForVehicle/ForContentPage/ForFormPage/ForNews/ForListing`, JSON-LD builders). `Views/Shared/_SeoHead.cshtml` renders `<title>`, meta description, `<link rel=canonical>`, OpenGraph (`og:site_name/title/description/type/url/image/locale`), Twitter `summary_large_image`, conditional `<meta name=robots>`, and the JSON-LD `<script>`s; `_Layout` delegates to it (the old static title/description lines were removed). **Fallbacks:** Vehicle `MetaTitle ?? Name` / `MetaDescription ?? Tagline ?? IntroText ?? default`, OG image = hero `ThumbPath`; ContentPage `MetaTitle ?? Title` / `MetaDescription ?? default` (ContentPage has no IntroText); FormPage adds `IntroText` to the desc chain; News uses `Excerpt` + `PublishedOn`. All text via `.Localize()`; `og:locale` = `en_US`/`ar_SA`. Canonical/OG/sitemap URLs are absolute from the request host (cookie-based language ⇒ one URL per page ⇒ no hreflang). Controllers (Home/Vehicles/Page/News/Offers/Forms) set `ViewData["Seo"]`; `/not-found` is `noindex,nofollow`.
+- **JSON-LD:** AutoDealer on home (name/url/logo/telephone/`sameAs` from `SiteSettings`; no address field exists), Car on vehicle detail, NewsArticle on news detail. Serialized with `System.Text.Json` **default** encoder → `<`/`>`/`&` escaped → HTML-safe in the `<script type="application/ld+json">` block (unit-tested against `</script>` breakout). NOTE: `_SeoHead` emits the script tag via `@Html.Raw($"<script type=\"application/ld+json\">{ld}</script>")` because Razor would otherwise HTML-encode the literal `+` in the `type` attribute to `&#x2B;`.
+- **sitemap.xml + robots.txt:** `Controllers/SeoController.cs` — `GET /sitemap.xml` (`application/xml`, `System.Xml.Linq` urlset: `/`, `/models`, `/news`, `/offers`, visible vehicles, visible content+form pages, published news with `<lastmod>`=`PublishedOn`; excludes hidden vehicles + unpublished news) and `GET /robots.txt` (`text/plain`; `Disallow: /admin`+`/admin/`; absolute `Sitemap:` line). Literal attribute routes beat the `/{slug}` catch-all. Two additive read methods `IContentService.GetAllContentPagesAsync`/`GetAllFormPagesAsync` (visible-only) feed the sitemap.
+- **Analytics hook:** `GAC.Web/Infrastructure/AnalyticsOptions.cs` bound from the `Analytics` config section (committed `appsettings.json` has **empty** `Ga4MeasurementId`/`GtmContainerId` — non-secret, set per-env at deploy). `_Layout` renders the GTM snippet (head `<script>` + `<body>` `<noscript>`) when `GtmContainerId` is set, else GA4 `gtag.js` when `Ga4MeasurementId` is set, else **nothing** (guard-tested).
+- **Accessibility:** skip-to-content link (`.skip-link`, off-screen until `:focus`, RTL-mirrored in `rtl.css`) + `<main id="main-content">` landmark in `_Layout`; Arabic skip-link string in `SharedResource.ar.resx`. Image `alt` audit found all content `<img>` already carry localized `alt` (hero/news use CSS `background-image`). **QA checklist:** `docs/superpowers/qa/2026-06-15-phase7-qa-checklist.md` — code-level fixes done; the **in-browser EN/AR Lighthouse run remains a MANUAL step** (not run here; no fabricated scores). Known false positive documented: the collapsed tech/safety `h4` toggles render 0×0 and trip "empty heading" audits — expected, not a defect.
+
+---
+
 ## 6. Routing map
 
 | URL | Handler | Source |
@@ -173,7 +186,8 @@ Spec: `docs/superpowers/specs/2026-06-15-phase6-admin-design.md` §6. The previo
 | `/news`, `/news/{slug}` | `NewsController` | `Views/News/Index.cshtml`, `Detail.cshtml` |
 | `/offers` | `OffersController.Index` | `Views/Offers/Index.cshtml` |
 | `/{slug}` (catch-all) | `PageController.Show` → ContentPage \| FormPage \| visible Vehicle \| 404 | generic view → `@Html.Raw(BodyHtml)` (Phase 6b; functional form pages still dispatch to `_{slug}` partial) |
-| `/not-found` | `HomeController.NotFoundPage` | `Views/Shared/NotFound.cshtml` |
+| `/not-found` | `HomeController.NotFoundPage` | `Views/Shared/NotFound.cshtml` (noindex; Phase 7) |
+| `/sitemap.xml`, `/robots.txt` | `SeoController` | DB-driven XML urlset / robots (Phase 7) |
 | `*.html` | `LegacyHtmlRedirectMiddleware` | 301 → clean URL |
 | `POST /forms/{slug}` | `FormsController.Submit` | persists `Lead`, PRG → `/{slug}` (Phase 5) |
 | `/Culture/Set` | `CultureController.Set` | sets language cookie |
@@ -252,16 +266,32 @@ Mostly content decisions and later-phase work:
     `Contact` lead. Optional hardening: reject/ignore `FormType.Contact` server-side in `Submit`.
 17. **Optional raw-HTML editor niceties.** The Phase-6b body editor is a plain `Code = true` textarea. Optional
     client-side polish (syntax highlighting, validation) could be added; purely cosmetic.
+18. **Stale `ViewData["Title"]`/`["MetaDescription"]` writes in public views (Phase 7, harmless no-ops).** A few
+    public views (`Home/Index`, `Vehicles/Index`, `News/Index`, `News/Detail`, `Offers/Index`, `Shared/NotFound`)
+    still set `ViewData["Title"]`; the public `_Layout`/`_SeoHead` no longer read it (SEO is driven by
+    `ViewData["Seo"]`), so these are inert leftovers. Delete on next touch to avoid confusing editors. (Admin
+    `_AdminLayout` still uses `ViewData["Title"]` legitimately.)
+19. **In-browser Lighthouse / EN-AR visual QA not yet run (Phase 7).** The accessibility code fixes are in and
+    the full test suite is green, but the manual Lighthouse Accessibility+SEO pass (`/`, `/models`, `/gs8`,
+    `/contact-us` in both languages) + single-`<h1>`/focus-ring/RTL-parity spot checks are still **TODO** — see
+    `docs/superpowers/qa/2026-06-15-phase7-qa-checklist.md`. Run before go-live; record scores there.
+20. **`GetAllContentPagesAsync`/`GetAllFormPagesAsync` return visible-only (Phase 7).** The `All` naming is
+    slightly misleading (they filter `IsVisible`, correct for the sitemap). Rename to `GetVisible…` if touched.
 
 ---
 
-## 9. Next: Phase 7 — Polish / QA / SEO
+## 9. Next: Phase 8 — Deploy
 
-**Phase 6 (admin) is now complete** — 6a delivered the foundation + CRUD over everything already DB-driven, and
-6b (see §5e) made the previously-hardcoded detail/prose pages admin-editable as raw HTML. All admin content
-management is in place; `AddBodyHtml` is applied to the GAC DB.
+**Phase 7 (Polish/QA/SEO) is now complete** (see §5f) — per-page SEO metadata/OpenGraph/Twitter + JSON-LD render
+from the admin-editable `MetaTitle`/`MetaDescription`; dynamic `/sitemap.xml` + `/robots.txt`; a configurable
+GA4/GTM analytics hook (off until an ID is set); and an accessibility pass (skip link + `<main>` landmark + RTL
+mirror). **No migration was added** (additive-only), so no `dotnet ef database update` is needed for Phase 7.
 
-Remaining roadmap: **Phase 7 — Polish/QA/SEO** · **Phase 8 — Deploy**. Before go-live also clear the deferred
-items in §8 — especially #1 (hidden AION hero slides), #9 (the `e2e.verify@example.com` lead — removable now via
-the Leads admin), #11 (change the admin password + deploy), and #15 (translate the blank Arabic page bodies via
-the new admin raw-HTML editor).
+**Phase 8 — Deploy** is the last phase: publish to IIS, ensure all applied migrations are on prod, run the seeder,
+and configure `appsettings` (real conn string + SMTP). **Go-live USER ACTIONS** (carry forward + new):
+- Change the seeded admin password (`ChangeMe!2026`) before exposing `/admin`.
+- Set real `Smtp:Username`/`Smtp:Password` + `Smtp:Enabled=true`; confirm `Smtp:AdminNotifyEmail`; validate Mailgun SPF/DKIM.
+- **Phase 7 new:** if analytics is wanted, set `Analytics:GtmContainerId` OR `Analytics:Ga4MeasurementId` in the prod config (empty = no tracking).
+- Run the manual Lighthouse / EN-AR QA pass (§8 #19) and translate the blank Arabic page bodies (§8 #15).
+- Clear remaining §8 content items — #1 (hidden AION hero slides → 404), #9 (`e2e.verify@example.com` lead),
+  #2 (missing `/pdfs/` spec sheets), #3 (empty news/offer bodies).
