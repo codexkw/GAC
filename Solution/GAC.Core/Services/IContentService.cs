@@ -10,4 +10,6 @@ public interface IContentService
     Task<IReadOnlyList<NewsArticle>> GetPublishedNewsAsync();
     Task<NewsArticle?> GetNewsBySlugAsync(string slug);
     Task<IReadOnlyList<Offer>> GetActiveOffersAsync();
+    Task<IReadOnlyList<ContentPage>> GetAllContentPagesAsync();
+    Task<IReadOnlyList<FormPage>> GetAllFormPagesAsync();
 }

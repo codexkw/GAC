@@ -47,4 +47,18 @@ public class ContentService : IContentService
             .Where(o => o.IsActive)
             .OrderBy(o => o.SortOrder)
             .ToListAsync();
+
+    public async Task<IReadOnlyList<ContentPage>> GetAllContentPagesAsync()
+        => await _db.ContentPages
+            .AsNoTracking()
+            .Where(p => p.IsVisible)
+            .OrderBy(p => p.Slug)
+            .ToListAsync();
+
+    public async Task<IReadOnlyList<FormPage>> GetAllFormPagesAsync()
+        => await _db.FormPages
+            .AsNoTracking()
+            .Where(p => p.IsVisible)
+            .OrderBy(p => p.Slug)
+            .ToListAsync();
 }

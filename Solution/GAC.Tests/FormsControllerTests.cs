@@ -22,6 +22,8 @@ public class FormsControllerTests
         public Task<IReadOnlyList<NewsArticle>> GetPublishedNewsAsync() => Task.FromResult<IReadOnlyList<NewsArticle>>(new List<NewsArticle>());
         public Task<NewsArticle?> GetNewsBySlugAsync(string slug) => Task.FromResult<NewsArticle?>(null);
         public Task<IReadOnlyList<Offer>> GetActiveOffersAsync() => Task.FromResult<IReadOnlyList<Offer>>(new List<Offer>());
+        public Task<IReadOnlyList<ContentPage>> GetAllContentPagesAsync() => Task.FromResult<IReadOnlyList<ContentPage>>(new List<ContentPage>());
+        public Task<IReadOnlyList<FormPage>> GetAllFormPagesAsync() => Task.FromResult<IReadOnlyList<FormPage>>(new List<FormPage>());
     }
     private sealed class FakeVehicles : IVehicleService
     {
