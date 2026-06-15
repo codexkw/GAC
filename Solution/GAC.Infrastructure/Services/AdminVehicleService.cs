@@ -227,6 +227,7 @@ public class AdminVehicleService : IAdminVehicleService
     {
         if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
         trim.VehicleId = vehicleId;
+        trim.Highlights = Sanitize(trim.Highlights); // rendered via @Html.Raw — keep consistent with Feature.Body
         trim.SortOrder = await _db.Set<Trim>().CountAsync(x => x.VehicleId == vehicleId, ct);
         _db.Set<Trim>().Add(trim);
         await _db.SaveChangesAsync(ct);

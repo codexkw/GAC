@@ -121,4 +121,20 @@ public class AdminVehicleSectionsTests
         Assert.True(await svc.RemoveTrimAsync(id));
         Assert.Equal(0, await db.Set<Trim>().CountAsync());
     }
+
+    [Fact]
+    public async Task AddTrim_SanitizesHighlights()
+    {
+        var db = NewDb(nameof(AddTrim_SanitizesHighlights));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "th", Name = "T" });
+        var id = await svc.AddTrimAsync(vid, new Trim
+        {
+            Name = "GT",
+            Highlights = new LocalizedText { En = "<strong>ok</strong><script>bad()</script>" }
+        });
+        var t = await db.Set<Trim>().FindAsync(id);
+        Assert.DoesNotContain("<script", t!.Highlights.En);
+        Assert.Contains("<strong>", t.Highlights.En);
+    }
 }
