@@ -1,0 +1,31 @@
+@model IReadOnlyList<GAC.Web.Areas.Admin.Models.UserRow>
+@{
+    ViewData["Title"] = "Users";
+}
+<h1>Users</h1>
+
+<p><a asp-action="Create" class="adm-btn">New user</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Display name</th>
+            <th>Role</th>
+            <th>Disabled?</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Email</td>
+                <td>@u.DisplayName</td>
+                <td>@u.Role</td>
+                <td>@(u.Disabled ? "Yes" : "No")</td>
+                <td><a asp-action="Edit" asp-route-id="@u.Id">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

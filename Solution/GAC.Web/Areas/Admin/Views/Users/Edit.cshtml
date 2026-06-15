@@ -1,0 +1,39 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model GAC.Web.Areas.Admin.Models.EditUserViewModel
+@{
+    ViewData["Title"] = "Edit user";
+}
+<p><a asp-action="Index">&larr; Back to users</a></p>
+
+<h1>Edit user</h1>
+
+<form method="post" asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="adm-error"></div>
+
+    <div class="adm-field">
+        <label>Email</label>
+        <div>@Model.Email</div>
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="DisplayName">Display name</label>
+        <input asp-for="DisplayName" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="Role">Role</label>
+        <select asp-for="Role" asp-items="@((List<SelectListItem>)ViewBag.Roles)"></select>
+    </div>
+
+    <div class="adm-field">
+        <label><input asp-for="Disabled" /> Disabled</label>
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="NewPassword">New password (leave blank to keep)</label>
+        <input asp-for="NewPassword" type="password" />
+    </div>
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>
