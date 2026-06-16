@@ -2,8 +2,8 @@
 
 <div class="crumb-bar">
   <div class="container">
-    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
-    <nav class="crumb-trail">You are here: <a href="/">Homepage</a> <span>&gt;</span> <a href="/book-a-service">Owners</a> <span>&gt;</span> Vehicle Recall Enquiry</nav>
+    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> @L["Back"]</a>
+    <nav class="crumb-trail">@L["You are here:"] <a href="/">@L["Homepage"]</a> <span>&gt;</span> <a href="/book-a-service">@L["Owners"]</a> <span>&gt;</span> @L["Vehicle Recall Enquiry"]</nav>
   </div>
 </div>
 
@@ -13,27 +13,27 @@
     <div class="bas-card">
       <form data-form novalidate method="post" asp-controller="Forms" asp-action="Submit" asp-route-slug="@Model.Page.Slug">
         <div class="form-grid">
-          <div class="field@(Html.FieldErrorClass("Title"))"><label for="title">Title *</label>
+          <div class="field@(Html.FieldErrorClass("Title"))"><label for="title">@L["Title"] *</label>
             <select id="title" name="title" required>
-              <option value="">Please select ...</option>
+              <option value="">@L["Please select ..."]</option>
               @foreach (var opt in new[] { "Mr", "Ms", "Mrs", "Miss" })
               {
                 <option selected="@(Model.Input.Title == opt)">@opt</option>
               }
             </select><span class="err">@L["Please select a title."]</span>
           </div>
-          <div class="field@(Html.FieldErrorClass("FirstName"))"><label for="fn">First Name *</label><input id="fn" name="firstName" required value="@Model.Input.FirstName" /><span class="err">@L["Please enter your first name."]</span></div>
-          <div class="field@(Html.FieldErrorClass("LastName"))"><label for="ln">Last Name *</label><input id="ln" name="lastName" required value="@Model.Input.LastName" /><span class="err">@L["Please enter your last name."]</span></div>
-          <div class="field@(Html.FieldErrorClass("Email"))"><label for="em">Email Address *</label><input id="em" name="email" type="email" required value="@Model.Input.Email" /><span class="err">@L["Please enter a valid email."]</span></div>
-          <div class="field@(Html.FieldErrorClass("Phone"))"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required value="@Model.Input.Phone" /><span class="err">@L["Please enter your contact number."]</span></div>
-          <div class="field"><label for="msg">Message</label><textarea id="msg" name="message">@Model.Input.Message</textarea></div>
+          <div class="field@(Html.FieldErrorClass("FirstName"))"><label for="fn">@L["First Name"] *</label><input id="fn" name="firstName" required value="@Model.Input.FirstName" /><span class="err">@L["Please enter your first name."]</span></div>
+          <div class="field@(Html.FieldErrorClass("LastName"))"><label for="ln">@L["Last Name"] *</label><input id="ln" name="lastName" required value="@Model.Input.LastName" /><span class="err">@L["Please enter your last name."]</span></div>
+          <div class="field@(Html.FieldErrorClass("Email"))"><label for="em">@L["Email Address"] *</label><input id="em" name="email" type="email" required value="@Model.Input.Email" /><span class="err">@L["Please enter a valid email."]</span></div>
+          <div class="field@(Html.FieldErrorClass("Phone"))"><label for="ph">@L["Contact Number"] *</label><input id="ph" name="phone" type="tel" required value="@Model.Input.Phone" /><span class="err">@L["Please enter your contact number."]</span></div>
+          <div class="field"><label for="msg">@L["Message"]</label><textarea id="msg" name="message">@Model.Input.Message</textarea></div>
           <div class="bas-disclaimer">
-            <p class="title">Privacy statement &amp; legal disclaimer</p>
-            <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a></p>
+            <p class="title">@L["Privacy statement & legal disclaimer"]</p>
+            <p>@L["I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href='/privacy-policy'>our Privacy Policy</a>"]</p>
           </div>
           <div class="field-check">
             <input id="mk" name="marketing" type="checkbox" value="true" checked="@Model.Input.Marketing" />
-            <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
+            <label for="mk">@L["I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information."]</label>
           </div>
           <div class="bas-submit"><button class="btn btn--hero" type="submit">@L["Submit"]</button></div>
         </div>
