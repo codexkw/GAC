@@ -200,10 +200,17 @@ public static class ContentSeeder
 
         foreach (var p in await db.ContentPages.ToListAsync())
         {
-            if (!string.IsNullOrWhiteSpace(p.BodyHtml?.En)) continue;
-            var html = ReadSeedBody("content", p.Slug);
-            if (html is null) continue;
-            p.BodyHtml = new LocalizedText { En = html };
+            // Backfill English and Arabic independently: each is filled only when
+            // currently blank and a matching seed file exists, so admin edits in
+            // either language are preserved.
+            var newEn = string.IsNullOrWhiteSpace(p.BodyHtml?.En) ? ReadSeedBody("content", p.Slug) : null;
+            var newAr = string.IsNullOrWhiteSpace(p.BodyHtml?.Ar) ? ReadSeedBody("content", p.Slug, "ar") : null;
+            if (newEn is null && newAr is null) continue;
+            p.BodyHtml = new LocalizedText
+            {
+                En = newEn ?? p.BodyHtml?.En ?? "",
+                Ar = newAr ?? p.BodyHtml?.Ar
+            };
             changed = true;
         }
 
@@ -223,12 +230,16 @@ public static class ContentSeeder
 
     private static readonly Assembly SeedAssembly = typeof(ContentSeeder).Assembly;
 
-    /// <summary>Reads SeedContent/&lt;area&gt;/&lt;slug&gt;.html as an embedded resource, or null if absent.
-    /// Matches case-insensitively and treats '-'/'_' as equivalent to tolerate manifest-name mangling.</summary>
-    private static string? ReadSeedBody(string area, string slug)
+    /// <summary>Reads SeedContent/&lt;area&gt;/[&lt;culture&gt;/]&lt;slug&gt;.html as an embedded resource, or null if absent.
+    /// Matches case-insensitively and treats '-'/'_' as equivalent to tolerate manifest-name mangling.
+    /// Pass <paramref name="culture"/> (e.g. "ar") to read a language-specific body from the culture subfolder;
+    /// omit for the default (English). The culture lives in a subfolder, not the filename, so MSBuild does not
+    /// mistake it for a satellite-assembly culture token (which would hide it from the main manifest).</summary>
+    private static string? ReadSeedBody(string area, string slug, string? culture = null)
     {
         static string Norm(string s) => s.Replace('-', '_').ToLowerInvariant();
-        var wanted = Norm($".SeedContent.{area}.{slug}.html");
+        var path = string.IsNullOrEmpty(culture) ? $"{area}.{slug}" : $"{area}.{culture}.{slug}";
+        var wanted = Norm($".SeedContent.{path}.html");
         var name = SeedAssembly.GetManifestResourceNames()
             .FirstOrDefault(n => Norm(n).EndsWith(wanted, StringComparison.Ordinal));
         if (name is null) return null;
