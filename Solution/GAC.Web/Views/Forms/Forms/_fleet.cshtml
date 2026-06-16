@@ -2,8 +2,8 @@
 
 <div class="crumb-bar">
   <div class="container">
-    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</a>
-    <nav class="crumb-trail">You are here: <a href="/">Homepage</a> <span>&gt;</span> Fleet Sales</nav>
+    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> @L["Back"]</a>
+    <nav class="crumb-trail">@L["You are here:"] <a href="/">@L["Homepage"]</a> <span>&gt;</span> @L["Fleet Sales"]</nav>
   </div>
 </div>
 
@@ -11,39 +11,39 @@
   <div class="container">
     <h1>@Model.Page.Title.Localize()</h1>
     <div class="fleet-banner"><img src="/assets/img/fleet/vehicles.jpg" alt="GAC fleet vehicles" /></div>
-    <p class="fleet-intro">Whether you are looking for a single vehicle or a fleet, we, at <strong>GAC Mutawa Alkadi Automotive</strong>, offer a wide selection of vehicles that can meet all of your needs to help propel your business. Thanks our fleet sales team, located in several major cities across Kuwait, you will be provided with solutions that meet your business needs and fit your budget.</p>
-    <p class="fleet-intro" style="margin-top:var(--space-4)">Fill out the forms below and our team will contact you the soonest:</p>
+    <p class="fleet-intro">@L["Whether you are looking for a single vehicle or a fleet, we, at <strong>GAC Mutawa Alkadi Automotive</strong>, offer a wide selection of vehicles that can meet all of your needs to help propel your business. Thanks our fleet sales team, located in several major cities across Kuwait, you will be provided with solutions that meet your business needs and fit your budget."]</p>
+    <p class="fleet-intro" style="margin-top:var(--space-4)">@L["Fill out the forms below and our team will contact you the soonest:"]</p>
     <form data-form class="flt-form" novalidate method="post" asp-controller="Forms" asp-action="Submit" asp-route-slug="@Model.Page.Slug">
-      <div class="field@(Html.FieldErrorClass("Branch"))"><label for="branch">Select Branch *</label>
+      <div class="field@(Html.FieldErrorClass("Branch"))"><label for="branch">@L["Select Branch"] *</label>
         <select id="branch" name="branch" required>
-          <option value="">Please select ...</option>
+          <option value="">@L["Please select ..."]</option>
           @foreach (var opt in new[] { "Riyadh Branch", "GAC Motors Jeddah, Malibari Sq Showroom", "GAC Motors Jeddah, Kilo 3 Branch", "Dammam Branch", "GAC Motors Al-Madinah Al-Munawarrah Branch" })
           {
             <option selected="@(Model.Input.Branch == opt)">@opt</option>
           }
         </select><span class="err">@L["Please select a branch."]</span>
       </div>
-      <div class="field@(Html.FieldErrorClass("Title"))"><label for="title">Title *</label>
+      <div class="field@(Html.FieldErrorClass("Title"))"><label for="title">@L["Title"] *</label>
         <select id="title" name="title" required>
-          <option value="">Please select ...</option>
+          <option value="">@L["Please select ..."]</option>
           @foreach (var opt in new[] { "Mr", "Ms", "Mrs", "Miss" })
           {
             <option selected="@(Model.Input.Title == opt)">@opt</option>
           }
         </select><span class="err">@L["Please select a title."]</span>
       </div>
-      <div class="field@(Html.FieldErrorClass("FirstName"))"><label for="fn">First Name *</label><input id="fn" name="firstName" required value="@Model.Input.FirstName" /><span class="err">@L["Please enter your first name."]</span></div>
-      <div class="field@(Html.FieldErrorClass("LastName"))"><label for="ln">Last Name *</label><input id="ln" name="lastName" required value="@Model.Input.LastName" /><span class="err">@L["Please enter your last name."]</span></div>
-      <div class="field@(Html.FieldErrorClass("Email"))"><label for="em">Email Address *</label><input id="em" name="email" type="email" required value="@Model.Input.Email" /><span class="err">@L["Please enter a valid email."]</span></div>
-      <div class="field@(Html.FieldErrorClass("Phone"))"><label for="ph">Contact Number *</label><input id="ph" name="phone" type="tel" required value="@Model.Input.Phone" /><span class="err">@L["Please enter your contact number."]</span></div>
-      <div class="field"><label for="msg">Message</label><textarea id="msg" name="message">@Model.Input.Message</textarea></div>
+      <div class="field@(Html.FieldErrorClass("FirstName"))"><label for="fn">@L["First Name"] *</label><input id="fn" name="firstName" required value="@Model.Input.FirstName" /><span class="err">@L["Please enter your first name."]</span></div>
+      <div class="field@(Html.FieldErrorClass("LastName"))"><label for="ln">@L["Last Name"] *</label><input id="ln" name="lastName" required value="@Model.Input.LastName" /><span class="err">@L["Please enter your last name."]</span></div>
+      <div class="field@(Html.FieldErrorClass("Email"))"><label for="em">@L["Email Address"] *</label><input id="em" name="email" type="email" required value="@Model.Input.Email" /><span class="err">@L["Please enter a valid email."]</span></div>
+      <div class="field@(Html.FieldErrorClass("Phone"))"><label for="ph">@L["Contact Number"] *</label><input id="ph" name="phone" type="tel" required value="@Model.Input.Phone" /><span class="err">@L["Please enter your contact number."]</span></div>
+      <div class="field"><label for="msg">@L["Message"]</label><textarea id="msg" name="message">@Model.Input.Message</textarea></div>
       <div class="bas-disclaimer">
-        <p class="title">Privacy statement &amp; legal disclaimer</p>
-        <p>I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties are required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href="/privacy-policy">our Privacy Policy</a></p>
+        <p class="title">@L["Privacy statement & legal disclaimer"]</p>
+        <p>@L["I acknowledge and understand that my information will be shared with Mutawa Alkadi Automotive Company, its affiliates, or other parties as required by law for compliance, safety campaigns, government inquiries, or similar legal process. My information may also be shared for product research and development purposes, and to manage customer relationships to provide support. Privacy Statement addresses how AAC and GAC handles the personal information shared with us at <a href='/privacy-policy'>our Privacy Policy</a>"]</p>
       </div>
       <div class="field-check">
         <input id="mk" name="marketing" type="checkbox" value="true" checked="@Model.Input.Marketing" />
-        <label for="mk">I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information.</label>
+        <label for="mk">@L["I wish to receive any marketing information or have my information shared with third parties for purposes of providing me with marketing information."]</label>
       </div>
       <div class="flt-submit"><button class="btn btn--hero" type="submit">@L["Submit"]</button></div>
     </form>
