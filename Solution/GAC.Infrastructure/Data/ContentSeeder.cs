@@ -215,13 +215,18 @@ public static class ContentSeeder
         }
 
         // Only the contact-us "Locate Us" directory has a body; the 5 functional
-        // form pages keep their server-rendered partials.
+        // form pages keep their server-rendered partials. English and Arabic are
+        // backfilled independently (only when blank), preserving admin edits.
         foreach (var f in await db.FormPages.ToListAsync())
         {
-            if (!string.IsNullOrWhiteSpace(f.BodyHtml?.En)) continue;
-            var html = ReadSeedBody("forms", f.Slug);
-            if (html is null) continue;
-            f.BodyHtml = new LocalizedText { En = html };
+            var newEn = string.IsNullOrWhiteSpace(f.BodyHtml?.En) ? ReadSeedBody("forms", f.Slug) : null;
+            var newAr = string.IsNullOrWhiteSpace(f.BodyHtml?.Ar) ? ReadSeedBody("forms", f.Slug, "ar") : null;
+            if (newEn is null && newAr is null) continue;
+            f.BodyHtml = new LocalizedText
+            {
+                En = newEn ?? f.BodyHtml?.En ?? "",
+                Ar = newAr ?? f.BodyHtml?.Ar
+            };
             changed = true;
         }
 
