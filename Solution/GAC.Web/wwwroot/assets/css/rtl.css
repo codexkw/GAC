@@ -5,10 +5,27 @@
    =========================================================================== */
 
 /* ---- Arabic typography ---- */
+/* ROOT-CAUSE FIX — Arabic letters render broken/"cut" on iOS Safari.
+   The --font-sans (Inter) and --font-display (Montserrat) design tokens contain NO
+   Arabic glyphs. Every element that sets `font-family: var(--font-*)` — model names in
+   the mega-menu (.mm-name), card titles (.lineup-card__name), eyebrows, all .mp-*
+   headings — therefore rendered Arabic through a per-glyph fallback that mis-shapes and
+   clips on WebKit (iOS Safari) while still looking acceptable on desktop. Re-pointing the
+   TOKENS at Cairo routes every var()-based element to an Arabic-capable face at one point,
+   instead of patching individual selectors (the body/heading rules below only covered ~6). */
+:root[dir="rtl"] {
+  --font-sans: "Cairo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Cairo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
 [dir="rtl"] body { font-family: "Cairo", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
 [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4,
 [dir="rtl"] .hero__title, [dir="rtl"] .spec__value,
 [dir="rtl"] .offer-card__title { font-family: "Cairo", "Montserrat", system-ui, sans-serif; letter-spacing: 0; }
+
+/* Arabic is a cursive script: `letter-spacing` (used widely in styles.css for Latin
+   tracking) pushes letters apart and breaks the joins — reads as "cut" glyphs, worst on
+   iOS Safari. Neutralise inherited tracking for all Arabic UI text. */
+[dir="rtl"] body, [dir="rtl"] body * { letter-spacing: normal !important; }
 
 /* ---- Global text direction ---- */
 [dir="rtl"] { text-align: right; }

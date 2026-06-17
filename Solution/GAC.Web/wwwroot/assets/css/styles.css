@@ -1445,14 +1445,30 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
 @media (max-width: 860px) {
   .util { display: none; }
   .brandbar__right > a:not(.lang) { display: none; }
-  .brandbar__franchise { display: none; }
-  .brandbar__inner { justify-content: center; }
+  /* Keep BOTH brand logos visible on mobile: GAC (left) + Mutawa Alkadi franchise (right).
+     Was: franchise hidden + lone GAC logo centred. Shrink both so they fit narrow phones;
+     .brandbar__inner stays space-between (no center override). */
+  .brandbar__logo img, .brandbar__franchise { height: 30px; }
+  .brandbar__right { gap: 14px; }
   .menu { display: none; }
   .nav-toggle { display: inline-grid; place-items: center; width: 44px; height: 44px; }
   .nav-toggle svg { width: 26px; height: 26px; }
   .mainnav__inner { justify-content: space-between; }
   .megamenu { display: none !important; }
   .hero-rail { display: none; }
+}
+
+/* Small phones: step both brand logos down further so GAC + language + franchise
+   logo all fit on a ~320px viewport without overflow. */
+@media (max-width: 480px) {
+  .brandbar__logo img, .brandbar__franchise { height: 24px; }
+  .brandbar__inner { gap: 10px; }
+  .brandbar__right { gap: 10px; }
+}
+/* iPhone-SE-class widths (~320px): trim a little further for comfortable slack. */
+@media (max-width: 360px) {
+  .brandbar__logo img, .brandbar__franchise { height: 22px; }
+  .brandbar__inner, .brandbar__right { gap: 8px; }
 }
 
 /* ------------------------------------------------------------------
