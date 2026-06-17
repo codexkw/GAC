@@ -47,8 +47,14 @@
 /* ---- Mobile drawer: slides from the right in RTL ---- */
 [dir="rtl"] .drawer__panel { right: auto; left: 0; }
 
-/* ---- Action dock: dock to the left edge in RTL ---- */
-[dir="rtl"] .action-dock { right: auto; left: 20px; }
+/* ---- Action dock: dock to the left edge in RTL (desktop rail only) ----
+   At <=992px the dock is a full-width bottom bar (styles.css sets right:0; left:0).
+   This rail offset must NOT leak into that breakpoint — unscoped, its (0,2,0)
+   specificity beats the mobile .action-dock (0,1,0) and collapses the RTL bottom bar
+   into a content-width pill at bottom-left (right:auto + left:20px). Scope to desktop. */
+@media (min-width: 993px) {
+  [dir="rtl"] .action-dock { right: auto; left: 20px; }
+}
 @media (min-width: 1101px) { [dir="rtl"] .footer-socials { padding-right: 0; padding-left: 56px; } }
 
 /* ---- Back-to-top button ---- */
