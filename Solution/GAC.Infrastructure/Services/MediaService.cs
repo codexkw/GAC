@@ -9,9 +9,9 @@ namespace GAC.Infrastructure.Services;
 public class MediaService : IMediaService
 {
     private static readonly HashSet<string> AllowedExt =
-        new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+        new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf" };
     private static readonly HashSet<string> AllowedCt =
-        new(StringComparer.OrdinalIgnoreCase) { "image/jpeg", "image/png", "image/webp", "image/gif" };
+        new(StringComparer.OrdinalIgnoreCase) { "image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf" };
 
     private readonly ApplicationDbContext _db;
     private readonly MediaOptions _opt;
@@ -26,9 +26,10 @@ public class MediaService : IMediaService
     {
         var ext = Path.GetExtension(originalFileName);
         if (string.IsNullOrEmpty(ext) || !AllowedExt.Contains(ext) || !AllowedCt.Contains(contentType))
-            return new MediaUploadResult(false, null, "Only image files (jpg, png, webp, gif) are allowed.");
-        if (length <= 0 || length > _opt.MaxBytes)
-            return new MediaUploadResult(false, null, $"File must be between 1 byte and {_opt.MaxBytes / 1024} KB.");
+            return new MediaUploadResult(false, null, "Only image files (jpg, png, webp, gif) and PDF files are allowed.");
+        var maxBytes = string.Equals(ext, ".pdf", StringComparison.OrdinalIgnoreCase) ? _opt.PdfMaxBytes : _opt.MaxBytes;
+        if (length <= 0 || length > maxBytes)
+            return new MediaUploadResult(false, null, $"File must be between 1 byte and {maxBytes / 1024} KB.");
 
         Directory.CreateDirectory(_opt.Root);
         var safeName = $"{Guid.NewGuid():N}{ext.ToLowerInvariant()}";

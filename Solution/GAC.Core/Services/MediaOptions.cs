@@ -7,4 +7,6 @@ public class MediaOptions
     // Public URL prefix that maps to Root (default "/uploads").
     public string PublicPrefix { get; set; } = "/uploads";
     public long MaxBytes { get; set; } = 5 * 1024 * 1024;
+    // PDFs (brochures / spec sheets) are allowed a larger ceiling than images.
+    public long PdfMaxBytes { get; set; } = 20 * 1024 * 1024;
 }
