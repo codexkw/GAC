@@ -1,0 +1,50 @@
+@model GAC.Core.Content.DockItem
+@using GAC.Core.Content
+@using GAC.Web.Areas.Admin.Models
+@using GAC.Web.Infrastructure
+@{
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "New dock item" : "Edit dock item";
+}
+<p><a asp-area="Admin" asp-action="Index">&larr; Back to action dock</a></p>
+
+<h1>@(isNew ? "New dock item" : "Edit dock item")</h1>
+
+<form method="post" asp-action="Save">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="adm-error"></div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Label", NameEn = "Label.En", NameAr = "Label.Ar", ValueEn = Model.Label.En, ValueAr = Model.Label.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Short label (mobile)", NameEn = "ShortLabel.En", NameAr = "ShortLabel.Ar", ValueEn = Model.ShortLabel.En, ValueAr = Model.ShortLabel.Ar }' />
+
+    <div class="adm-field">
+        <label asp-for="LinkType">Link type</label>
+        <select asp-for="LinkType" asp-items="Html.GetEnumSelectList<DockLinkType>()"></select>
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="Url">Url (used when link type is Url)</label>
+        <input asp-for="Url" />
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="Icon">Icon</label>
+        <select asp-for="Icon">
+            @foreach (var key in DockIcons.Keys)
+            {
+                <option value="@key">@key</option>
+            }
+        </select>
+    </div>
+
+    <div class="adm-field">
+        <label><input asp-for="IsVisible" /> Visible</label>
+    </div>
+
+    <div class="adm-field">
+        <label asp-for="SortOrder">Sort order</label>
+        <input asp-for="SortOrder" type="number" />
+    </div>
+
+    <button type="submit" class="adm-btn">Save</button>
+</form>

@@ -1,0 +1,46 @@
+@model IReadOnlyList<GAC.Core.Content.DockItem>
+@{
+    ViewData["Title"] = "Action dock";
+}
+<h1>Action dock</h1>
+
+<p><a asp-action="Create" class="adm-btn">New item</a></p>
+
+<table class="adm-table">
+    <thead>
+        <tr><th>Label</th><th>Type</th><th>Target</th><th>Icon</th><th>Visible</th><th>Order</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.Label.Localize()</td>
+                <td>@d.LinkType</td>
+                <td>@(d.LinkType == GAC.Core.Content.DockLinkType.Url ? d.Url : "—")</td>
+                <td>@d.Icon</td>
+                <td>@(d.IsVisible ? "Yes" : "No")</td>
+                <td>
+                    @d.SortOrder
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@d.Id" />
+                        <input type="hidden" name="direction" value="-1" />
+                        <button type="submit" class="adm-btn" title="Move up">&uarr;</button>
+                    </form>
+                    <form asp-action="Move" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@d.Id" />
+                        <input type="hidden" name="direction" value="1" />
+                        <button type="submit" class="adm-btn" title="Move down">&darr;</button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@d.Id">Edit</a>
+                    <form asp-action="Delete" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this dock item?')">
+                        <input type="hidden" name="id" value="@d.Id" />
+                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
