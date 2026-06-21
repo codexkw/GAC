@@ -26,3 +26,25 @@ public class ActionDockSeedTests
         Assert.All(items, i => Assert.True(i.IsVisible));
     }
 }
+
+public class ActionDockRenderTests : IClassFixture<DevWebApplicationFactory>
+{
+    private readonly DevWebApplicationFactory _factory;
+    public ActionDockRenderTests(DevWebApplicationFactory factory) => _factory = factory;
+
+    [Fact]
+    public async Task Home_Renders_Dock_Items()
+    {
+        var html = await (await _factory.CreateClient().GetAsync("/")).Content.ReadAsStringAsync();
+        Assert.Contains("action-dock", html);
+        Assert.Contains("action-dock__item--wa", html); // WhatsApp item present
+    }
+
+    [Fact]
+    public async Task Home_Hides_Brochure_When_Not_On_Vehicle_Page()
+    {
+        var html = await (await _factory.CreateClient().GetAsync("/")).Content.ReadAsStringAsync();
+        // The brochure item is VehicleBrochure-typed; off a model page it must not render.
+        Assert.DoesNotContain("Download Brochure", html);
+    }
+}

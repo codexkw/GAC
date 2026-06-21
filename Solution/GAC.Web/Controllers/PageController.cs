@@ -34,6 +34,7 @@ public class PageController : Controller
         var vehicle = await _vehicles.GetBySlugAsync(slug);
         if (vehicle != null)
         {
+            HttpContext.Items["CurrentVehicleBrochure"] = vehicle.BrochurePdf;
             ViewData["Seo"] = SeoBuilder.ForVehicle(vehicle, baseUrl);
             return View("~/Views/Vehicles/Detail.cshtml", vehicle);
         }
