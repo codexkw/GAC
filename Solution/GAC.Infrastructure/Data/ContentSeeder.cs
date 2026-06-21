@@ -20,6 +20,7 @@ public static class ContentSeeder
         await SeedVehiclesAsync(db);
         await SeedHomePageAsync(db);
         await SeedMenuAsync(db);
+        await SeedDockItemsAsync(db);
         await SeedContentPagesAsync(db);
         await SeedFormPagesAsync(db);
         await SeedNewsArticlesAsync(db);
@@ -419,6 +420,54 @@ public static class ContentSeeder
         };
 
         db.MenuItems.AddRange(items);
+        await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Action-dock (6 items — matches the previously-hardcoded footer dock)
+    // ──────────────────────────────────────────────
+    private static async Task SeedDockItemsAsync(ApplicationDbContext db)
+    {
+        if (await db.DockItems.AnyAsync()) return;
+
+        db.DockItems.AddRange(
+            new DockItem
+            {
+                SortOrder = 1, Icon = "whatsapp", LinkType = DockLinkType.WhatsApp,
+                Label = new() { En = "Chat on WhatsApp", Ar = "تواصل عبر واتساب" },
+                ShortLabel = new() { En = "WhatsApp", Ar = "واتساب" }
+            },
+            new DockItem
+            {
+                SortOrder = 2, Icon = "test-drive", LinkType = DockLinkType.Url, Url = "/book-a-test-drive",
+                Label = new() { En = "Book a Test Drive", Ar = "احجز تجربة قيادة" },
+                ShortLabel = new() { En = "Test Drive", Ar = "تجربة قيادة" }
+            },
+            new DockItem
+            {
+                SortOrder = 3, Icon = "quote", LinkType = DockLinkType.Url, Url = "/request-a-quote",
+                Label = new() { En = "Get Online Quote", Ar = "اطلب عرض سعر" },
+                ShortLabel = new() { En = "Quote", Ar = "عرض سعر" }
+            },
+            new DockItem
+            {
+                SortOrder = 4, Icon = "brochure", LinkType = DockLinkType.VehicleBrochure,
+                Label = new() { En = "Download Brochure", Ar = "حمّل الكتيب" },
+                ShortLabel = new() { En = "Brochure", Ar = "الكتيب" }
+            },
+            new DockItem
+            {
+                SortOrder = 5, Icon = "location", LinkType = DockLinkType.Url, Url = "/contact-us",
+                Label = new() { En = "Find Showroom", Ar = "أوجد المعرض" },
+                ShortLabel = new() { En = "Showroom", Ar = "المعرض" }
+            },
+            new DockItem
+            {
+                SortOrder = 6, Icon = "mail", LinkType = DockLinkType.Url, Url = "/contact-us",
+                Label = new() { En = "Contact Us", Ar = "تواصل معنا" },
+                ShortLabel = new() { En = "Contact", Ar = "تواصل" }
+            }
+        );
         await db.SaveChangesAsync();
     }
 

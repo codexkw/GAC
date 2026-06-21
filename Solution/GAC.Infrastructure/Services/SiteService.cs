@@ -21,4 +21,11 @@ public class SiteService : ISiteService
             .Where(m => m.ParentId == null)
             .OrderBy(m => m.SortOrder)
             .ToListAsync();
+
+    public async Task<IReadOnlyList<DockItem>> GetDockItemsAsync()
+        => await _db.DockItems
+            .AsNoTracking()
+            .Where(d => d.IsVisible)
+            .OrderBy(d => d.SortOrder)
+            .ToListAsync();
 }
