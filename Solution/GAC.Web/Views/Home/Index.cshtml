@@ -210,46 +210,4 @@
     </div>
   </section>
 
-  <!-- =================================================
-       NEWS & EVENTS — header + square-thumb carousel (DB-driven)
-       ================================================= -->
-  <section class="news">
-    <div class="container">
-      <div class="news__head">
-        <div>
-          <h2>@L["News & events"]</h2>
-          <p>@L["Keep up to date with all the latest news and stories from Mutawa Alkadi Automotive."]</p>
-        </div>
-        <a class="btn btn--ghost" href="/news">@L["Read All News"]</a>
-      </div>
-
-      <div class="newscar" data-news-carousel>
-        <button class="newscar__arrow newscar__arrow--prev" data-news-prev aria-label="Previous">‹</button>
-        <div class="newscar__viewport">
-          <div class="newscar__track" data-news-track>
-
-@foreach (var n in Model.News)
-{
-        <a class="news-card" href="/news/@n.Slug">
-          <div class="news-card__media news-card__media--photo" style="background-image:url('@n.ImagePath')"></div>
-          <div class="news-card__body">
-            <div class="news-card__date">@n.PublishedOn.ToString("dd MMM yyyy")</div>
-            <h3 class="news-card__title">@n.Title.Localize()</h3>
-            <span class="news-card__more">@L["Read More"]</span>
-          </div>
-        </a>
-}
-
-          </div>
-        </div>
-        <button class="newscar__arrow newscar__arrow--next" data-news-next aria-label="Next">›</button>
-
-        <div class="newscar__pager" data-news-pager>
-@for (var i = 0; i < Model.News.Count; i++)
-{
-          <button class="newscar__dot @(i == 0 ? "is-active" : "")" aria-label="Slide @(i + 1)"></button>
-}
-        </div>
-      </div>
-    </div>
-  </section>
+  @* NEWS & EVENTS section intentionally hidden from the home page (kept in code for easy re-enable). *@
