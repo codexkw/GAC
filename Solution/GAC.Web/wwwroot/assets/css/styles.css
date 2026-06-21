@@ -1997,3 +1997,7 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
 .mp-color__chip { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(0,0,0,.15); }
 .mp-color__img { width: 100%; height: auto; border-radius: 8px; }
 .mp-color__name { font-size: .9rem; }
+
+/* Per-vehicle Specifications download CTA (field-driven; Vehicle.SpecPdf) */
+.mp-spec-cta { padding: 1.25rem 0; text-align: center; }
+.mp-spec-cta .btn { display: inline-block; }

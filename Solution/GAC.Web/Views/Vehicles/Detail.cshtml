@@ -2,9 +2,17 @@
 @model GAC.Core.Content.Vehicle
 @{ Layout = "_Layout"; }
 
+@{
+    var specBtn = !string.IsNullOrWhiteSpace(Model.SpecPdf);
+}
+
 @if (VehicleContent.HasStructuredContent(Model))
 {
     <partial name="_VehicleHero" model="Model" />
+    @if (specBtn)
+    {
+        <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a></div></section>
+    }
     <partial name="_VehicleFeatures" model="Model" />
     <partial name="_VehicleSpecs" model="Model" />
     <partial name="_VehicleColors" model="Model" />
@@ -12,5 +20,9 @@
 }
 else
 {
+    @if (specBtn)
+    {
+        <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a></div></section>
+    }
     @Html.Raw(Model.BodyHtml.Localize())
 }

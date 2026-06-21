@@ -12,7 +12,7 @@
     2. Vehicles  : display order for the home dropdown, model strip and mega-menu
                    -> EMZOOM, EMKOO, GS4 MAX, HYPTEC HT, GS8, GS8 Traveller, M8,
                       EMPOW, EMPOW R (hidden AION concepts last). GN6 intentionally skipped.
-    3. gs4/hyptec-ht: "Request a Quote" trim button -> "Specifications" (matches other models).
+    3. gs4/hyptec-ht: remove in-body trim CTA anchor (Specifications is now field-driven via Vehicles.SpecPdf).
     4. gs4      : remove the "All New GAC GS4 MAX / Inspiring Performance" overview heading.
     5. contact-us: British -> American spelling ("Centres"/"centre" -> "Centers"/"center").
 
@@ -58,21 +58,29 @@ UPDATE [Vehicles] SET [SortOrder] = CASE [Slug]
 WHERE [Slug] IN ('gs3emzoom','emkoo','gs4','hyptec-ht','gs8','gs8traveller','m8','empow','empow-sport','aion-v','aion-es');
 
 ------------------------------------------------------------------
--- 3. "Request a Quote" trim button -> "Specifications"
+-- 3. gs4 / hyptec-ht: remove the in-body trim CTA anchor
+--    (Specifications is now a field-driven button from Vehicles.SpecPdf)
+--    3a. Remove "Request a Quote" anchor (if the old form was never replaced)
+--    3b. Remove hardcoded Specifications PDF anchors (if an earlier SQL run
+--        already replaced "Request a Quote" with the PDF link)
 ------------------------------------------------------------------
 UPDATE [Vehicles]
    SET [BodyHtml_En] = REPLACE([BodyHtml_En],
-        N'<a class="btn btn--trim" href="#enquiry">Request a Quote</a>',
-        N'<a class="btn btn--trim" href="/pdfs/gs4-specifications.pdf" target="_blank" rel="noopener">Specifications</a>')
- WHERE [Slug] = 'gs4'
+        N'<a class="btn btn--trim" href="#enquiry">Request a Quote</a>', N'')
+ WHERE [Slug] IN ('gs4','hyptec-ht')
    AND [BodyHtml_En] LIKE N'%<a class="btn btn--trim" href="#enquiry">Request a Quote</a>%';
 
 UPDATE [Vehicles]
    SET [BodyHtml_En] = REPLACE([BodyHtml_En],
-        N'<a class="btn btn--trim" href="#enquiry">Request a Quote</a>',
-        N'<a class="btn btn--trim" href="/pdfs/hyptec-ht-specifications.pdf" target="_blank" rel="noopener">Specifications</a>')
+        N'<a class="btn btn--trim" href="/pdfs/gs4-specifications.pdf" target="_blank" rel="noopener">Specifications</a>', N'')
+ WHERE [Slug] = 'gs4'
+   AND [BodyHtml_En] LIKE N'%<a class="btn btn--trim" href="/pdfs/gs4-specifications.pdf" target="_blank" rel="noopener">Specifications</a>%';
+
+UPDATE [Vehicles]
+   SET [BodyHtml_En] = REPLACE([BodyHtml_En],
+        N'<a class="btn btn--trim" href="/pdfs/hyptec-ht-specifications.pdf" target="_blank" rel="noopener">Specifications</a>', N'')
  WHERE [Slug] = 'hyptec-ht'
-   AND [BodyHtml_En] LIKE N'%<a class="btn btn--trim" href="#enquiry">Request a Quote</a>%';
+   AND [BodyHtml_En] LIKE N'%<a class="btn btn--trim" href="/pdfs/hyptec-ht-specifications.pdf" target="_blank" rel="noopener">Specifications</a>%';
 
 ------------------------------------------------------------------
 -- 4. gs4: remove the "All New GAC GS4 MAX / Inspiring Performance" heading

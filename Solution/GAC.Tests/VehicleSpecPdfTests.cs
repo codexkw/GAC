@@ -31,3 +31,23 @@ public class VehicleSpecPdfTests
         Assert.Equal("/uploads/gs4-spec.pdf", (await db.Vehicles.FindAsync(1))!.SpecPdf);
     }
 }
+
+public class VehicleSpecPdfRenderTests : IClassFixture<DevWebApplicationFactory>
+{
+    private readonly DevWebApplicationFactory _factory;
+    public VehicleSpecPdfRenderTests(DevWebApplicationFactory factory) => _factory = factory;
+
+    [Fact]
+    public async Task Gs4_Renders_And_OmitsFieldDrivenSpecCta_WhenNoSpecPdf()
+    {
+        var response = await _factory.CreateClient().GetAsync("/gs4");
+        response.EnsureSuccessStatusCode(); // rewritten Detail.cshtml renders without error
+        var html = await response.Content.ReadAsStringAsync();
+        // gs4 has no SpecPdf set in the DB -> the field-driven Specifications CTA must not render.
+        // If the @if (specBtn) conditional in Detail.cshtml were broken to always render the section,
+        // "mp-spec-cta" would appear here and this test would fail — making this a genuine code check.
+        // (Removing the legacy in-body /pdfs/ anchor from live data is handled by the
+        //  reviewed content SQL section 3b/3c at deploy + manual QA, not asserted here.)
+        Assert.DoesNotContain("mp-spec-cta", html);
+    }
+}
