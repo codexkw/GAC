@@ -44,6 +44,7 @@ public class AdminVehicleService : IAdminVehicleService
         existing.IsVisible = vehicle.IsVisible;
         existing.PriceFrom = vehicle.PriceFrom;
         existing.BrochurePdf = vehicle.BrochurePdf;
+        existing.SpecPdf = vehicle.SpecPdf;
         existing.Name = vehicle.Name;
         existing.Tagline = vehicle.Tagline;
         existing.IntroText = vehicle.IntroText;

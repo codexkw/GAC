@@ -33,8 +33,19 @@
     </div>
 
     <div class="adm-field">
+        <label asp-for="SpecPdf">Specifications PDF</label>
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input asp-for="SpecPdf" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+    </div>
+
+    <div class="adm-field">
         <label asp-for="BrochurePdf">Brochure PDF</label>
-        <input asp-for="BrochurePdf" />
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input asp-for="BrochurePdf" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
     </div>
 
     <div class="adm-field">
