@@ -31,6 +31,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<SiteSettings> SiteSettings => Set<SiteSettings>();
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<MediaAsset> MediaAssets => Set<MediaAsset>();
+    public DbSet<DockItem> DockItems => Set<DockItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

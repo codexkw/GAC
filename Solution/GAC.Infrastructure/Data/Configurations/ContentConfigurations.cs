@@ -211,3 +211,14 @@ public class MediaAssetConfig : IEntityTypeConfiguration<MediaAsset>
         b.OwnsLocalized(m => m.Alt);
     }
 }
+
+public class DockItemConfig : IEntityTypeConfiguration<DockItem>
+{
+    public void Configure(EntityTypeBuilder<DockItem> b)
+    {
+        b.Property(d => d.Icon).HasMaxLength(50);
+        b.Property(d => d.Url).HasMaxLength(300);
+        b.OwnsLocalized(d => d.Label);
+        b.OwnsLocalized(d => d.ShortLabel);
+    }
+}
