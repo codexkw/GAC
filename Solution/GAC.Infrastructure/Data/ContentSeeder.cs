@@ -73,6 +73,7 @@ public static class ContentSeeder
             ["aion-es"]      = ("أيون ES", "سيدان كهربائية بالكامل"),
             ["hyptec-ht"]    = ("هايبتك HT", "دفع رباعي كهربائي فاخر"),
             ["gs4"]          = ("GS4 ماكس", "دفع رباعي مدمج عملي"),
+            ["gn6"]          = ("GN6", "دفع رباعي مدمج عملي"),
         };
         foreach (var v in await db.Vehicles.ToListAsync())
         {
@@ -279,27 +280,28 @@ public static class ContentSeeder
     }
 
     // ──────────────────────────────────────────────
-    //  Vehicles (11) + Hero + Gallery thumbnail VehicleImage each
+    //  Vehicles (12) + Hero + Gallery thumbnail VehicleImage each
     // ──────────────────────────────────────────────
     private static async Task SeedVehiclesAsync(ApplicationDbContext db)
     {
         if (await db.Vehicles.AnyAsync()) return;
 
         // Display order (home dropdown, model strip, mega-menu): EMZOOM, EMKOO, GS4 MAX,
-        // HYPTEC HT, GS8, GS8 Traveller, M8, EMPOW, EMPOW R. Hidden EV concepts last.
+        // HYPTEC HT, GN6, GS8, GS8 Traveller, M8, EMPOW, EMPOW R. Hidden EV concepts last.
         var vehicles = new[]
         {
             MakeVehicle(1, "gs3emzoom",       "EMZOOM",        VehicleCategory.Suv,                     true,  "/assets/img/hero-gs3-emzoom.jpg",  "/assets/img/m-gs3-emzoom.png"),
             MakeVehicle(2, "emkoo",           "EMKOO",         VehicleCategory.Suv,                     true,  "/assets/img/m-emkoo.png",          "/assets/img/m-emkoo.png"),
             MakeVehicle(3, "gs4",             "GS4 MAX",       VehicleCategory.Suv,                     true,  "/assets/img/hero-gs4.jpg",         "/assets/img/m-gs4.png"),
             MakeVehicle(4, "hyptec-ht",       "HYPTEC HT",     VehicleCategory.Suv | VehicleCategory.Ev, true,  "/assets/img/m-hyptec-ht.png",     "/assets/img/m-hyptec-ht.png"),
-            MakeVehicle(5, "gs8",             "GS8",           VehicleCategory.Suv,                     true,  "/assets/img/m-gs8.jpg",            "/assets/img/m-gs8.jpg"),
-            MakeVehicle(6, "gs8traveller",    "GS8 Traveller", VehicleCategory.Suv,                     true,  "/assets/img/hero-gs8-traveller.png", "/assets/img/m-gs8-traveller.png"),
-            MakeVehicle(7, "m8",              "M8",            VehicleCategory.Suv,                     true,  "/assets/img/hero-m8.png",          "/assets/img/m-m8.png"),
-            MakeVehicle(8, "empow",           "EMPOW",         VehicleCategory.Sedan,                   true,  "/assets/img/m-empow.png",          "/assets/img/m-empow.png"),
-            MakeVehicle(9, "empow-sport",     "EMPOW R",       VehicleCategory.Sedan,                   true,  "/assets/img/hero-empow-sport.jpg", "/assets/img/m-empow-sport.png"),
-            MakeVehicle(10,"aion-v",          "AION V",        VehicleCategory.Suv | VehicleCategory.Ev, false, "/assets/img/hero-aion-v.jpg",      "/assets/img/m-aion-v.png"),
-            MakeVehicle(11,"aion-es",         "AION ES",       VehicleCategory.Sedan | VehicleCategory.Ev, false, "/assets/img/hero-aion-es.jpg",    "/assets/img/m-aion-es.png"),
+            MakeVehicle(5, "gn6",             "GN6",           VehicleCategory.Suv,                     true,  "/assets/img/hero-gs4.jpg",         "/assets/img/m-gs4.png"),
+            MakeVehicle(6, "gs8",             "GS8",           VehicleCategory.Suv,                     true,  "/assets/img/m-gs8.jpg",            "/assets/img/m-gs8.jpg"),
+            MakeVehicle(7, "gs8traveller",    "GS8 Traveller", VehicleCategory.Suv,                     true,  "/assets/img/hero-gs8-traveller.png", "/assets/img/m-gs8-traveller.png"),
+            MakeVehicle(8, "m8",              "M8",            VehicleCategory.Suv,                     true,  "/assets/img/hero-m8.png",          "/assets/img/m-m8.png"),
+            MakeVehicle(9, "empow",           "EMPOW",         VehicleCategory.Sedan,                   true,  "/assets/img/m-empow.png",          "/assets/img/m-empow.png"),
+            MakeVehicle(10,"empow-sport",     "EMPOW R",       VehicleCategory.Sedan,                   true,  "/assets/img/hero-empow-sport.jpg", "/assets/img/m-empow-sport.png"),
+            MakeVehicle(11,"aion-v",          "AION V",        VehicleCategory.Suv | VehicleCategory.Ev, false, "/assets/img/hero-aion-v.jpg",      "/assets/img/m-aion-v.png"),
+            MakeVehicle(12,"aion-es",         "AION ES",       VehicleCategory.Sedan | VehicleCategory.Ev, false, "/assets/img/hero-aion-es.jpg",    "/assets/img/m-aion-es.png"),
         };
 
         db.Vehicles.AddRange(vehicles);

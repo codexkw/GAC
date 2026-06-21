@@ -44,7 +44,7 @@ public class ArabicSeedTests
         await ContentSeeder.SeedAsync(sp); // run twice
         var db = sp.GetRequiredService<ApplicationDbContext>();
 
-        Assert.Equal(11, await db.Vehicles.CountAsync());
+        Assert.Equal(12, await db.Vehicles.CountAsync());
 
         // A vehicle whose Arabic genuinely differs from English: proves the backfill
         // guard preserved the distinct Arabic and did NOT clobber English on the 2nd pass.

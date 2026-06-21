@@ -16,13 +16,13 @@ public class ContentSeederTests
     }
 
     [Fact]
-    public async Task Seeds_ElevenVehicles_WithTwoHidden()
+    public async Task Seeds_TwelveVehicles_WithTwoHidden()
     {
         var sp = BuildServices("seed-vehicles");
         await ContentSeeder.SeedAsync(sp);
 
         var db = sp.GetRequiredService<ApplicationDbContext>();
-        Assert.Equal(11, await db.Vehicles.CountAsync());
+        Assert.Equal(12, await db.Vehicles.CountAsync());
         Assert.Equal(2, await db.Vehicles.CountAsync(v => !v.IsVisible));
         Assert.True(await db.Vehicles.AnyAsync(v => v.Slug == "gs8"));
     }
@@ -35,7 +35,7 @@ public class ContentSeederTests
         await ContentSeeder.SeedAsync(sp);
 
         var db = sp.GetRequiredService<ApplicationDbContext>();
-        Assert.Equal(11, await db.Vehicles.CountAsync());
+        Assert.Equal(12, await db.Vehicles.CountAsync());
         Assert.Equal(1, await db.SiteSettings.CountAsync());
         Assert.Equal(6, await db.FormPages.CountAsync());
         Assert.Equal(6, await db.ContentPages.CountAsync());
