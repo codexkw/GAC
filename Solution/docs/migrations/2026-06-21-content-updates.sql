@@ -13,8 +13,9 @@
                    -> EMZOOM, EMKOO, GS4 MAX, HYPTEC HT, GS8, GS8 Traveller, M8,
                       EMPOW, EMPOW R (hidden AION concepts last). GN6 intentionally skipped.
     3. gs4/hyptec-ht: remove in-body trim CTA anchor (Specifications is now field-driven via Vehicles.SpecPdf).
-    4. gs4      : remove the "All New GAC GS4 MAX / Inspiring Performance" overview heading.
-    5. contact-us: British -> American spelling ("Centres"/"centre" -> "Centers"/"center").
+    4. contact-us: British -> American spelling ("Centres"/"centre" -> "Centers"/"center").
+       (The earlier "remove gs4 overview heading" step was reverted on 2026-06-22 — the
+        heading is intentionally kept; see 2026-06-22 source change to gs4.html.)
 
   Idempotent & guarded: re-running makes no further changes. The HTML edits only fire
   when the original markup is still present (so admin edits are not clobbered).
@@ -83,21 +84,7 @@ UPDATE [Vehicles]
    AND [BodyHtml_En] LIKE N'%<a class="btn btn--trim" href="/pdfs/hyptec-ht-specifications.pdf" target="_blank" rel="noopener">Specifications</a>%';
 
 ------------------------------------------------------------------
--- 4. gs4: remove the "All New GAC GS4 MAX / Inspiring Performance" heading
---    (removes the two text elements; the empty wrapper renders nothing)
-------------------------------------------------------------------
-UPDATE [Vehicles]
-   SET [BodyHtml_En] = REPLACE([BodyHtml_En], N'<h2 class="mp-head__title">All New GAC GS4 MAX</h2>', N'')
- WHERE [Slug] = 'gs4'
-   AND [BodyHtml_En] LIKE N'%<h2 class="mp-head__title">All New GAC GS4 MAX</h2>%';
-
-UPDATE [Vehicles]
-   SET [BodyHtml_En] = REPLACE([BodyHtml_En], N'<p class="mp-head__sub">Inspiring Performance</p>', N'')
- WHERE [Slug] = 'gs4'
-   AND [BodyHtml_En] LIKE N'%<p class="mp-head__sub">Inspiring Performance</p>%';
-
-------------------------------------------------------------------
--- 5. contact-us: British -> American spelling (Centres/centre -> Centers/center)
+-- 4. contact-us: British -> American spelling (Centres/centre -> Centers/center)
 ------------------------------------------------------------------
 UPDATE [FormPages]
    SET [BodyHtml_En] = REPLACE([BodyHtml_En], N'Service Centres', N'Service Centers')
