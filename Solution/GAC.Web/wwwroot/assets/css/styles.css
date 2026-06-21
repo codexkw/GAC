@@ -1472,29 +1472,37 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
 }
 
 /* ------------------------------------------------------------------
-   MOBILE HERO FIT
-   The slider photos are 16:9 landscape (1600x900). Forcing them into
-   the tall portrait phone viewport with background-size:cover cropped
-   ~60% of each car's width (front/rear cut off) while wasting height
-   on empty sky/ground. On phones & tablets we instead render the FULL
-   photo in a true 16:9 band and drop the caption onto the solid black
-   hero panel beneath it, so the whole vehicle is always visible.
+   MOBILE HERO — full-screen image with the caption OVER the photo
+   (matches the desktop/web view). Phones previously rendered the photo
+   as a small 16:9 band with the caption on a black panel beneath it;
+   now the image fills the hero, the caption + dots sit over it, and the
+   prev/next arrows stay visible — as on the web view.
    ------------------------------------------------------------------ */
 @media (max-width: 860px) {
-  .hero__viewport { height: calc(56.25vw + 204px); min-height: 0; max-height: none; }
-  /* image band: exactly 16:9 of the viewport width -> no crop, no bars */
-  .hero__bg { top: 0; left: 0; right: 0; bottom: auto; height: 56.25vw; }
+  /* (1) Full-screen image: fill the band between the sticky header (~110px on
+     phones — brandbar + mainnav, util hidden) and the fixed bottom action-dock
+     (~58px), so the whole photo shows, nothing hides under the dock, and there
+     is no extra scroll. (var(--header-h) is 64px on mobile but the real header
+     is taller, so use measured constants here.) */
+  .hero__viewport { height: calc(100vh - 110px - 58px); height: calc(100svh - 110px - 58px);
+                    min-height: 440px; max-height: none; padding: 0; }
+  /* Background image covers the WHOLE hero (no 16:9 band, no black panel) */
+  .hero__bg { top: 0; left: 0; right: 0; bottom: 0; height: auto; }
   .hero__bg--img { background-size: cover; background-position: center; }
-  .hero__bg::after { background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.28) 100%); }
-  /* caption sits on the black hero panel below the photo */
-  .hero__inner { position: absolute; top: 56.25vw; left: 0; right: 0; bottom: 0; height: auto;
-                 align-items: center; justify-content: flex-start; padding: 0; }
-  .hero__content { text-align: center; max-width: none; padding: 48px 18px 0; }
+  /* Scrim so the white caption stays legible over any photo (darker top + bottom) */
+  .hero__bg::after { background: linear-gradient(180deg, rgba(0,0,0,.30) 0%, rgba(0,0,0,.08) 42%, rgba(0,0,0,.62) 100%); }
+  /* (2) Caption overlaid and centred ON the image (not on a panel below) */
+  .hero__inner { position: relative; top: auto; left: auto; right: auto; bottom: auto;
+                 height: 100%; align-items: center; justify-content: center; padding: 0; }
+  .hero__content { text-align: center; max-width: 560px; margin-inline: auto; padding: 0 18px; }
   .hero__eyebrow { max-width: 34ch; margin-inline: auto; margin-bottom: 10px; }
-  .hero__title { margin-bottom: 16px; }
-  /* dots ride just under the photo, centred on the black panel */
-  .hero__dots { top: calc(56.25vw + 16px); bottom: auto; left: 50%; transform: translateX(-50%);
+  .hero__title { font-size: clamp(2rem, 8vw, 3rem); margin-bottom: 16px; }
+  /* dots over the image, just above the bottom action-dock */
+  .hero__dots { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%);
                 width: auto; justify-content: center; }
+  /* (3) Keep the prev/next arrows visible like the web view (a touch smaller) */
+  .hero__arrows { display: flex; padding: 0 8px; }
+  .hero__arrow { width: 40px; height: 40px; font-size: 1.25rem; }
   .hero__scroll { display: none; }
 }
 
