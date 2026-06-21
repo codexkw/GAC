@@ -2,12 +2,12 @@
   <div class="adm-modal__backdrop" data-picker-close></div>
   <div class="adm-modal__panel">
     <div class="adm-modal__head">
-      <strong>Choose image</strong>
+      <strong>Choose image or PDF</strong>
       <button type="button" data-picker-close>&times;</button>
     </div>
     <form class="adm-picker-upload" data-picker-upload enctype="multipart/form-data">
       @Html.AntiForgeryToken()
-      <input type="file" name="file" accept="image/*" />
+      <input type="file" name="file" accept="image/*,.pdf" />
       <button type="submit" class="adm-btn">Upload</button>
     </form>
     <div class="adm-picker-grid" data-picker-grid></div>

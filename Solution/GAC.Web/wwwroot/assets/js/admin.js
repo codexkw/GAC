@@ -17,13 +17,22 @@
       .then(function (items) {
         grid.innerHTML = "";
         items.forEach(function (it) {
-          var img = document.createElement("img");
-          img.src = it.path; img.title = it.path; img.className = "adm-picker-thumb";
-          img.addEventListener("click", function () {
+          var isPdf = /\.pdf$/i.test(it.path);
+          var el;
+          if (isPdf) {
+            el = document.createElement("div");
+            el.className = "adm-picker-thumb adm-picker-thumb--pdf";
+            el.title = it.path;
+            el.textContent = "PDF: " + it.path.split("/").pop();
+          } else {
+            el = document.createElement("img");
+            el.src = it.path; el.title = it.path; el.className = "adm-picker-thumb";
+          }
+          el.addEventListener("click", function () {
             if (activeInput) activeInput.value = it.path;
             close();
           });
-          grid.appendChild(img);
+          grid.appendChild(el);
         });
       });
   }
