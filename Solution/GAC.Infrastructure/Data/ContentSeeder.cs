@@ -73,7 +73,7 @@ public static class ContentSeeder
             ["aion-es"]      = ("أيون ES", "سيدان كهربائية بالكامل"),
             ["hyptec-ht"]    = ("هايبتك HT", "دفع رباعي كهربائي فاخر"),
             ["gs4"]          = ("GS4 ماكس", "دفع رباعي مدمج عملي"),
-            ["gn6"]          = ("GN6", "دفع رباعي مدمج عملي"),
+            ["gn6"]          = ("GN6", "مساحة فاخرة"),
         };
         foreach (var v in await db.Vehicles.ToListAsync())
         {
@@ -193,10 +193,18 @@ public static class ContentSeeder
 
         foreach (var v in await db.Vehicles.ToListAsync())
         {
-            if (!string.IsNullOrWhiteSpace(v.BodyHtml?.En)) continue;
-            var html = ReadSeedBody("vehicles", v.Slug);
-            if (html is null) continue; // hidden vehicles have no seed body
-            v.BodyHtml = new LocalizedText { En = html };
+            // Backfill English and Arabic independently: each is filled only when
+            // currently blank and a matching seed file exists. Most vehicles ship
+            // English-only (Arabic left null → English fallback at render); a
+            // vehicle with a SeedContent/vehicles/ar/<slug>.html file also gets Arabic.
+            var newEn = string.IsNullOrWhiteSpace(v.BodyHtml?.En) ? ReadSeedBody("vehicles", v.Slug) : null;
+            var newAr = string.IsNullOrWhiteSpace(v.BodyHtml?.Ar) ? ReadSeedBody("vehicles", v.Slug, "ar") : null;
+            if (newEn is null && newAr is null) continue;
+            v.BodyHtml = new LocalizedText
+            {
+                En = newEn ?? v.BodyHtml?.En ?? "",
+                Ar = newAr ?? v.BodyHtml?.Ar
+            };
             changed = true;
         }
 
@@ -294,7 +302,7 @@ public static class ContentSeeder
             MakeVehicle(2, "emkoo",           "EMKOO",         VehicleCategory.Suv,                     true,  "/assets/img/m-emkoo.png",          "/assets/img/m-emkoo.png"),
             MakeVehicle(3, "gs4",             "GS4 MAX",       VehicleCategory.Suv,                     true,  "/assets/img/hero-gs4.jpg",         "/assets/img/m-gs4.png"),
             MakeVehicle(4, "hyptec-ht",       "HYPTEC HT",     VehicleCategory.Suv | VehicleCategory.Ev, true,  "/assets/img/m-hyptec-ht.png",     "/assets/img/m-hyptec-ht.png"),
-            MakeVehicle(5, "gn6",             "GN6",           VehicleCategory.Suv,                     true,  "/assets/img/hero-gs4.jpg",         "/assets/img/m-gs4.png"),
+            MakeVehicle(5, "gn6",             "GN6",           VehicleCategory.Suv,                     true,  "/assets/img/hero-gn6.jpg",         "/assets/img/m-gn6.png"),
             MakeVehicle(6, "gs8",             "GS8",           VehicleCategory.Suv,                     true,  "/assets/img/m-gs8.jpg",            "/assets/img/m-gs8.jpg"),
             MakeVehicle(7, "gs8traveller",    "GS8 Traveller", VehicleCategory.Suv,                     true,  "/assets/img/hero-gs8-traveller.png", "/assets/img/m-gs8-traveller.png"),
             MakeVehicle(8, "m8",              "M8",            VehicleCategory.Suv,                     true,  "/assets/img/hero-m8.png",          "/assets/img/m-m8.png"),
