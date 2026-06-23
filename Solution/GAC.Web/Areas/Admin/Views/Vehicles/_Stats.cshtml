@@ -1,0 +1,36 @@
+@model GAC.Core.Content.Vehicle
+<h2>Overview stats</h2>
+<table class="adm-table">
+  <thead><tr><th>Order</th><th>Label</th><th>Value</th><th></th></tr></thead>
+  <tbody>
+    @foreach (var s in Model.Stats.OrderBy(x => x.SortOrder))
+    {
+        <tr>
+          <td>
+            <form asp-action="MoveStat" method="post" style="display:inline">
+              <input type="hidden" name="statId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+              <button class="adm-btn">&uarr;</button>
+            </form>
+            <form asp-action="MoveStat" method="post" style="display:inline">
+              <input type="hidden" name="statId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+              <button class="adm-btn">&darr;</button>
+            </form>
+          </td>
+          <td>@s.Label.En</td>
+          <td>@s.Value.En</td>
+          <td>
+            <form asp-action="RemoveStat" method="post" style="display:inline" onsubmit="return confirm('Remove stat?')">
+              <input type="hidden" name="statId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+              <button class="adm-btn adm-btn--danger">Remove</button>
+            </form>
+          </td>
+        </tr>
+    }
+  </tbody>
+</table>
+<form asp-action="AddStat" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="labelEn" placeholder="Label (EN)" /><input name="labelAr" placeholder="Label (AR)" dir="rtl" />
+  <input name="valueEn" placeholder="Value e.g. 177 HP (EN)" /><input name="valueAr" placeholder="Value (AR)" dir="rtl" />
+  <button class="adm-btn">Add stat</button>
+</form>
