@@ -1,0 +1,38 @@
+@using System.Linq
+@using GAC.Web.Infrastructure
+@model GAC.Core.Content.Vehicle
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Safety);
+    var toggles = Model.SafetyToggles.OrderBy(t => t.SortOrder).ToList();
+}
+@if (toggles.Count > 0)
+{
+    <section class="mp-section mp-section--grey" id="safety">
+      <div class="container">
+        <partial name="~/Views/Vehicles/_SectionHead.cshtml" model="head" />
+        <div class="mp-stoggles">
+          @for (var i = 0; i < toggles.Count; i++)
+          {
+              var t = toggles[i];
+              <article class="mp-stoggle@(VehicleContent.StateOpen(i == 0))">
+                <button class="mp-stoggle__head" type="button" aria-expanded="@VehicleContent.AriaExpanded(i == 0)"><span>@t.Title.Localize()</span><i class="mp-stoggle__icon"></i></button>
+                <div class="mp-stoggle__body">
+                  @if (!string.IsNullOrWhiteSpace(t.ImagePath))
+                  {
+                      <div class="mp-stoggle__media"><img src="@t.ImagePath" alt="@t.Title.Localize()" loading="lazy" /></div>
+                  }
+                  @if (!string.IsNullOrWhiteSpace(t.Strap.Localize()))
+                  {
+                      <h3 class="mp-stoggle__strap">@t.Strap.Localize()</h3>
+                  }
+                  @if (!string.IsNullOrWhiteSpace(t.Content.Localize()))
+                  {
+                      <p class="mp-stoggle__content">@t.Content.Localize()</p>
+                  }
+                </div>
+              </article>
+          }
+        </div>
+      </div>
+    </section>
+}
