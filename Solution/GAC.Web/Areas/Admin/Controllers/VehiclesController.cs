@@ -148,4 +148,17 @@ public class VehiclesController : Controller
     { await _svc.RemoveFeatureBulletAsync(bulletId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveFeatureBullet(int bulletId, int vehicleId, int direction)
     { await _svc.MoveFeatureBulletAsync(bulletId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddGalleryTab(int vehicleId, string? labelEn, string? labelAr)
+    { await _svc.AddGalleryTabAsync(vehicleId, new() { En = labelEn, Ar = labelAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveGalleryTab(int tabId, int vehicleId)
+    { await _svc.RemoveGalleryTabAsync(tabId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveGalleryTab(int tabId, int vehicleId, int direction)
+    { await _svc.MoveGalleryTabAsync(tabId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> AddGalleryImage(int galleryTabId, int vehicleId, string? imagePath, string? altEn, string? altAr)
+    { await _svc.AddGalleryImageAsync(galleryTabId, imagePath, new() { En = altEn, Ar = altAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveGalleryImage(int imageId, int vehicleId)
+    { await _svc.RemoveGalleryImageAsync(imageId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveGalleryImage(int imageId, int vehicleId, int direction)
+    { await _svc.MoveGalleryImageAsync(imageId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }

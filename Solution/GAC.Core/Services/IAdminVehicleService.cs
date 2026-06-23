@@ -57,4 +57,12 @@ public interface IAdminVehicleService
     Task<int> AddFeatureBulletAsync(int featureSectionId, LocalizedText label, LocalizedText text, CancellationToken ct = default);
     Task<bool> RemoveFeatureBulletAsync(int bulletId, CancellationToken ct = default);
     Task<bool> MoveFeatureBulletAsync(int bulletId, int direction, CancellationToken ct = default);
+
+    // Gallery tabs (tab -> images)
+    Task<int> AddGalleryTabAsync(int vehicleId, LocalizedText label, CancellationToken ct = default);
+    Task<bool> RemoveGalleryTabAsync(int tabId, CancellationToken ct = default);
+    Task<bool> MoveGalleryTabAsync(int tabId, int direction, CancellationToken ct = default);
+    Task<int> AddGalleryImageAsync(int galleryTabId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
+    Task<bool> RemoveGalleryImageAsync(int imageId, CancellationToken ct = default);
+    Task<bool> MoveGalleryImageAsync(int imageId, int direction, CancellationToken ct = default);
 }

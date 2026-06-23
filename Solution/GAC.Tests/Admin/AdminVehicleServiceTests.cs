@@ -295,4 +295,37 @@ public class AdminVehicleServiceTests
         Assert.Equal("Perf", f2.TabLabel.En);
         Assert.Equal("lead2", f2.Lead.En);
     }
+
+    // ---- Task 25: GalleryTab + GalleryImage ----
+
+    [Fact]
+    public async Task GalleryTab_And_Image_AddMoveRemove()
+    {
+        var db = NewDb(nameof(GalleryTab_And_Image_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "gt", Name = "G" });
+        var t1 = await svc.AddGalleryTabAsync(vid, new LocalizedText { En = "Exterior" });
+        var t2 = await svc.AddGalleryTabAsync(vid, new LocalizedText { En = "Interior" });
+        Assert.Equal(0, (await db.Set<GalleryTab>().FindAsync(t1))!.SortOrder);
+        Assert.True(await svc.MoveGalleryTabAsync(t2, -1));
+        Assert.Equal(0, (await db.Set<GalleryTab>().FindAsync(t2))!.SortOrder);
+
+        var i1 = await svc.AddGalleryImageAsync(t1, "/uploads/a.png", new LocalizedText { En = "a" });
+        var i2 = await svc.AddGalleryImageAsync(t1, "/uploads/b.png", new LocalizedText { En = "b" });
+        Assert.Equal(0, (await db.Set<GalleryImage>().FindAsync(i1))!.SortOrder);
+        Assert.Equal(1, (await db.Set<GalleryImage>().FindAsync(i2))!.SortOrder);
+        Assert.True(await svc.MoveGalleryImageAsync(i2, -1));
+        Assert.Equal(0, (await db.Set<GalleryImage>().FindAsync(i2))!.SortOrder);
+        Assert.True(await svc.RemoveGalleryImageAsync(i1));
+        Assert.Equal(1, await db.Set<GalleryImage>().CountAsync());
+        Assert.True(await svc.RemoveGalleryTabAsync(t1));
+    }
+
+    [Fact]
+    public async Task AddGalleryImage_OnMissingTab_ReturnsZero()
+    {
+        var db = NewDb(nameof(AddGalleryImage_OnMissingTab_ReturnsZero));
+        var svc = NewSvc(db);
+        Assert.Equal(0, await svc.AddGalleryImageAsync(999999, "/x.png", new LocalizedText { En = "x" }));
+    }
 }

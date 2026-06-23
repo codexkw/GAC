@@ -262,6 +262,45 @@ public class AdminVehicleService : IAdminVehicleService
         return await SwapOrderAsync<Trim>(x => x.VehicleId == t.VehicleId, trimId, direction, ct);
     }
 
+    // ---- Gallery tabs ----
+    public async Task<int> AddGalleryTabAsync(int vehicleId, LocalizedText label, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var e = new GalleryTab { VehicleId = vehicleId, Label = label, SortOrder = await _db.Set<GalleryTab>().CountAsync(x => x.VehicleId == vehicleId, ct) };
+        _db.Set<GalleryTab>().Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveGalleryTabAsync(int tabId, CancellationToken ct = default)
+        => await RemoveByIdAsync<GalleryTab>(tabId, ct);
+
+    public async Task<bool> MoveGalleryTabAsync(int tabId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.Set<GalleryTab>().FindAsync([tabId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<GalleryTab>(x => x.VehicleId == e.VehicleId, tabId, direction, ct);
+    }
+
+    public async Task<int> AddGalleryImageAsync(int galleryTabId, string? imagePath, LocalizedText alt, CancellationToken ct = default)
+    {
+        if (!await _db.Set<GalleryTab>().AnyAsync(g => g.Id == galleryTabId, ct)) return 0;
+        var e = new GalleryImage { GalleryTabId = galleryTabId, ImagePath = imagePath, Alt = alt, SortOrder = await _db.Set<GalleryImage>().CountAsync(x => x.GalleryTabId == galleryTabId, ct) };
+        _db.Set<GalleryImage>().Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveGalleryImageAsync(int imageId, CancellationToken ct = default)
+        => await RemoveByIdAsync<GalleryImage>(imageId, ct);
+
+    public async Task<bool> MoveGalleryImageAsync(int imageId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.Set<GalleryImage>().FindAsync([imageId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<GalleryImage>(x => x.GalleryTabId == e.GalleryTabId, imageId, direction, ct);
+    }
+
     // ---- Feature bullets ----
     public async Task<int> AddFeatureBulletAsync(int featureSectionId, LocalizedText label, LocalizedText text, CancellationToken ct = default)
     {
