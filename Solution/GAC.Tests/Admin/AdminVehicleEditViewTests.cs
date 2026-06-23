@@ -126,6 +126,15 @@ public class AdminVehicleEditViewSmokeTests : IClassFixture<AdminWebApplicationF
             Assert.Contains(heading, html);
         // PickerModal rendered exactly once.
         Assert.Single(Regex.Matches(html, "id=\"mediaPicker\""));
+        // Assert all key action names are present (unconditional in every section)
+        Assert.Contains("UpsertSectionHeading", html);
+        Assert.Contains("AddStat", html);
+        Assert.Contains("AddSlider", html);
+        Assert.Contains("AddGalleryTab", html);
+        Assert.Contains("UpsertQuality", html);
+        Assert.Contains("AddCard", html);
+        Assert.Contains("AddSafetyToggle", html);
+        Assert.Contains("AddWarrantyLink", html);
     }
 
     [Fact]

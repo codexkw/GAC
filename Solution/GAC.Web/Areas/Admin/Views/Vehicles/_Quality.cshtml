@@ -33,3 +33,10 @@
   </div>
   <button class="adm-btn">Save quality block</button>
 </form>
+@if (q is not null)
+{
+    <form asp-action="RemoveQuality" method="post" class="adm-inline" onsubmit="return confirm('Remove quality block?')">
+        <input type="hidden" name="vehicleId" value="@Model.Id" />
+        <button class="adm-btn adm-btn--danger">Remove quality block</button>
+    </form>
+}
