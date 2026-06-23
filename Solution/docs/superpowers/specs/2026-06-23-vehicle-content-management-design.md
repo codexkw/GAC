@@ -45,64 +45,96 @@ We need non-technical staff to manage **all** car-page content through admin for
 
 One developer-owned Razor template renders the fixed master design for every car, reading all content from a structured per-vehicle model. Admins edit that model through a sectioned form. `BodyHtml` is retired as the render path (kept as backup data).
 
-### Architecture & reuse map
+### Real section inventory (revised after reading `emkoo.html` end-to-end during planning)
 
-Most sections already have models, admin UI, and the media picker:
+The master page is **13 section types** — richer than the first-pass model. Section order is taken from the master HTML's `section.mp-section` ids (+ interleaved `.mp-slider-wrap` and `.mp-enquiry`). **All 13 are in scope for this comprehensive build.**
 
-| Page section | Data source | Status |
-|---|---|---|
-| Hero image | `VehicleImage` (Kind=Hero) | exists |
-| Hero heading / tagline / intro | `Vehicle.Name` / `Tagline` / `IntroText` | exists |
-| Gallery (~15 zoom images) | `VehicleImage` (Kind=Gallery) | exists (add/remove/reorder + picker) |
-| Feature blocks (×4) | `FeatureSection` | exists |
-| Specifications (toggles) | `SpecGroup` / `SpecRow` | exists |
-| Colours | `ColorOption` | exists |
-| Trims + per-trim PDF | `Trim` | exists |
-| Spec / Brochure PDF | `Vehicle.SpecPdf` / `BrochurePdf` | exists |
-| Performance stats (×4) | **new `StatItem`** | build |
-| Tabbed content (×3 blocks) | **new `TabItem`** | build |
-| Sliders / slides | **new `SliderSlide`** | build |
-| Cards (×3) | **new `CardItem`** | build |
-| Section headings (×9) | **new `SectionHeading`** | build |
+| # | Section (page order) | DOM hooks | Data source | Status |
+|---|---|---|---|---|
+| 1 | Hero | `.mp-hero` | `VehicleImage`(Hero) + `Vehicle.Name`/`Tagline` | reuse |
+| 2 | Section headings (×8) | `.mp-head` keyed by parent `section[id]` | **new `SectionHeading`** | build |
+| 3 | Overview stats (×4, value carries units) + note | `.mp-stats > .mp-stat`, `.mp-note` | **new `StatItem`** (+ note field) | build |
+| 4 | Sliders (×2: eyebrow+title + N slides) | `.mp-slider-wrap > .mp-slider[data-slider]` | **new `SliderGroup` + `SliderSlide`** | build |
+| 5 | Design tabs → 3 feature panels (image, title, lead, bullet list) | `.mp-tabs[data-tabs-wrap]` keys d1/d2/d3 → `.mp-feature` | **extend `FeatureSection`** (+`GroupKey`,+`TabLabel`,+`Lead`,+`FeatureBullet` children) | build |
+| 6 | Gallery tabs → 3 galleries (15 zoom images) + lightbox | `.mp-tabs` keys gex/gin/gte → `.mp-gpanel > .mp-gallery > a.mp-gshot` | **new `GalleryTab` + `GalleryImage`** + one `[data-lightbox]` singleton | build |
+| 7 | Quality / awards | `.mp-quality` (main+thumb img, strapline, content) | **new `QualityBlock`** (0/1 per car) | build |
+| 8 | Technology (banner + 3 cards) | `.mp-tech-banner img`, `.mp-cards > .mp-card` | **new `CardItem`** + `TechBanner` field (cards have NO link) | build |
+| 9 | Performance tabs → 3 feature panels | `.mp-tabs` keys p1/p2/p3 → `.mp-feature` | same as #5, `GroupKey=Performance` | build |
+| 10 | Safety toggles (×3: title + image + strap + paragraph) | `.mp-stoggles > .mp-stoggle` | **new `SafetyToggle`** | build |
+| 11 | Trims (model, name, price text-rows, 2 CTAs) | `.mp-trims > .mp-trim` | **rework `Trim`** (+`ModelLabel`,+`ImagePath`, price as `TrimPriceRow` children; keep `SpecPdf`) | build |
+| 12 | Warranty (document/PDF links) | `.mp-warranty__links a.btn--doc` | **new `WarrantyLink`** | build |
+| 13 | Enquiry (bg image + title/sub/lead; form stays static) | `.mp-enquiry` (`__title`/`__sub`/`__lead`, inline bg style) | **new fields on `Vehicle`** (form handled by FormsController) | build |
 
-**Three workstreams:** (1) model + admin for the new types; (2) render template reproducing the real master design; (3) one-time migration.
+**Corrections to the first-pass model (important):**
+- There is **no label/value specifications table** anywhere on the real page. The safety section is **media toggles** (`mp-stoggle`: title + image + strap + paragraph), modelled by the new `SafetyToggle`. The existing `SpecGroup`/`SpecRow` entities (from the simplified structured editor) **do not map to any real section** and are not used by this render path. The "Specifications" the user sees is the per-trim **PDF** CTA, not an on-page table.
+- `FeatureSection` is **extended**, not reused as-is: real feature panels are tab-grouped (Design vs Performance) and carry a tab label, an optional lead paragraph, and a bullet list (each bullet = bold label + description) — modelled with `+GroupKey`, `+TabLabel`, `+Lead`, and a `FeatureBullet` child collection (the bullets are discrete fields, not HTML).
+- Galleries are **tab-grouped** (3 tabs) and feed a JS **lightbox singleton** that is *not* in `_Layout` today — the render must emit exactly one `<div data-lightbox>` per page.
+- `Trim.Price` (single decimal) is replaced by ordered **price text-rows** (`TrimPriceRow`), matching the real `<ul>` of "Price/VAT/Total" lines.
+
+**Three workstreams:** (1) model + EF + admin for the new/changed types; (2) render partials reproducing the real master design *with* the JS hook contract (tabs `data-tabs-wrap`/`data-tab-btn`↔`data-tab-panel`, slider `data-slider`/`data-slider-track`, gallery `a.mp-gshot` + lightbox, safety `mp-stoggle`); (3) the AngleSharp parser + one-time migration of all 11 cars.
 
 ### Data model
 
-Reused unchanged: `VehicleImage` (Hero+Gallery), `FeatureSection`, `SpecGroup`/`SpecRow`, `ColorOption`, `Trim`, `Vehicle.SpecPdf`/`BrochurePdf`/`Name`/`Tagline`/`IntroText`.
+Conventions (verbatim from codebase): every orderable child is `int Id` + `int VehicleId` (or parent FK), `LocalizedText` owned EN/AR fields, `string? ImagePath`, `int SortOrder`, `: IOrderable` (`{ int Id { get; } int SortOrder { get; set; } }`). No `BaseEntity`/Guid (GAC uses INT IDENTITY). Children have **no** back-reference nav (parent config uses `.WithOne()` with no arg). `LocalizedText` maps as an owned type to `{Field}_En`/`{Field}_Ar` columns via the `OwnsLocalized` helper.
 
-New child entities of `Vehicle` (same pattern as existing: `int Id`, `int VehicleId`, `LocalizedText` owned EN/AR, `string? ImagePath`, `int SortOrder`, `IOrderable`):
+**Enums:** `SectionKey { Overview, Design, Gallery, Technology, Performance, Safety, Trims, Warranty }`; `FeatureGroup { Design, Performance }`.
+
+**Reused unchanged:** `VehicleImage`(Hero) for the hero image; `Vehicle.Name`/`Tagline`/`SpecPdf`/`BrochurePdf`. (`SpecGroup`/`SpecRow`/`ColorOption` and `VehicleImage`(Gallery) are **not** used by this render path — see corrections above. Their existing admin panels remain but are decoupled from the new template.)
+
+**New / changed entities:**
 
 ```csharp
-public class StatItem : IOrderable        // 4 performance stats
-{ int Id; int VehicleId; LocalizedText Value; LocalizedText Label; int SortOrder; }
+// 2. Section headings — one per SectionKey (no reorder; order is fixed by section)
+public class SectionHeading { int Id; int VehicleId; SectionKey Key;
+  LocalizedText Title=new(); LocalizedText Sub=new(); LocalizedText Body=new(); }
 
-public class CardItem : IOrderable         // 3 cards
-{ int Id; int VehicleId; LocalizedText Title; LocalizedText Text;
-  string? ImagePath; string? LinkUrl; int SortOrder; }
+// 3. Overview stats (value text carries units e.g. "177 HP"); note lives on Vehicle
+public class StatItem : IOrderable { int Id; int VehicleId;
+  LocalizedText Label=new(); LocalizedText Value=new(); int SortOrder; }
 
-public class SliderSlide : IOrderable      // slides; GroupKey = which slider
-{ int Id; int VehicleId; int GroupKey;
-  LocalizedText Eyebrow; LocalizedText Title; LocalizedText Caption;
-  string? ImagePath; int SortOrder; }
+// 4. Sliders (group → slides)
+public class SliderGroup : IOrderable { int Id; int VehicleId;
+  LocalizedText Eyebrow=new(); LocalizedText Title=new(); int SortOrder; List<SliderSlide> Slides=new(); }
+public class SliderSlide : IOrderable { int Id; int SliderGroupId;
+  string? ImagePath; LocalizedText Alt=new(); int SortOrder; }
 
-public class TabItem : IOrderable          // tabbed content; GroupKey = which tab block
-{ int Id; int VehicleId; int GroupKey;
-  LocalizedText Label; LocalizedText Heading; LocalizedText Body; // Body = sanitized rich-text-lite
-  string? ImagePath; int SortOrder; }
+// 5/9. Features — EXTEND existing FeatureSection (currently: Id,VehicleId,Heading,Body,ImagePath,Layout,SortOrder)
+//      ADD: GroupKey (Design|Performance), TabLabel, Lead, Bullets[]. Heading=panel title; Body retained but render uses Lead+Bullets.
+public class FeatureBullet : IOrderable { int Id; int FeatureSectionId;
+  LocalizedText Label=new(); LocalizedText Text=new(); int SortOrder; }
 
-public class SectionHeading                // the 9 mp-section headers
-{ int Id; int VehicleId; SectionKey Key;   // enum: Features, Gallery, Stats, Tabs, Specs, Colours, Trims, Sliders, Cards
-  LocalizedText Title; LocalizedText Sub; LocalizedText Body; }
+// 6. Gallery tabs (tab → images); separate from VehicleImage(Gallery)
+public class GalleryTab : IOrderable { int Id; int VehicleId;
+  LocalizedText Label=new(); int SortOrder; List<GalleryImage> Images=new(); }
+public class GalleryImage : IOrderable { int Id; int GalleryTabId;
+  string? ImagePath; LocalizedText Alt=new(); int SortOrder; }   // ImagePath = full-size (a.mp-gshot href == img src)
+
+// 7. Quality / awards — 0 or 1 per vehicle
+public class QualityBlock { int Id; int VehicleId;
+  string? MainImage; string? ThumbImage; LocalizedText Strapline=new(); LocalizedText Content=new(); }
+
+// 8. Technology cards (no link). Tech banner image = new Vehicle.TechBannerImage field.
+public class CardItem : IOrderable { int Id; int VehicleId;
+  LocalizedText Title=new(); LocalizedText Text=new(); string? ImagePath; int SortOrder; }
+
+// 10. Safety toggles
+public class SafetyToggle : IOrderable { int Id; int VehicleId;
+  LocalizedText Title=new(); string? ImagePath; LocalizedText Strap=new(); LocalizedText Content=new(); int SortOrder; }
+
+// 11. Trims — REWORK existing Trim: ADD ModelLabel, ImagePath; price as rows; keep SpecPdf,Name. (Highlights retired from render.)
+public class TrimPriceRow : IOrderable { int Id; int TrimId; LocalizedText Text=new(); int SortOrder; }
+
+// 12. Warranty document links
+public class WarrantyLink : IOrderable { int Id; int VehicleId;
+  LocalizedText Label=new(); string Url=""; int SortOrder; }
 ```
 
-Hang off `Vehicle` as `List<StatItem> Stats`, `List<CardItem> Cards`, `List<SliderSlide> Slides`, `List<TabItem> Tabs`, `List<SectionHeading> Headings`. `VehicleService.GetBySlugAsync` gains five `.Include(...)`s.
+**New scalar fields on `Vehicle`:** `string? TechBannerImage`; `string? StatsNote` *(or a `LocalizedText StatsNote`)* for the `.mp-note`; `string? EnquiryBgImage`; `LocalizedText EnquiryTitle/EnquirySub/EnquiryLead` (#13). New navs: `List<SectionHeading> Headings`, `List<StatItem> Stats`, `List<SliderGroup> Sliders`, `List<GalleryTab> GalleryTabs`, `List<CardItem> Cards`, `List<SafetyToggle> SafetyToggles`, `List<WarrantyLink> WarrantyLinks`, `QualityBlock? Quality`; plus `FeatureSection.Bullets`, `Trim.PriceRows`. `VehicleService.GetBySlugAsync` + `AdminVehicleService.GetAsync` gain the matching `.Include(...).ThenInclude(...)`.
 
-Notes:
-- All bilingual text via `LocalizedText` (`_En`/`_Ar` owned columns) — identical to every existing field, so EN/AR works automatically in admin + renderer.
-- `GroupKey` lets a flat list belong to the correct one of the 2 sliders / 3 tab blocks without extra parent tables.
-- `TabItem.Body` is the only formatted field → existing **Trix** WYSIWYG, sanitized via existing `HtmlSanitizerService`.
-- **The exact field list of the 4 new types is finalized by reading the master HTML during planning.** Shapes above are the working model and may gain/lose a field per real binding points.
+**Notes:**
+- All bilingual text via `LocalizedText` owned columns — EN/AR automatic in admin + renderer.
+- Group→child collections (Sliders→Slides, GalleryTabs→Images, FeatureSection→Bullets, Trim→PriceRows) follow the existing `SpecGroup→SpecRow` pattern (parent declares `HasMany(...).WithOne().HasForeignKey(child.ParentId)`).
+- Discrete fields over HTML wherever possible (feature bullets = label+text pairs, trim price = text rows) so non-technical editing needs no markup. The only sanitized-HTML field retained is `FeatureSection.Body` (unused by the new render; kept for back-compat) — the new render path uses no admin-entered raw HTML.
 
 ### Admin editing experience
 
