@@ -27,6 +27,27 @@
   </div>
 
   <div class="adm-field">
+    <label>Group (which tab strip)</label>
+    <select asp-for="GroupKey" asp-items="Html.GetEnumSelectList<FeatureGroup>()"></select>
+  </div>
+
+  <div class="adm-field adm-localized">
+    <span class="adm-localized__label">Tab label</span>
+    <div class="adm-localized__pair">
+      <div><label>English</label><input name="TabLabel.En" value="@Model.TabLabel.En" /></div>
+      <div dir="rtl"><label>Arabic</label><input name="TabLabel.Ar" value="@Model.TabLabel.Ar" dir="rtl" /></div>
+    </div>
+  </div>
+
+  <div class="adm-field adm-localized">
+    <span class="adm-localized__label">Lead paragraph</span>
+    <div class="adm-localized__pair">
+      <div><label>English</label><textarea name="Lead.En" rows="3">@Model.Lead.En</textarea></div>
+      <div dir="rtl"><label>Arabic</label><textarea name="Lead.Ar" rows="3" dir="rtl">@Model.Lead.Ar</textarea></div>
+    </div>
+  </div>
+
+  <div class="adm-field">
     <label>Image</label>
     <span style="display:flex;gap:.5rem;align-items:center">
       <input type="text" name="ImagePath" value="@Model.ImagePath" data-media-input />
@@ -52,6 +73,45 @@
 
   <button type="submit" class="adm-btn">Save feature</button>
 </form>
+
+@if (Model.Id != 0)
+{
+    <h2>Feature bullets</h2>
+    <table class="adm-table">
+      <thead><tr><th>Order</th><th>Label</th><th>Text</th><th></th></tr></thead>
+      <tbody>
+        @foreach (var b in Model.Bullets.OrderBy(x => x.SortOrder))
+        {
+            <tr>
+              <td>
+                <form asp-action="MoveFeatureBullet" method="post" style="display:inline">
+                  <input type="hidden" name="bulletId" value="@b.Id" /><input type="hidden" name="vehicleId" value="@Model.VehicleId" /><input type="hidden" name="direction" value="-1" />
+                  <button class="adm-btn">&uarr;</button>
+                </form>
+                <form asp-action="MoveFeatureBullet" method="post" style="display:inline">
+                  <input type="hidden" name="bulletId" value="@b.Id" /><input type="hidden" name="vehicleId" value="@Model.VehicleId" /><input type="hidden" name="direction" value="1" />
+                  <button class="adm-btn">&darr;</button>
+                </form>
+              </td>
+              <td>@b.Label.En</td>
+              <td>@b.Text.En</td>
+              <td>
+                <form asp-action="RemoveFeatureBullet" method="post" style="display:inline" onsubmit="return confirm('Remove bullet?')">
+                  <input type="hidden" name="bulletId" value="@b.Id" /><input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+                  <button class="adm-btn adm-btn--danger">Remove</button>
+                </form>
+              </td>
+            </tr>
+        }
+      </tbody>
+    </table>
+    <form asp-action="AddFeatureBullet" method="post" class="adm-inline">
+      <input type="hidden" name="featureSectionId" value="@Model.Id" /><input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+      <input name="labelEn" placeholder="Label (EN)" /><input name="labelAr" placeholder="Label (AR)" dir="rtl" />
+      <input name="textEn" placeholder="Text (EN)" /><input name="textAr" placeholder="Text (AR)" dir="rtl" />
+      <button class="adm-btn">Add bullet</button>
+    </form>
+}
 
 <partial name="_PickerModal" />
 
