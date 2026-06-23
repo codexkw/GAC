@@ -203,4 +203,22 @@ public class AdminVehicleServiceTests
             new LocalizedText { En = "Design" }, new LocalizedText(), new LocalizedText());
         Assert.Equal(2, await db.Set<SectionHeading>().CountAsync());
     }
+
+    // ---- Task 22: StatItem add/move/remove ----
+
+    [Fact]
+    public async Task Stat_AddMoveRemove()
+    {
+        var db = NewDb(nameof(Stat_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "st", Name = "S" });
+        var a = await svc.AddStatAsync(vid, new LocalizedText { En = "Power" }, new LocalizedText { En = "177 HP" });
+        var b = await svc.AddStatAsync(vid, new LocalizedText { En = "Torque" }, new LocalizedText { En = "270 Nm" });
+        Assert.Equal(0, (await db.Set<StatItem>().FindAsync(a))!.SortOrder);
+        Assert.Equal(1, (await db.Set<StatItem>().FindAsync(b))!.SortOrder);
+        Assert.True(await svc.MoveStatAsync(b, -1));
+        Assert.Equal(0, (await db.Set<StatItem>().FindAsync(b))!.SortOrder);
+        Assert.True(await svc.RemoveStatAsync(a));
+        Assert.Equal(1, await db.Set<StatItem>().CountAsync());
+    }
 }

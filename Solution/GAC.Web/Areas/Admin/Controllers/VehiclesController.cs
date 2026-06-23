@@ -121,4 +121,11 @@ public class VehiclesController : Controller
 
     [HttpPost] public async Task<IActionResult> UpsertSectionHeading(int vehicleId, SectionKey key, string? titleEn, string? titleAr, string? subEn, string? subAr, string? bodyEn, string? bodyAr)
     { await _svc.UpsertSectionHeadingAsync(vehicleId, key, new() { En = titleEn, Ar = titleAr }, new() { En = subEn, Ar = subAr }, new() { En = bodyEn, Ar = bodyAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddStat(int vehicleId, string? labelEn, string? labelAr, string? valueEn, string? valueAr)
+    { await _svc.AddStatAsync(vehicleId, new() { En = labelEn, Ar = labelAr }, new() { En = valueEn, Ar = valueAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveStat(int statId, int vehicleId)
+    { await _svc.RemoveStatAsync(statId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveStat(int statId, int vehicleId, int direction)
+    { await _svc.MoveStatAsync(statId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }

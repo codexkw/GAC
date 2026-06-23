@@ -39,4 +39,9 @@ public interface IAdminVehicleService
 
     // Section headings (set-by-key, no reorder)
     Task<int> UpsertSectionHeadingAsync(int vehicleId, SectionKey key, LocalizedText title, LocalizedText sub, LocalizedText body, CancellationToken ct = default);
+
+    // Overview stats
+    Task<int> AddStatAsync(int vehicleId, LocalizedText label, LocalizedText value, CancellationToken ct = default);
+    Task<bool> RemoveStatAsync(int statId, CancellationToken ct = default);
+    Task<bool> MoveStatAsync(int statId, int direction, CancellationToken ct = default);
 }

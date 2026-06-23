@@ -259,6 +259,26 @@ public class AdminVehicleService : IAdminVehicleService
         return await SwapOrderAsync<Trim>(x => x.VehicleId == t.VehicleId, trimId, direction, ct);
     }
 
+    // ---- Overview stats ----
+    public async Task<int> AddStatAsync(int vehicleId, LocalizedText label, LocalizedText value, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var e = new StatItem { VehicleId = vehicleId, Label = label, Value = value, SortOrder = await _db.Set<StatItem>().CountAsync(x => x.VehicleId == vehicleId, ct) };
+        _db.Set<StatItem>().Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveStatAsync(int statId, CancellationToken ct = default)
+        => await RemoveByIdAsync<StatItem>(statId, ct);
+
+    public async Task<bool> MoveStatAsync(int statId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.Set<StatItem>().FindAsync([statId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<StatItem>(x => x.VehicleId == e.VehicleId, statId, direction, ct);
+    }
+
     // ---- Section headings ----
     public async Task<int> UpsertSectionHeadingAsync(int vehicleId, SectionKey key, LocalizedText title, LocalizedText sub, LocalizedText body, CancellationToken ct = default)
     {
