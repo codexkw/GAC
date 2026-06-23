@@ -32,6 +32,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<MediaAsset> MediaAssets => Set<MediaAsset>();
     public DbSet<DockItem> DockItems => Set<DockItem>();
+    public DbSet<SectionHeading> SectionHeadings => Set<SectionHeading>();
+    public DbSet<StatItem> StatItems => Set<StatItem>();
+    public DbSet<SliderGroup> SliderGroups => Set<SliderGroup>();
+    public DbSet<SliderSlide> SliderSlides => Set<SliderSlide>();
+    public DbSet<FeatureBullet> FeatureBullets => Set<FeatureBullet>();
+    public DbSet<GalleryTab> GalleryTabs => Set<GalleryTab>();
+    public DbSet<GalleryImage> GalleryImages => Set<GalleryImage>();
+    public DbSet<QualityBlock> QualityBlocks => Set<QualityBlock>();
+    public DbSet<CardItem> CardItems => Set<CardItem>();
+    public DbSet<SafetyToggle> SafetyToggles => Set<SafetyToggle>();
+    public DbSet<TrimPriceRow> TrimPriceRows => Set<TrimPriceRow>();
+    public DbSet<WarrantyLink> WarrantyLinks => Set<WarrantyLink>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
