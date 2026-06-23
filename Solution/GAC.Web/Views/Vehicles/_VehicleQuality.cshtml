@@ -1,0 +1,35 @@
+@model GAC.Core.Content.Vehicle
+@{
+    var q = Model.Quality;
+}
+@if (q != null && (!string.IsNullOrWhiteSpace(q.MainImage) || !string.IsNullOrWhiteSpace(q.Strapline.Localize()) || !string.IsNullOrWhiteSpace(q.Content.Localize())))
+{
+    <section class="mp-section" id="quality">
+      <div class="container">
+        <div class="mp-quality">
+          @if (!string.IsNullOrWhiteSpace(q.MainImage))
+          {
+              <div class="mp-quality__main">
+                <img src="@q.MainImage" alt="@Model.Name.Localize()" />
+              </div>
+          }
+          <aside class="mp-quality__card">
+            @if (!string.IsNullOrWhiteSpace(q.ThumbImage))
+            {
+                <div class="mp-quality__thumb"><img src="@q.ThumbImage" alt="@Model.Name.Localize()" loading="lazy" /></div>
+            }
+            <div class="mp-quality__text">
+              @if (!string.IsNullOrWhiteSpace(q.Strapline.Localize()))
+              {
+                  <span class="mp-quality__strapline">@q.Strapline.Localize()</span>
+              }
+              @if (!string.IsNullOrWhiteSpace(q.Content.Localize()))
+              {
+                  <p class="mp-quality__content">@q.Content.Localize()</p>
+              }
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+}
