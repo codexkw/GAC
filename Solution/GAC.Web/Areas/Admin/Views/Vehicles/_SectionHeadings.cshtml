@@ -1,0 +1,37 @@
+@using GAC.Core.Content
+@model GAC.Core.Content.Vehicle
+<h2>Section headings</h2>
+<p class="adm-hint">One title/subtitle/body per page section. These are fixed sections — fill the text only.</p>
+@foreach (var key in (SectionKey[])Enum.GetValues(typeof(SectionKey)))
+{
+    var h = Model.Headings.FirstOrDefault(x => x.Key == key);
+    <div class="adm-card">
+      <h3>@key</h3>
+      <form asp-action="UpsertSectionHeading" method="post">
+        <input type="hidden" name="vehicleId" value="@Model.Id" />
+        <input type="hidden" name="key" value="@key" />
+        <div class="adm-field adm-localized">
+          <span class="adm-localized__label">Title</span>
+          <div class="adm-localized__pair">
+            <div><label>English</label><input name="titleEn" value="@(h?.Title.En)" /></div>
+            <div dir="rtl"><label>Arabic</label><input name="titleAr" value="@(h?.Title.Ar)" dir="rtl" /></div>
+          </div>
+        </div>
+        <div class="adm-field adm-localized">
+          <span class="adm-localized__label">Subtitle</span>
+          <div class="adm-localized__pair">
+            <div><label>English</label><input name="subEn" value="@(h?.Sub.En)" /></div>
+            <div dir="rtl"><label>Arabic</label><input name="subAr" value="@(h?.Sub.Ar)" dir="rtl" /></div>
+          </div>
+        </div>
+        <div class="adm-field adm-localized">
+          <span class="adm-localized__label">Body</span>
+          <div class="adm-localized__pair">
+            <div><label>English</label><textarea name="bodyEn" rows="3">@(h?.Body.En)</textarea></div>
+            <div dir="rtl"><label>Arabic</label><textarea name="bodyAr" rows="3" dir="rtl">@(h?.Body.Ar)</textarea></div>
+          </div>
+        </div>
+        <button class="adm-btn">Save heading</button>
+      </form>
+    </div>
+}
