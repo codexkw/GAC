@@ -18,10 +18,18 @@ public class AdminVehicleService : IAdminVehicleService
     public async Task<Vehicle?> GetAsync(int id, CancellationToken ct = default)
         => await _db.Vehicles
             .Include(v => v.Images)
-            .Include(v => v.Features)
+            .Include(v => v.Features).ThenInclude(f => f.Bullets)
             .Include(v => v.SpecGroups).ThenInclude(g => g.Rows)
             .Include(v => v.Colors)
-            .Include(v => v.Trims)
+            .Include(v => v.Trims).ThenInclude(t => t.PriceRows)
+            .Include(v => v.Headings)
+            .Include(v => v.Stats)
+            .Include(v => v.Sliders).ThenInclude(s => s.Slides)
+            .Include(v => v.GalleryTabs).ThenInclude(g => g.Images)
+            .Include(v => v.Cards)
+            .Include(v => v.SafetyToggles)
+            .Include(v => v.WarrantyLinks)
+            .Include(v => v.Quality)
             .FirstOrDefaultAsync(v => v.Id == id, ct);
 
     public async Task<bool> SlugExistsAsync(string slug, int? exceptId = null, CancellationToken ct = default)
@@ -51,6 +59,12 @@ public class AdminVehicleService : IAdminVehicleService
         existing.BodyHtml = vehicle.BodyHtml;
         existing.MetaTitle = vehicle.MetaTitle;
         existing.MetaDescription = vehicle.MetaDescription;
+        existing.TechBannerImage = vehicle.TechBannerImage;
+        existing.EnquiryBgImage = vehicle.EnquiryBgImage;
+        existing.StatsNote = vehicle.StatsNote;
+        existing.EnquiryTitle = vehicle.EnquiryTitle;
+        existing.EnquirySub = vehicle.EnquirySub;
+        existing.EnquiryLead = vehicle.EnquiryLead;
         await _db.SaveChangesAsync(ct);
         return true;
     }

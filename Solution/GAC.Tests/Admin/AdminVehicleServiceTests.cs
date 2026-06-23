@@ -142,4 +142,38 @@ public class AdminVehicleServiceTests
         Assert.False(await svc.MoveAsync(only, 1));  // already at bottom
         Assert.False(await svc.MoveAsync(999999, -1)); // not found
     }
+
+    // ---- Task 20: UpdateAsync new fields ----
+
+    [Fact]
+    public async Task UpdateAsync_PersistsEnquiryAndTechFields()
+    {
+        var db = NewDb(nameof(UpdateAsync_PersistsEnquiryAndTechFields));
+        var svc = NewSvc(db);
+        var id = await svc.CreateAsync(new Vehicle { Slug = "enq", Name = "Enq" });
+
+        var ok = await svc.UpdateAsync(new Vehicle
+        {
+            Id = id, Slug = "enq", Name = "Enq",
+            TechBannerImage = "/uploads/tech.png",
+            EnquiryBgImage = "/uploads/bg.png",
+            StatsNote = new LocalizedText { En = "note en", Ar = "note ar" },
+            EnquiryTitle = new LocalizedText { En = "Get a quote" },
+            EnquirySub = new LocalizedText { En = "sub" },
+            EnquiryLead = new LocalizedText { En = "lead" }
+        });
+
+        Assert.True(ok);
+        var v = await svc.GetAsync(id);
+        Assert.Equal("/uploads/tech.png", v!.TechBannerImage);
+        Assert.Equal("/uploads/bg.png", v.EnquiryBgImage);
+        Assert.Equal("note en", v.StatsNote.En);
+        Assert.Equal("Get a quote", v.EnquiryTitle.En);
+        Assert.Equal("sub", v.EnquirySub.En);
+        Assert.Equal("lead", v.EnquiryLead.En);
+    }
+
+    // NOTE: GetAsync_Includes_NewCollections_AndQuality (Task 20 round-trip) calls methods from
+    // Tasks 26-31 (AddCardAsync/AddSafetyToggleAsync/AddWarrantyLinkAsync/UpsertQualityAsync).
+    // It is added in the Task 31 regression sweep once all Add* methods are present.
 }
