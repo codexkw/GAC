@@ -8,15 +8,18 @@
 
 @if (VehicleContent.HasStructuredContent(Model))
 {
-    <partial name="_VehicleHero" model="Model" />
+    @* Full view paths: this page is rendered by PageController (controller route
+       value "Page"), so bare partial names would only probe /Views/Page and
+       /Views/Shared and never find these partials under /Views/Vehicles. *@
+    <partial name="~/Views/Vehicles/_VehicleHero.cshtml" model="Model" />
     @if (specBtn)
     {
         <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a></div></section>
     }
-    <partial name="_VehicleFeatures" model="Model" />
-    <partial name="_VehicleSpecs" model="Model" />
-    <partial name="_VehicleColors" model="Model" />
-    <partial name="_VehicleTrims" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleFeatures.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleSpecs.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleColors.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleTrims.cshtml" model="Model" />
 }
 else
 {
