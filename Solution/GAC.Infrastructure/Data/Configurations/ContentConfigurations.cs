@@ -2,6 +2,7 @@ using GAC.Core.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+// Task 9: group→child configs (SliderGroup/Slide, GalleryTab/Image, FeatureBullet, TrimPriceRow, QualityBlock)
 namespace GAC.Infrastructure.Data.Configurations;
 
 internal static class OwnedExtensions
