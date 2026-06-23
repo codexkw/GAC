@@ -1,0 +1,45 @@
+@using System.Linq
+@using GAC.Web.Infrastructure
+@model GAC.Core.Content.Vehicle
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Gallery);
+    var tabs = Model.GalleryTabs.OrderBy(t => t.SortOrder).ToList();
+}
+@if (tabs.Count > 0)
+{
+    <section class="mp-section" id="gallery">
+      <div class="container">
+        @if (head != null)
+        {
+            <header class="mp-head mp-head--center">
+              @if (!string.IsNullOrWhiteSpace(head.Title.Localize()))
+              {
+                  <h2 class="mp-head__title">@head.Title.Localize()</h2>
+              }
+            </header>
+        }
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            @for (var i = 0; i < tabs.Count; i++)
+            {
+                <button class="mp-tabs__btn@(VehicleContent.StateActive(i == 0))" data-tab-btn="@VehicleContent.TabKey("g", i)">@tabs[i].Label.Localize()</button>
+            }
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+            @for (var i = 0; i < tabs.Count; i++)
+            {
+                var images = tabs[i].Images.OrderBy(im => im.SortOrder).Where(im => !string.IsNullOrWhiteSpace(im.ImagePath)).ToList();
+                <div class="mp-gpanel@(VehicleContent.StateActive(i == 0))" data-tab-panel="@VehicleContent.TabKey("g", i)">
+                  <div class="mp-gallery">
+                    @foreach (var im in images)
+                    {
+                        <a class="mp-gshot" href="@im.ImagePath"><img src="@im.ImagePath" alt="@im.Alt.Localize()" loading="lazy" /><span class="mp-gshot__zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 4a6 6 0 104.47 10.03l4.25 4.25 1.41-1.41-4.25-4.25A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z"/></svg></span></a>
+                    }
+                  </div>
+                </div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+}
