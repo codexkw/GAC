@@ -1,0 +1,24 @@
+@using System.Linq
+@model GAC.Core.Content.SliderGroup
+@{
+    var slides = Model.Slides.OrderBy(s => s.SortOrder).Where(s => !string.IsNullOrWhiteSpace(s.ImagePath)).ToList();
+}
+@if (slides.Count > 0)
+{
+    <div class="mp-slider" data-slider>
+      <div class="mp-slider__viewport">
+        <div class="mp-slider__track" data-slider-track>
+          @foreach (var s in slides)
+          {
+              <figure class="mp-slide"><img src="@s.ImagePath" alt="@s.Alt.Localize()" /></figure>
+          }
+        </div>
+      </div>
+      <div class="mp-slider__caption">
+        <span class="mp-slider__eyebrow">@Model.Eyebrow.Localize()</span>
+        <span class="mp-slider__title">@Model.Title.Localize()</span>
+      </div>
+      <button class="mp-slider__arrow mp-slider__arrow--prev" data-slider-prev aria-label="@L["Previous"]">&lsaquo;</button>
+      <button class="mp-slider__arrow mp-slider__arrow--next" data-slider-next aria-label="@L["Next"]">&rsaquo;</button>
+    </div>
+}
