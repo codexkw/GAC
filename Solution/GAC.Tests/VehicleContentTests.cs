@@ -1,3 +1,4 @@
+using System.Linq;
 using GAC.Core.Content;
 using GAC.Web.Infrastructure;
 using Xunit;
@@ -52,5 +53,41 @@ public class VehicleContentTests
     {
         Assert.False(VehicleContent.ShowsImage(FeatureLayout.TextOnly));
         Assert.True(VehicleContent.ShowsImage(FeatureLayout.ImageLeft));
+    }
+
+    [Fact]
+    public void TabKey_BuildsOneBasedSuffix()
+    {
+        Assert.Equal("d1", VehicleContent.TabKey("d", 0));
+        Assert.Equal("p3", VehicleContent.TabKey("p", 2));
+        Assert.Equal("g2", VehicleContent.TabKey("g", 1));
+    }
+
+    [Fact]
+    public void DesignFeatures_FiltersAndOrders()
+    {
+        var v = new Vehicle();
+        v.Features.Add(new FeatureSection { GroupKey = FeatureGroup.Performance, SortOrder = 0 });
+        v.Features.Add(new FeatureSection { GroupKey = FeatureGroup.Design, SortOrder = 2 });
+        v.Features.Add(new FeatureSection { GroupKey = FeatureGroup.Design, SortOrder = 1 });
+
+        var design = VehicleContent.DesignFeatures(v).ToList();
+        var perf = VehicleContent.PerformanceFeatures(v).ToList();
+
+        Assert.Equal(2, design.Count);
+        Assert.Equal(1, design[0].SortOrder);
+        Assert.Equal(2, design[1].SortOrder);
+        Assert.Single(perf);
+    }
+
+    [Fact]
+    public void StateHelpers_OnlyFirstIsActiveOrOpen()
+    {
+        Assert.Equal(" is-active", VehicleContent.StateActive(true));
+        Assert.Equal("", VehicleContent.StateActive(false));
+        Assert.Equal(" is-open", VehicleContent.StateOpen(true));
+        Assert.Equal("", VehicleContent.StateOpen(false));
+        Assert.Equal("true", VehicleContent.AriaExpanded(true));
+        Assert.Equal("false", VehicleContent.AriaExpanded(false));
     }
 }
