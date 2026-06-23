@@ -1,0 +1,18 @@
+@model GAC.Core.Content.SectionHeading
+@if (Model != null)
+{
+    <header class="mp-head mp-head--left">
+      @if (!string.IsNullOrWhiteSpace(Model.Title.Localize()))
+      {
+          <h2 class="mp-head__title">@Model.Title.Localize()</h2>
+      }
+      @if (!string.IsNullOrWhiteSpace(Model.Sub.Localize()))
+      {
+          <p class="mp-head__sub">@Html.Raw(Model.Sub.Localize())</p>
+      }
+      @if (!string.IsNullOrWhiteSpace(Model.Body.Localize()))
+      {
+          <p class="mp-head__body">@Html.Raw(Model.Body.Localize())</p>
+      }
+    </header>
+}
