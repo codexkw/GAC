@@ -1,0 +1,28 @@
+@using System.Linq
+@model GAC.Core.Content.Vehicle
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Overview);
+    var stats = Model.Stats.OrderBy(s => s.SortOrder).ToList();
+    var note = Model.StatsNote.Localize();
+}
+@if (head != null || stats.Count > 0)
+{
+    <section class="mp-section" id="exterior">
+      <div class="container">
+        <partial name="~/Views/Vehicles/_SectionHead.cshtml" model="head" />
+        @if (stats.Count > 0)
+        {
+            <div class="mp-stats">
+              @foreach (var s in stats)
+              {
+                  <div class="mp-stat"><span class="mp-stat__label">@s.Label.Localize()</span><span class="mp-stat__value">@s.Value.Localize()</span></div>
+              }
+            </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(note))
+        {
+            <p class="mp-note">@note</p>
+        }
+      </div>
+    </section>
+}
