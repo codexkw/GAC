@@ -65,4 +65,28 @@ public interface IAdminVehicleService
     Task<int> AddGalleryImageAsync(int galleryTabId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
     Task<bool> RemoveGalleryImageAsync(int imageId, CancellationToken ct = default);
     Task<bool> MoveGalleryImageAsync(int imageId, int direction, CancellationToken ct = default);
+
+    // Quality block (0/1 per vehicle)
+    Task<int> UpsertQualityAsync(int vehicleId, string? mainImage, string? thumbImage, LocalizedText strapline, LocalizedText content, CancellationToken ct = default);
+    Task<bool> RemoveQualityAsync(int vehicleId, CancellationToken ct = default);
+
+    // Card items (technology cards)
+    Task<int> AddCardAsync(int vehicleId, LocalizedText title, LocalizedText text, string? imagePath, CancellationToken ct = default);
+    Task<bool> RemoveCardAsync(int cardId, CancellationToken ct = default);
+    Task<bool> MoveCardAsync(int cardId, int direction, CancellationToken ct = default);
+
+    // Safety toggles
+    Task<int> AddSafetyToggleAsync(int vehicleId, LocalizedText title, string? imagePath, LocalizedText strap, LocalizedText content, CancellationToken ct = default);
+    Task<bool> RemoveSafetyToggleAsync(int toggleId, CancellationToken ct = default);
+    Task<bool> MoveSafetyToggleAsync(int toggleId, int direction, CancellationToken ct = default);
+
+    // Trim price rows (grandchild: TrimId-scoped)
+    Task<int> AddTrimPriceRowAsync(int trimId, LocalizedText text, CancellationToken ct = default);
+    Task<bool> RemoveTrimPriceRowAsync(int rowId, CancellationToken ct = default);
+    Task<bool> MoveTrimPriceRowAsync(int rowId, int direction, CancellationToken ct = default);
+
+    // Warranty links
+    Task<int> AddWarrantyLinkAsync(int vehicleId, LocalizedText label, string? url, CancellationToken ct = default);
+    Task<bool> RemoveWarrantyLinkAsync(int linkId, CancellationToken ct = default);
+    Task<bool> MoveWarrantyLinkAsync(int linkId, int direction, CancellationToken ct = default);
 }

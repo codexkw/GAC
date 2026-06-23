@@ -397,6 +397,129 @@ public class AdminVehicleService : IAdminVehicleService
         return existing.Id;
     }
 
+    // ---- Quality block ----
+    public async Task<int> UpsertQualityAsync(int vehicleId, string? mainImage, string? thumbImage, LocalizedText strapline, LocalizedText content, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var existing = await _db.QualityBlocks.FirstOrDefaultAsync(q => q.VehicleId == vehicleId, ct);
+        if (existing is null)
+        {
+            existing = new QualityBlock { VehicleId = vehicleId };
+            _db.QualityBlocks.Add(existing);
+        }
+        existing.MainImage = mainImage;
+        existing.ThumbImage = thumbImage;
+        existing.Strapline = strapline;
+        existing.Content = content;
+        await _db.SaveChangesAsync(ct);
+        return existing.Id;
+    }
+
+    public async Task<bool> RemoveQualityAsync(int vehicleId, CancellationToken ct = default)
+    {
+        var existing = await _db.QualityBlocks.FirstOrDefaultAsync(q => q.VehicleId == vehicleId, ct);
+        if (existing is null) return false;
+        _db.QualityBlocks.Remove(existing);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    // ---- Card items ----
+    public async Task<int> AddCardAsync(int vehicleId, LocalizedText title, LocalizedText text, string? imagePath, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var e = new CardItem
+        {
+            VehicleId = vehicleId, Title = title, Text = text, ImagePath = imagePath,
+            SortOrder = await _db.CardItems.CountAsync(x => x.VehicleId == vehicleId, ct)
+        };
+        _db.CardItems.Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveCardAsync(int cardId, CancellationToken ct = default)
+        => await RemoveByIdAsync<CardItem>(cardId, ct);
+
+    public async Task<bool> MoveCardAsync(int cardId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.CardItems.FindAsync([cardId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<CardItem>(x => x.VehicleId == e.VehicleId, cardId, direction, ct);
+    }
+
+    // ---- Safety toggles ----
+    public async Task<int> AddSafetyToggleAsync(int vehicleId, LocalizedText title, string? imagePath, LocalizedText strap, LocalizedText content, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var e = new SafetyToggle
+        {
+            VehicleId = vehicleId, Title = title, ImagePath = imagePath, Strap = strap, Content = content,
+            SortOrder = await _db.SafetyToggles.CountAsync(x => x.VehicleId == vehicleId, ct)
+        };
+        _db.SafetyToggles.Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveSafetyToggleAsync(int toggleId, CancellationToken ct = default)
+        => await RemoveByIdAsync<SafetyToggle>(toggleId, ct);
+
+    public async Task<bool> MoveSafetyToggleAsync(int toggleId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.SafetyToggles.FindAsync([toggleId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<SafetyToggle>(x => x.VehicleId == e.VehicleId, toggleId, direction, ct);
+    }
+
+    // ---- Trim price rows ----
+    public async Task<int> AddTrimPriceRowAsync(int trimId, LocalizedText text, CancellationToken ct = default)
+    {
+        if (!await _db.Set<Trim>().AnyAsync(t => t.Id == trimId, ct)) return 0;
+        var e = new TrimPriceRow
+        {
+            TrimId = trimId, Text = text,
+            SortOrder = await _db.TrimPriceRows.CountAsync(x => x.TrimId == trimId, ct)
+        };
+        _db.TrimPriceRows.Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveTrimPriceRowAsync(int rowId, CancellationToken ct = default)
+        => await RemoveByIdAsync<TrimPriceRow>(rowId, ct);
+
+    public async Task<bool> MoveTrimPriceRowAsync(int rowId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.TrimPriceRows.FindAsync([rowId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<TrimPriceRow>(x => x.TrimId == e.TrimId, rowId, direction, ct);
+    }
+
+    // ---- Warranty links ----
+    public async Task<int> AddWarrantyLinkAsync(int vehicleId, LocalizedText label, string? url, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var e = new WarrantyLink
+        {
+            VehicleId = vehicleId, Label = label, Url = url ?? "",
+            SortOrder = await _db.WarrantyLinks.CountAsync(x => x.VehicleId == vehicleId, ct)
+        };
+        _db.WarrantyLinks.Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveWarrantyLinkAsync(int linkId, CancellationToken ct = default)
+        => await RemoveByIdAsync<WarrantyLink>(linkId, ct);
+
+    public async Task<bool> MoveWarrantyLinkAsync(int linkId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.WarrantyLinks.FindAsync([linkId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<WarrantyLink>(x => x.VehicleId == e.VehicleId, linkId, direction, ct);
+    }
+
     // ---- shared helpers ----
     private async Task<bool> RemoveByIdAsync<T>(int id, CancellationToken ct) where T : class
     {

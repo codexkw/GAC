@@ -328,4 +328,241 @@ public class AdminVehicleServiceTests
         var svc = NewSvc(db);
         Assert.Equal(0, await svc.AddGalleryImageAsync(999999, "/x.png", new LocalizedText { En = "x" }));
     }
+
+    // ---- Task 26: QualityBlock upsert/remove ----
+
+    [Fact]
+    public async Task Quality_Upsert_IsSingleton_AndRemove()
+    {
+        var db = NewDb(nameof(Quality_Upsert_IsSingleton_AndRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "qb", Name = "Q" });
+
+        // First upsert inserts
+        var id1 = await svc.UpsertQualityAsync(vid, "/main1.jpg", "/thumb1.jpg",
+            new LocalizedText { En = "Strap" }, new LocalizedText { En = "Body" });
+        Assert.NotEqual(0, id1);
+        Assert.Equal(1, await db.QualityBlocks.CountAsync());
+
+        // Second upsert updates same row
+        var id2 = await svc.UpsertQualityAsync(vid, "/main2.jpg", "/thumb2.jpg",
+            new LocalizedText { En = "Strap 2" }, new LocalizedText { En = "Body 2" });
+        Assert.Equal(id1, id2); // same row
+        Assert.Equal(1, await db.QualityBlocks.CountAsync());
+        var row = await db.QualityBlocks.FindAsync(id1);
+        Assert.Equal("/main2.jpg", row!.MainImage);
+        Assert.Equal("Strap 2", row.Strapline.En);
+
+        // Remove returns true first time, false second time
+        Assert.True(await svc.RemoveQualityAsync(vid));
+        Assert.Equal(0, await db.QualityBlocks.CountAsync());
+        Assert.False(await svc.RemoveQualityAsync(vid));
+    }
+
+    // ---- Task 27: CardItem add/move/remove ----
+
+    [Fact]
+    public async Task Card_AddMoveRemove()
+    {
+        var db = NewDb(nameof(Card_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "card", Name = "C" });
+
+        var c1 = await svc.AddCardAsync(vid, new LocalizedText { En = "T1" }, new LocalizedText { En = "Body1" }, "/img1.png");
+        var c2 = await svc.AddCardAsync(vid, new LocalizedText { En = "T2" }, new LocalizedText { En = "Body2" }, "/img2.png");
+        Assert.Equal(0, (await db.CardItems.FindAsync(c1))!.SortOrder);
+        Assert.Equal(1, (await db.CardItems.FindAsync(c2))!.SortOrder);
+        Assert.Equal("/img2.png", (await db.CardItems.FindAsync(c2))!.ImagePath);
+
+        Assert.True(await svc.MoveCardAsync(c2, -1));
+        Assert.Equal(0, (await db.CardItems.FindAsync(c2))!.SortOrder);
+
+        Assert.True(await svc.RemoveCardAsync(c1));
+        Assert.Equal(1, await db.CardItems.CountAsync());
+    }
+
+    // ---- Task 28: SafetyToggle add/move/remove ----
+
+    [Fact]
+    public async Task SafetyToggle_AddMoveRemove()
+    {
+        var db = NewDb(nameof(SafetyToggle_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "st2", Name = "S" });
+
+        var t1 = await svc.AddSafetyToggleAsync(vid, new LocalizedText { En = "Title1" }, "/img1.png",
+            new LocalizedText { En = "Strap1" }, new LocalizedText { En = "Content1" });
+        var t2 = await svc.AddSafetyToggleAsync(vid, new LocalizedText { En = "Title2" }, "/img2.png",
+            new LocalizedText { En = "Strap2" }, new LocalizedText { En = "Content2" });
+        Assert.Equal(0, (await db.SafetyToggles.FindAsync(t1))!.SortOrder);
+        Assert.Equal(1, (await db.SafetyToggles.FindAsync(t2))!.SortOrder);
+        Assert.Equal("Strap2", (await db.SafetyToggles.FindAsync(t2))!.Strap.En);
+
+        Assert.True(await svc.MoveSafetyToggleAsync(t2, -1));
+        Assert.Equal(0, (await db.SafetyToggles.FindAsync(t2))!.SortOrder);
+
+        Assert.True(await svc.RemoveSafetyToggleAsync(t1));
+        Assert.Equal(1, await db.SafetyToggles.CountAsync());
+    }
+
+    // ---- Task 29: Trim new fields + TrimPriceRow ----
+
+    [Fact]
+    public async Task Trim_NewFields_Persist_AndPriceRows_AddMoveRemove()
+    {
+        var db = NewDb(nameof(Trim_NewFields_Persist_AndPriceRows_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "tr", Name = "T" });
+
+        var trimId = await svc.AddTrimAsync(vid, new Trim
+        {
+            Name = new LocalizedText { En = "Prestige" },
+            ModelLabel = new LocalizedText { En = "GS4 MAX Prestige" },
+            ImagePath = "/uploads/prestige.png"
+        });
+        var trim = await db.Set<Trim>().FindAsync(trimId);
+        Assert.Equal("GS4 MAX Prestige", trim!.ModelLabel.En);
+        Assert.Equal("/uploads/prestige.png", trim.ImagePath);
+
+        var r1 = await svc.AddTrimPriceRowAsync(trimId, new LocalizedText { En = "Base price" });
+        var r2 = await svc.AddTrimPriceRowAsync(trimId, new LocalizedText { En = "With options" });
+        Assert.Equal(0, (await db.TrimPriceRows.FindAsync(r1))!.SortOrder);
+        Assert.Equal(1, (await db.TrimPriceRows.FindAsync(r2))!.SortOrder);
+
+        Assert.True(await svc.MoveTrimPriceRowAsync(r2, -1));
+        Assert.Equal(0, (await db.TrimPriceRows.FindAsync(r2))!.SortOrder);
+
+        Assert.True(await svc.RemoveTrimPriceRowAsync(r1));
+        Assert.Equal(1, await db.TrimPriceRows.CountAsync());
+    }
+
+    [Fact]
+    public async Task AddTrimPriceRow_OnMissingTrim_ReturnsZero()
+    {
+        var db = NewDb(nameof(AddTrimPriceRow_OnMissingTrim_ReturnsZero));
+        var svc = NewSvc(db);
+        Assert.Equal(0, await svc.AddTrimPriceRowAsync(999999, new LocalizedText { En = "x" }));
+    }
+
+    // ---- Task 30: WarrantyLink add/move/remove ----
+
+    [Fact]
+    public async Task WarrantyLink_AddMoveRemove()
+    {
+        var db = NewDb(nameof(WarrantyLink_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "wl", Name = "W" });
+
+        var l1 = await svc.AddWarrantyLinkAsync(vid, new LocalizedText { En = "Policy" }, "https://example.com/policy");
+        var l2 = await svc.AddWarrantyLinkAsync(vid, new LocalizedText { En = "Terms" }, "https://example.com/terms");
+        Assert.Equal(0, (await db.WarrantyLinks.FindAsync(l1))!.SortOrder);
+        Assert.Equal(1, (await db.WarrantyLinks.FindAsync(l2))!.SortOrder);
+        Assert.Equal("https://example.com/terms", (await db.WarrantyLinks.FindAsync(l2))!.Url);
+
+        Assert.True(await svc.MoveWarrantyLinkAsync(l2, -1));
+        Assert.Equal(0, (await db.WarrantyLinks.FindAsync(l2))!.SortOrder);
+
+        Assert.True(await svc.RemoveWarrantyLinkAsync(l1));
+        Assert.Equal(1, await db.WarrantyLinks.CountAsync());
+    }
+
+    // ---- Task 31: regression sweep ----
+
+    [Fact]
+    public async Task AddMethods_OnMissingVehicle_ReturnZero()
+    {
+        var db = NewDb(nameof(AddMethods_OnMissingVehicle_ReturnZero));
+        var svc = NewSvc(db);
+        const int ghost = 987654;
+
+        Assert.Equal(0, await svc.AddStatAsync(ghost, new LocalizedText { En = "x" }, new LocalizedText { En = "x" }));
+        Assert.Equal(0, await svc.AddSliderAsync(ghost, new LocalizedText { En = "x" }, new LocalizedText { En = "x" }));
+        Assert.Equal(0, await svc.AddGalleryTabAsync(ghost, new LocalizedText { En = "x" }));
+        Assert.Equal(0, await svc.AddFeatureBulletAsync(ghost, new LocalizedText { En = "x" }, new LocalizedText { En = "x" }));  // missing featureSection
+        Assert.Equal(0, await svc.AddCardAsync(ghost, new LocalizedText { En = "x" }, new LocalizedText { En = "x" }, null));
+        Assert.Equal(0, await svc.AddSafetyToggleAsync(ghost, new LocalizedText { En = "x" }, null, new LocalizedText { En = "x" }, new LocalizedText { En = "x" }));
+        Assert.Equal(0, await svc.AddWarrantyLinkAsync(ghost, new LocalizedText { En = "x" }, null));
+        Assert.Equal(0, await svc.UpsertQualityAsync(ghost, null, null, new LocalizedText { En = "x" }, new LocalizedText { En = "x" }));
+        Assert.Equal(0, await svc.AddTrimPriceRowAsync(ghost, new LocalizedText { En = "x" }));   // missing trim
+    }
+
+    [Fact]
+    public async Task MoveMethods_OutOfBounds_ReturnFalse()
+    {
+        var db = NewDb(nameof(MoveMethods_OutOfBounds_ReturnFalse));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "oob", Name = "O" });
+
+        var statId = await svc.AddStatAsync(vid, new LocalizedText { En = "L" }, new LocalizedText { En = "V" });
+        Assert.False(await svc.MoveStatAsync(statId, -1));   // already at top (only 1)
+        Assert.False(await svc.MoveStatAsync(statId, 1));    // already at bottom
+        Assert.False(await svc.RemoveStatAsync(999999));     // missing id
+
+        var cardId = await svc.AddCardAsync(vid, new LocalizedText { En = "T" }, new LocalizedText { En = "B" }, null);
+        Assert.False(await svc.MoveCardAsync(cardId, -1));
+        Assert.False(await svc.MoveCardAsync(cardId, 1));
+        Assert.False(await svc.MoveCardAsync(999999, -1));
+
+        var toggleId = await svc.AddSafetyToggleAsync(vid, new LocalizedText { En = "T" }, null, new LocalizedText { En = "S" }, new LocalizedText { En = "C" });
+        Assert.False(await svc.MoveSafetyToggleAsync(toggleId, -1));
+        Assert.False(await svc.MoveSafetyToggleAsync(toggleId, 1));
+
+        var linkId = await svc.AddWarrantyLinkAsync(vid, new LocalizedText { En = "L" }, "https://example.com");
+        Assert.False(await svc.MoveWarrantyLinkAsync(linkId, -1));
+        Assert.False(await svc.MoveWarrantyLinkAsync(linkId, 1));
+
+        var trimId = await svc.AddTrimAsync(vid, new Trim { Name = new LocalizedText { En = "Trim" } });
+        var rowId = await svc.AddTrimPriceRowAsync(trimId, new LocalizedText { En = "Row" });
+        Assert.False(await svc.MoveTrimPriceRowAsync(rowId, -1));
+        Assert.False(await svc.MoveTrimPriceRowAsync(rowId, 1));
+    }
+
+    [Fact]
+    public async Task GetAsync_EagerLoads_Grandchildren()
+    {
+        var db = NewDb(nameof(GetAsync_EagerLoads_Grandchildren));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "eager", Name = "E" });
+
+        // Grandchild: SliderSlide
+        var sliderId = await svc.AddSliderAsync(vid, new LocalizedText { En = "Eye" }, new LocalizedText { En = "Title" });
+        await svc.AddSliderSlideAsync(sliderId, "/s.png", new LocalizedText { En = "alt" });
+
+        // Grandchild: GalleryImage
+        var tabId = await svc.AddGalleryTabAsync(vid, new LocalizedText { En = "Tab" });
+        await svc.AddGalleryImageAsync(tabId, "/g.png", new LocalizedText { En = "alt" });
+
+        // Grandchild: FeatureBullet
+        var featureId = await svc.AddFeatureAsync(vid, new FeatureSection { Heading = "F" });
+        await svc.AddFeatureBulletAsync(featureId, new LocalizedText { En = "Lbl" }, new LocalizedText { En = "Txt" });
+
+        // Grandchild: TrimPriceRow
+        var trimId = await svc.AddTrimAsync(vid, new Trim { Name = new LocalizedText { En = "Trim" } });
+        await svc.AddTrimPriceRowAsync(trimId, new LocalizedText { En = "Row" });
+
+        // Direct children new in Tasks 26-30
+        await svc.AddStatAsync(vid, new LocalizedText { En = "Label" }, new LocalizedText { En = "Val" });
+        await svc.AddCardAsync(vid, new LocalizedText { En = "CardTitle" }, new LocalizedText { En = "CardBody" }, null);
+        await svc.AddSafetyToggleAsync(vid, new LocalizedText { En = "SafeTitle" }, null, new LocalizedText { En = "Strap" }, new LocalizedText { En = "Content" });
+        await svc.AddWarrantyLinkAsync(vid, new LocalizedText { En = "Warranty" }, "https://example.com");
+        await svc.UpsertQualityAsync(vid, null, null, new LocalizedText { En = "Strap" }, new LocalizedText { En = "Body" });
+        await svc.UpsertSectionHeadingAsync(vid, SectionKey.Overview, new LocalizedText { En = "Heading" }, new LocalizedText { En = "Sub" }, new LocalizedText { En = "Body" });
+
+        var v = await svc.GetAsync(vid);
+        Assert.NotNull(v);
+        Assert.Single(v!.Sliders);
+        Assert.Single(v.Sliders[0].Slides);
+        Assert.Single(v.GalleryTabs);
+        Assert.Single(v.GalleryTabs[0].Images);
+        Assert.Single(v.Features);
+        Assert.Single(v.Features[0].Bullets);
+        Assert.Single(v.Trims);
+        Assert.Single(v.Trims[0].PriceRows);
+        Assert.Single(v.Stats);
+        Assert.Single(v.Cards);
+        Assert.Single(v.SafetyToggles);
+        Assert.Single(v.WarrantyLinks);
+        Assert.NotNull(v.Quality);
+        Assert.Single(v.Headings);
+    }
 }
