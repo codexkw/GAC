@@ -1,3 +1,35 @@
 @model GAC.Core.Content.Vehicle
-<h2>Safety</h2>
-<p class="adm-hint">Safety section — coming soon.</p>
+<h2>Safety toggles</h2>
+@foreach (var s in Model.SafetyToggles.OrderBy(x => x.SortOrder))
+{
+    <div class="adm-card">
+      <h3>@s.Title.En
+        <form asp-action="MoveSafetyToggle" method="post" style="display:inline">
+          <input type="hidden" name="toggleId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+          <button class="adm-btn">&uarr;</button>
+        </form>
+        <form asp-action="MoveSafetyToggle" method="post" style="display:inline">
+          <input type="hidden" name="toggleId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+          <button class="adm-btn">&darr;</button>
+        </form>
+        <form asp-action="RemoveSafetyToggle" method="post" style="display:inline" onsubmit="return confirm('Remove safety toggle?')">
+          <input type="hidden" name="toggleId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <button class="adm-btn adm-btn--danger">Remove</button>
+        </form>
+      </h3>
+      @if (!string.IsNullOrWhiteSpace(s.ImagePath)) { <img src="@s.ImagePath" class="adm-picker-thumb" alt="" /> }
+      <p><strong>Strap:</strong> @s.Strap.En</p>
+      <p>@s.Content.En</p>
+    </div>
+}
+<form asp-action="AddSafetyToggle" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="titleEn" placeholder="Title (EN)" /><input name="titleAr" placeholder="Title (AR)" dir="rtl" />
+  <span style="display:inline-flex;gap:.4rem;align-items:center">
+    <input type="text" name="imagePath" placeholder="Image" data-media-input />
+    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+  </span>
+  <input name="strapEn" placeholder="Strap (EN)" /><input name="strapAr" placeholder="Strap (AR)" dir="rtl" />
+  <input name="contentEn" placeholder="Content (EN)" /><input name="contentAr" placeholder="Content (AR)" dir="rtl" />
+  <button class="adm-btn">Add safety toggle</button>
+</form>
