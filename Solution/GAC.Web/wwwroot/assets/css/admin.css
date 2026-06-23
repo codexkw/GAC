@@ -190,3 +190,7 @@ trix-toolbar .trix-button-group--block-tools .trix-button--icon-decrease-nesting
 trix-toolbar .trix-button-group--block-tools .trix-button--icon-increase-nesting-level,
 trix-toolbar .trix-button-group--file-tools { display: none; }
 .adm-trix { min-height: 160px; background: #fff; }
+
+.adm-section-nav{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:.5rem;padding:.6rem .8rem;margin:1rem 0;background:#fff;border:1px solid #e2e2e2;border-radius:6px}
+.adm-section-nav a{font-size:.85rem;text-decoration:none;color:#0a3d62;padding:.15rem .4rem;border-radius:4px}
+.adm-section-nav a:hover{background:#eef3f8}
