@@ -36,4 +36,7 @@ public interface IAdminVehicleService
     Task<int> AddTrimAsync(int vehicleId, Trim trim, CancellationToken ct = default);
     Task<bool> RemoveTrimAsync(int trimId, CancellationToken ct = default);
     Task<bool> MoveTrimAsync(int trimId, int direction, CancellationToken ct = default);
+
+    // Section headings (set-by-key, no reorder)
+    Task<int> UpsertSectionHeadingAsync(int vehicleId, SectionKey key, LocalizedText title, LocalizedText sub, LocalizedText body, CancellationToken ct = default);
 }

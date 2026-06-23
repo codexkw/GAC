@@ -118,4 +118,7 @@ public class VehiclesController : Controller
     { await _svc.RemoveTrimAsync(trimId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveTrim(int trimId, int vehicleId, int direction)
     { await _svc.MoveTrimAsync(trimId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> UpsertSectionHeading(int vehicleId, SectionKey key, string? titleEn, string? titleAr, string? subEn, string? subAr, string? bodyEn, string? bodyAr)
+    { await _svc.UpsertSectionHeadingAsync(vehicleId, key, new() { En = titleEn, Ar = titleAr }, new() { En = subEn, Ar = subAr }, new() { En = bodyEn, Ar = bodyAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }

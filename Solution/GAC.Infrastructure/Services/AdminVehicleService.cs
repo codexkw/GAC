@@ -259,6 +259,23 @@ public class AdminVehicleService : IAdminVehicleService
         return await SwapOrderAsync<Trim>(x => x.VehicleId == t.VehicleId, trimId, direction, ct);
     }
 
+    // ---- Section headings ----
+    public async Task<int> UpsertSectionHeadingAsync(int vehicleId, SectionKey key, LocalizedText title, LocalizedText sub, LocalizedText body, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var existing = await _db.Set<SectionHeading>().FirstOrDefaultAsync(h => h.VehicleId == vehicleId && h.Key == key, ct);
+        if (existing is null)
+        {
+            existing = new SectionHeading { VehicleId = vehicleId, Key = key };
+            _db.Set<SectionHeading>().Add(existing);
+        }
+        existing.Title = title;
+        existing.Sub = sub;
+        existing.Body = body;
+        await _db.SaveChangesAsync(ct);
+        return existing.Id;
+    }
+
     // ---- shared helpers ----
     private async Task<bool> RemoveByIdAsync<T>(int id, CancellationToken ct) where T : class
     {

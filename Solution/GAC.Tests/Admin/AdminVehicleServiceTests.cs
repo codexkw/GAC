@@ -176,4 +176,31 @@ public class AdminVehicleServiceTests
     // NOTE: GetAsync_Includes_NewCollections_AndQuality (Task 20 round-trip) calls methods from
     // Tasks 26-31 (AddCardAsync/AddSafetyToggleAsync/AddWarrantyLinkAsync/UpsertQualityAsync).
     // It is added in the Task 31 regression sweep once all Add* methods are present.
+
+    // ---- Task 21: UpsertSectionHeading ----
+
+    [Fact]
+    public async Task UpsertSectionHeading_InsertsThenUpdatesInPlace()
+    {
+        var db = NewDb(nameof(UpsertSectionHeading_InsertsThenUpdatesInPlace));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "sh", Name = "S" });
+
+        var first = await svc.UpsertSectionHeadingAsync(vid, SectionKey.Overview,
+            new LocalizedText { En = "Overview" }, new LocalizedText { En = "sub" }, new LocalizedText { En = "body" });
+        Assert.Equal(1, await db.Set<SectionHeading>().CountAsync());
+
+        var second = await svc.UpsertSectionHeadingAsync(vid, SectionKey.Overview,
+            new LocalizedText { En = "Overview 2" }, new LocalizedText { En = "sub 2" }, new LocalizedText { En = "body 2" });
+        Assert.Equal(first, second); // same row, not a new one
+        Assert.Equal(1, await db.Set<SectionHeading>().CountAsync());
+        var row = await db.Set<SectionHeading>().FindAsync(first);
+        Assert.Equal("Overview 2", row!.Title.En);
+        Assert.Equal("body 2", row.Body.En);
+
+        // a different key creates a second row
+        await svc.UpsertSectionHeadingAsync(vid, SectionKey.Design,
+            new LocalizedText { En = "Design" }, new LocalizedText(), new LocalizedText());
+        Assert.Equal(2, await db.Set<SectionHeading>().CountAsync());
+    }
 }
