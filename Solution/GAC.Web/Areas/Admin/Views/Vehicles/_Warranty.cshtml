@@ -1,3 +1,39 @@
 @model GAC.Core.Content.Vehicle
-<h2>Warranty</h2>
-<p class="adm-hint">Warranty section — coming soon.</p>
+<h2>Warranty links</h2>
+<table class="adm-table">
+  <thead><tr><th>Order</th><th>Label</th><th>URL / document</th><th></th></tr></thead>
+  <tbody>
+    @foreach (var w in Model.WarrantyLinks.OrderBy(x => x.SortOrder))
+    {
+        <tr>
+          <td>
+            <form asp-action="MoveWarrantyLink" method="post" style="display:inline">
+              <input type="hidden" name="linkId" value="@w.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+              <button class="adm-btn">&uarr;</button>
+            </form>
+            <form asp-action="MoveWarrantyLink" method="post" style="display:inline">
+              <input type="hidden" name="linkId" value="@w.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+              <button class="adm-btn">&darr;</button>
+            </form>
+          </td>
+          <td>@w.Label.En</td>
+          <td>@w.Url</td>
+          <td>
+            <form asp-action="RemoveWarrantyLink" method="post" style="display:inline" onsubmit="return confirm('Remove warranty link?')">
+              <input type="hidden" name="linkId" value="@w.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+              <button class="adm-btn adm-btn--danger">Remove</button>
+            </form>
+          </td>
+        </tr>
+    }
+  </tbody>
+</table>
+<form asp-action="AddWarrantyLink" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="labelEn" placeholder="Label (EN)" /><input name="labelAr" placeholder="Label (AR)" dir="rtl" />
+  <span style="display:inline-flex;gap:.4rem;align-items:center">
+    <input type="text" name="url" placeholder="Document / PDF" data-media-input />
+    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+  </span>
+  <button class="adm-btn">Add warranty link</button>
+</form>
