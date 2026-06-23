@@ -87,6 +87,57 @@ public class AdminVehicleEditViewTests : IClassFixture<AdminWebApplicationFactor
     }
 }
 
+public class AdminVehicleEditViewSmokeTests : IClassFixture<AdminWebApplicationFactory>
+{
+    private readonly AdminWebApplicationFactory _factory;
+    public AdminVehicleEditViewSmokeTests(AdminWebApplicationFactory factory) => _factory = factory;
+
+    private async Task<string> EditHtmlAsync(string role)
+    {
+        var client = _factory.ClientForRole(role);
+        var list = await client.GetStringAsync("/Admin/Vehicles");
+        var m = Regex.Match(list, @"/Admin/Vehicles/Edit/(\d+)");
+        Assert.True(m.Success);
+        var res = await client.GetAsync($"/Admin/Vehicles/Edit/{m.Groups[1].Value}");
+        Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+        return await res.Content.ReadAsStringAsync();
+    }
+
+    [Fact]
+    public async Task Edit_AsEditor_RendersEveryRichSectionPanel()
+    {
+        var html = await EditHtmlAsync(Roles.Editor);
+        foreach (var heading in new[]
+        {
+            "adm-section-nav",
+            "Section headings",
+            "Overview stats",
+            "Sliders",
+            "Feature sections",
+            "Gallery tabs",
+            "Quality / awards",
+            "Technology cards",
+            "Safety toggles",
+            "Trims",
+            "Warranty links",
+            "Technology banner image",
+            "Enquiry title",
+        })
+            Assert.Contains(heading, html);
+        // PickerModal rendered exactly once.
+        Assert.Single(Regex.Matches(html, "id=\"mediaPicker\""));
+    }
+
+    [Fact]
+    public async Task Edit_AsSales_IsForbidden()
+    {
+        var client = _factory.ClientForRole(Roles.Sales);
+        var list = await client.GetAsync("/Admin/Vehicles");
+        // Sales lacks ContentEditor → redirected away from the Vehicles controller.
+        Assert.Equal(HttpStatusCode.Found, list.StatusCode);
+    }
+}
+
 public class AdminFeatureEditViewTests : IClassFixture<AdminWebApplicationFactory>
 {
     private readonly AdminWebApplicationFactory _factory;
