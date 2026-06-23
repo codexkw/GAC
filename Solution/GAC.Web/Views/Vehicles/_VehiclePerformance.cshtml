@@ -1,0 +1,55 @@
+@using System.Linq
+@using GAC.Web.Infrastructure
+@model GAC.Core.Content.Vehicle
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Performance);
+    var features = VehicleContent.PerformanceFeatures(Model).ToList();
+}
+@if (features.Count > 0)
+{
+    <section class="mp-section" id="performance">
+      <div class="container">
+        <partial name="~/Views/Vehicles/_SectionHead.cshtml" model="head" />
+        <div class="mp-tabs" data-tabs-wrap>
+          <div class="mp-tabs__nav" data-tabs>
+            @for (var i = 0; i < features.Count; i++)
+            {
+                <button class="mp-tabs__btn@(VehicleContent.StateActive(i == 0))" data-tab-btn="@VehicleContent.TabKey("p", i)">@features[i].TabLabel.Localize()</button>
+            }
+          </div>
+          <div class="mp-tabs__root" data-tab-root>
+            @for (var i = 0; i < features.Count; i++)
+            {
+                var f = features[i];
+                var bullets = f.Bullets.OrderBy(b => b.SortOrder).ToList();
+                <div class="mp-feature@(VehicleContent.StateActive(i == 0))" data-tab-panel="@VehicleContent.TabKey("p", i)">
+                  @if (!string.IsNullOrWhiteSpace(f.ImagePath))
+                  {
+                      <div class="mp-feature__media"><img src="@f.ImagePath" alt="@f.Heading.Localize()" /></div>
+                  }
+                  <div class="mp-feature__body">
+                    @if (!string.IsNullOrWhiteSpace(f.Heading.Localize()))
+                    {
+                        <h3 class="mp-feature__title">@f.Heading.Localize()</h3>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(f.Lead.Localize()))
+                    {
+                        <p>@f.Lead.Localize()</p>
+                    }
+                    @if (bullets.Count > 0)
+                    {
+                        <ul class="mp-feature__list">
+                          @foreach (var b in bullets)
+                          {
+                              <li><strong>@b.Label.Localize():</strong> @Html.Raw(b.Text.Localize())</li>
+                          }
+                        </ul>
+                    }
+                  </div>
+                </div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+}
