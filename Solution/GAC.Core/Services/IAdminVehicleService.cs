@@ -44,4 +44,12 @@ public interface IAdminVehicleService
     Task<int> AddStatAsync(int vehicleId, LocalizedText label, LocalizedText value, CancellationToken ct = default);
     Task<bool> RemoveStatAsync(int statId, CancellationToken ct = default);
     Task<bool> MoveStatAsync(int statId, int direction, CancellationToken ct = default);
+
+    // Sliders (group -> slides)
+    Task<int> AddSliderAsync(int vehicleId, LocalizedText eyebrow, LocalizedText title, CancellationToken ct = default);
+    Task<bool> RemoveSliderAsync(int sliderId, CancellationToken ct = default);
+    Task<bool> MoveSliderAsync(int sliderId, int direction, CancellationToken ct = default);
+    Task<int> AddSliderSlideAsync(int sliderGroupId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
+    Task<bool> RemoveSliderSlideAsync(int slideId, CancellationToken ct = default);
+    Task<bool> MoveSliderSlideAsync(int slideId, int direction, CancellationToken ct = default);
 }

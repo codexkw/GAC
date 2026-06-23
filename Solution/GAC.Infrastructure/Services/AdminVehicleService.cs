@@ -259,6 +259,45 @@ public class AdminVehicleService : IAdminVehicleService
         return await SwapOrderAsync<Trim>(x => x.VehicleId == t.VehicleId, trimId, direction, ct);
     }
 
+    // ---- Sliders ----
+    public async Task<int> AddSliderAsync(int vehicleId, LocalizedText eyebrow, LocalizedText title, CancellationToken ct = default)
+    {
+        if (!await _db.Vehicles.AnyAsync(v => v.Id == vehicleId, ct)) return 0;
+        var e = new SliderGroup { VehicleId = vehicleId, Eyebrow = eyebrow, Title = title, SortOrder = await _db.Set<SliderGroup>().CountAsync(x => x.VehicleId == vehicleId, ct) };
+        _db.Set<SliderGroup>().Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveSliderAsync(int sliderId, CancellationToken ct = default)
+        => await RemoveByIdAsync<SliderGroup>(sliderId, ct);
+
+    public async Task<bool> MoveSliderAsync(int sliderId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.Set<SliderGroup>().FindAsync([sliderId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<SliderGroup>(x => x.VehicleId == e.VehicleId, sliderId, direction, ct);
+    }
+
+    public async Task<int> AddSliderSlideAsync(int sliderGroupId, string? imagePath, LocalizedText alt, CancellationToken ct = default)
+    {
+        if (!await _db.Set<SliderGroup>().AnyAsync(g => g.Id == sliderGroupId, ct)) return 0;
+        var e = new SliderSlide { SliderGroupId = sliderGroupId, ImagePath = imagePath, Alt = alt, SortOrder = await _db.Set<SliderSlide>().CountAsync(x => x.SliderGroupId == sliderGroupId, ct) };
+        _db.Set<SliderSlide>().Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveSliderSlideAsync(int slideId, CancellationToken ct = default)
+        => await RemoveByIdAsync<SliderSlide>(slideId, ct);
+
+    public async Task<bool> MoveSliderSlideAsync(int slideId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.Set<SliderSlide>().FindAsync([slideId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<SliderSlide>(x => x.SliderGroupId == e.SliderGroupId, slideId, direction, ct);
+    }
+
     // ---- Overview stats ----
     public async Task<int> AddStatAsync(int vehicleId, LocalizedText label, LocalizedText value, CancellationToken ct = default)
     {

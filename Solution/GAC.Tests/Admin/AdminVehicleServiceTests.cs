@@ -221,4 +221,37 @@ public class AdminVehicleServiceTests
         Assert.True(await svc.RemoveStatAsync(a));
         Assert.Equal(1, await db.Set<StatItem>().CountAsync());
     }
+
+    // ---- Task 23: SliderGroup + SliderSlide ----
+
+    [Fact]
+    public async Task Slider_And_Slide_AddMoveRemove()
+    {
+        var db = NewDb(nameof(Slider_And_Slide_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "sl", Name = "S" });
+        var g1 = await svc.AddSliderAsync(vid, new LocalizedText { En = "Eye1" }, new LocalizedText { En = "T1" });
+        var g2 = await svc.AddSliderAsync(vid, new LocalizedText { En = "Eye2" }, new LocalizedText { En = "T2" });
+        Assert.Equal(0, (await db.Set<SliderGroup>().FindAsync(g1))!.SortOrder);
+        Assert.True(await svc.MoveSliderAsync(g2, -1));
+        Assert.Equal(0, (await db.Set<SliderGroup>().FindAsync(g2))!.SortOrder);
+
+        var s1 = await svc.AddSliderSlideAsync(g1, "/uploads/a.png", new LocalizedText { En = "a" });
+        var s2 = await svc.AddSliderSlideAsync(g1, "/uploads/b.png", new LocalizedText { En = "b" });
+        Assert.Equal(0, (await db.Set<SliderSlide>().FindAsync(s1))!.SortOrder);
+        Assert.Equal(1, (await db.Set<SliderSlide>().FindAsync(s2))!.SortOrder);
+        Assert.True(await svc.MoveSliderSlideAsync(s2, -1));
+        Assert.Equal(0, (await db.Set<SliderSlide>().FindAsync(s2))!.SortOrder);
+        Assert.True(await svc.RemoveSliderSlideAsync(s1));
+        Assert.Equal(1, await db.Set<SliderSlide>().CountAsync());
+        Assert.True(await svc.RemoveSliderAsync(g1));
+    }
+
+    [Fact]
+    public async Task AddSliderSlide_OnMissingGroup_ReturnsZero()
+    {
+        var db = NewDb(nameof(AddSliderSlide_OnMissingGroup_ReturnsZero));
+        var svc = NewSvc(db);
+        Assert.Equal(0, await svc.AddSliderSlideAsync(999999, "/x.png", new LocalizedText { En = "x" }));
+    }
 }

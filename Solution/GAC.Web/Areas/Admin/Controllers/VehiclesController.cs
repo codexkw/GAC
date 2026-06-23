@@ -128,4 +128,17 @@ public class VehiclesController : Controller
     { await _svc.RemoveStatAsync(statId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveStat(int statId, int vehicleId, int direction)
     { await _svc.MoveStatAsync(statId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddSlider(int vehicleId, string? eyebrowEn, string? eyebrowAr, string? titleEn, string? titleAr)
+    { await _svc.AddSliderAsync(vehicleId, new() { En = eyebrowEn, Ar = eyebrowAr }, new() { En = titleEn, Ar = titleAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveSlider(int sliderId, int vehicleId)
+    { await _svc.RemoveSliderAsync(sliderId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveSlider(int sliderId, int vehicleId, int direction)
+    { await _svc.MoveSliderAsync(sliderId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> AddSliderSlide(int sliderGroupId, int vehicleId, string? imagePath, string? altEn, string? altAr)
+    { await _svc.AddSliderSlideAsync(sliderGroupId, imagePath, new() { En = altEn, Ar = altAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveSliderSlide(int slideId, int vehicleId)
+    { await _svc.RemoveSliderSlideAsync(slideId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveSliderSlide(int slideId, int vehicleId, int direction)
+    { await _svc.MoveSliderSlideAsync(slideId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }
