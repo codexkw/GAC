@@ -1,22 +1,37 @@
+@using System.Linq
 @model GAC.Core.Content.Vehicle
-@if (Model.Trims.Count > 0)
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Trims);
+    var trims = Model.Trims.OrderBy(t => t.SortOrder).ToList();
+}
+@if (trims.Count > 0)
 {
     <section class="mp-section" id="trims">
       <div class="container">
-        <div class="mp-trims" style="gap:var(--space-7); flex-wrap:wrap;">
-          @foreach (var t in Model.Trims.OrderBy(x => x.SortOrder))
+        <partial name="~/Views/Vehicles/_SectionHead.cshtml" model="head" />
+        <div class="mp-trims">
+          @foreach (var t in trims)
           {
+              var rows = t.PriceRows.OrderBy(p => p.SortOrder).ToList();
               <article class="mp-trim">
+                @if (!string.IsNullOrWhiteSpace(t.ImagePath))
+                {
+                    <div class="mp-trim__media"><img src="@t.ImagePath" alt="@t.Name.Localize()" /></div>
+                }
                 <div class="mp-trim__body">
-                  <p class="mp-trim__model">@Model.Name.Localize()</p>
-                  <h3 class="mp-trim__name">@t.Name.Localize()</h3>
-                  @if (t.Price.HasValue)
+                  @if (!string.IsNullOrWhiteSpace(t.ModelLabel.Localize()))
                   {
-                      <ul class="mp-trim__price"><li>@t.Price.Value.ToString("N0") @L["SAR"]</li></ul>
+                      <p class="mp-trim__model">@t.ModelLabel.Localize()</p>
                   }
-                  @if (!string.IsNullOrWhiteSpace(t.Highlights.Localize()))
+                  <h3 class="mp-trim__name">@t.Name.Localize()</h3>
+                  @if (rows.Count > 0)
                   {
-                      <div class="mp-trim__highlights">@Html.Raw(t.Highlights.Localize())</div>
+                      <ul class="mp-trim__price">
+                        @foreach (var r in rows)
+                        {
+                            <li>@Html.Raw(r.Text.Localize())</li>
+                        }
+                      </ul>
                   }
                   <div class="mp-trim__cta">
                     <a class="btn btn--trim" href="#enquiry">@L["Book a Test Drive"]</a>
