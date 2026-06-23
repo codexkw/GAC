@@ -145,6 +145,9 @@ public class AdminVehicleService : IAdminVehicleService
         existing.Body = Sanitize(feature.Body);
         existing.ImagePath = feature.ImagePath;
         existing.Layout = feature.Layout;
+        existing.GroupKey = feature.GroupKey;
+        existing.TabLabel = feature.TabLabel;
+        existing.Lead = feature.Lead;
         await _db.SaveChangesAsync(ct);
         return true;
     }
@@ -257,6 +260,26 @@ public class AdminVehicleService : IAdminVehicleService
         var t = await _db.Set<Trim>().FindAsync([trimId], ct);
         if (t is null) return false;
         return await SwapOrderAsync<Trim>(x => x.VehicleId == t.VehicleId, trimId, direction, ct);
+    }
+
+    // ---- Feature bullets ----
+    public async Task<int> AddFeatureBulletAsync(int featureSectionId, LocalizedText label, LocalizedText text, CancellationToken ct = default)
+    {
+        if (!await _db.Set<FeatureSection>().AnyAsync(f => f.Id == featureSectionId, ct)) return 0;
+        var e = new FeatureBullet { FeatureSectionId = featureSectionId, Label = label, Text = text, SortOrder = await _db.Set<FeatureBullet>().CountAsync(x => x.FeatureSectionId == featureSectionId, ct) };
+        _db.Set<FeatureBullet>().Add(e);
+        await _db.SaveChangesAsync(ct);
+        return e.Id;
+    }
+
+    public async Task<bool> RemoveFeatureBulletAsync(int bulletId, CancellationToken ct = default)
+        => await RemoveByIdAsync<FeatureBullet>(bulletId, ct);
+
+    public async Task<bool> MoveFeatureBulletAsync(int bulletId, int direction, CancellationToken ct = default)
+    {
+        var e = await _db.Set<FeatureBullet>().FindAsync([bulletId], ct);
+        if (e is null) return false;
+        return await SwapOrderAsync<FeatureBullet>(x => x.FeatureSectionId == e.FeatureSectionId, bulletId, direction, ct);
     }
 
     // ---- Sliders ----

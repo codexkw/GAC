@@ -52,4 +52,9 @@ public interface IAdminVehicleService
     Task<int> AddSliderSlideAsync(int sliderGroupId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
     Task<bool> RemoveSliderSlideAsync(int slideId, CancellationToken ct = default);
     Task<bool> MoveSliderSlideAsync(int slideId, int direction, CancellationToken ct = default);
+
+    // Feature bullets (feature -> bullets)
+    Task<int> AddFeatureBulletAsync(int featureSectionId, LocalizedText label, LocalizedText text, CancellationToken ct = default);
+    Task<bool> RemoveFeatureBulletAsync(int bulletId, CancellationToken ct = default);
+    Task<bool> MoveFeatureBulletAsync(int bulletId, int direction, CancellationToken ct = default);
 }

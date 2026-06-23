@@ -141,4 +141,11 @@ public class VehiclesController : Controller
     { await _svc.RemoveSliderSlideAsync(slideId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveSliderSlide(int slideId, int vehicleId, int direction)
     { await _svc.MoveSliderSlideAsync(slideId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+
+    [HttpPost] public async Task<IActionResult> AddFeatureBullet(int featureSectionId, int vehicleId, string? labelEn, string? labelAr, string? textEn, string? textAr)
+    { await _svc.AddFeatureBulletAsync(featureSectionId, new() { En = labelEn, Ar = labelAr }, new() { En = textEn, Ar = textAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> RemoveFeatureBullet(int bulletId, int vehicleId)
+    { await _svc.RemoveFeatureBulletAsync(bulletId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> MoveFeatureBullet(int bulletId, int vehicleId, int direction)
+    { await _svc.MoveFeatureBulletAsync(bulletId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 }

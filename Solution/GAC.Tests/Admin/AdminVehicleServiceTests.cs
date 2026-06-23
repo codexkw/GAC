@@ -254,4 +254,45 @@ public class AdminVehicleServiceTests
         var svc = NewSvc(db);
         Assert.Equal(0, await svc.AddSliderSlideAsync(999999, "/x.png", new LocalizedText { En = "x" }));
     }
+
+    // ---- Task 24: FeatureSection new fields + FeatureBullet ----
+
+    [Fact]
+    public async Task Feature_NewFields_Persist_AndBullets_AddMoveRemove()
+    {
+        var db = NewDb(nameof(Feature_NewFields_Persist_AndBullets_AddMoveRemove));
+        var svc = NewSvc(db);
+        var vid = await svc.CreateAsync(new Vehicle { Slug = "fb", Name = "F" });
+        var fid = await svc.AddFeatureAsync(vid, new FeatureSection
+        {
+            Heading = "Panel",
+            GroupKey = FeatureGroup.Design,
+            TabLabel = new LocalizedText { En = "Design" },
+            Lead = new LocalizedText { En = "lead text" }
+        });
+        var f = await svc.GetFeatureAsync(fid);
+        Assert.Equal(FeatureGroup.Design, f!.GroupKey);
+        Assert.Equal("Design", f.TabLabel.En);
+        Assert.Equal("lead text", f.Lead.En);
+
+        var b1 = await svc.AddFeatureBulletAsync(fid, new LocalizedText { En = "L1" }, new LocalizedText { En = "T1" });
+        var b2 = await svc.AddFeatureBulletAsync(fid, new LocalizedText { En = "L2" }, new LocalizedText { En = "T2" });
+        Assert.Equal(0, (await db.Set<FeatureBullet>().FindAsync(b1))!.SortOrder);
+        Assert.Equal(1, (await db.Set<FeatureBullet>().FindAsync(b2))!.SortOrder);
+        Assert.True(await svc.MoveFeatureBulletAsync(b2, -1));
+        Assert.Equal(0, (await db.Set<FeatureBullet>().FindAsync(b2))!.SortOrder);
+        Assert.True(await svc.RemoveFeatureBulletAsync(b1));
+        Assert.Equal(1, await db.Set<FeatureBullet>().CountAsync());
+
+        var ok = await svc.UpdateFeatureAsync(new FeatureSection
+        {
+            Id = fid, Heading = "Panel2", GroupKey = FeatureGroup.Performance,
+            TabLabel = new LocalizedText { En = "Perf" }, Lead = new LocalizedText { En = "lead2" }
+        });
+        Assert.True(ok);
+        var f2 = await svc.GetFeatureAsync(fid);
+        Assert.Equal(FeatureGroup.Performance, f2!.GroupKey);
+        Assert.Equal("Perf", f2.TabLabel.En);
+        Assert.Equal("lead2", f2.Lead.En);
+    }
 }
