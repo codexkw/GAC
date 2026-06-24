@@ -9,4 +9,8 @@ public class Trim : IOrderable
     public LocalizedText Highlights { get; set; } = new();
     public string? SpecPdf { get; set; }
     public int SortOrder { get; set; }
+
+    public LocalizedText ModelLabel { get; set; } = new();
+    public string? ImagePath { get; set; }
+    public List<TrimPriceRow> PriceRows { get; set; } = new();
 }

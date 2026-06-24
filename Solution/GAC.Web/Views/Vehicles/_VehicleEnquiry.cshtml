@@ -1,0 +1,77 @@
+@model GAC.Core.Content.Vehicle
+<section class="mp-enquiry" id="enquiry"@(string.IsNullOrWhiteSpace(Model.EnquiryBgImage) ? "" : $" style=\"background-image:url('{Model.EnquiryBgImage}')\"")>
+  <div class="mp-enquiry__overlay">
+    <div class="container mp-enquiry__grid">
+      <div class="mp-enquiry__intro">
+        @if (!string.IsNullOrWhiteSpace(Model.EnquiryTitle.Localize()))
+        {
+            <h2 class="mp-enquiry__title">@Model.EnquiryTitle.Localize()</h2>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.EnquirySub.Localize()))
+        {
+            <p class="mp-enquiry__sub">@Model.EnquirySub.Localize()</p>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.EnquiryLead.Localize()))
+        {
+            <p class="mp-enquiry__lead">@Model.EnquiryLead.Localize()</p>
+        }
+        <div class="mp-enquiry__actions">
+          <a class="mp-enquiry__action" href="tel:1833334">
+            <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1z"/></svg>
+            <span>@L["Call us"]</span>
+          </a>
+          <a class="mp-enquiry__action" href="/contact-us">
+            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+            <span>@L["Find a location"]</span>
+          </a>
+        </div>
+      </div>
+
+      @if (TempData["FormSubmitted"] != null)
+      {
+        <div class="mp-form mp-form--done">
+          <h3>@L["Thanks — we received your request."]</h3>
+          <p>@L["A representative will contact you within one business day."]</p>
+        </div>
+      }
+      else
+      {
+        <form class="mp-form" data-form novalidate method="post" asp-controller="Forms" asp-action="SubmitEnquiry" asp-route-slug="@Model.Slug">
+          @if (TempData["FormError"] != null)
+          {
+            <p class="err">@L["Please check your entries and try again."]</p>
+          }
+          <div class="field">
+            <label>@L["Message"]</label>
+            <textarea name="message" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label>@L["Select Branch"] *</label>
+            <select name="branch" required>
+              <option value="">@L["Please select ..."]</option>
+              <option>Riyadh Branch</option>
+              <option>GAC Motors Jeddah, Malibari Sq Showroom</option>
+              <option>GAC Motors Jeddah, Kilo 3 Branch</option>
+              <option>Dammam Branch</option>
+              <option>GAC Motors Al-Madinah Al-Munawarrah Branch</option>
+              <option>GAC Motors Khamis Mushait Branch</option>
+              <option>GAC Motors Jazan Branch</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>@L["Title"] *</label>
+            <select name="title" required>
+              <option value="">@L["Please select ..."]</option>
+              <option>@L["Mr"]</option><option>@L["Ms"]</option><option>@L["Mrs"]</option><option>@L["Miss"]</option>
+            </select>
+          </div>
+          <div class="field"><label>@L["First Name"] *</label><input name="firstName" type="text" required /></div>
+          <div class="field"><label>@L["Last Name"] *</label><input name="lastName" type="text" required /></div>
+          <div class="field"><label>@L["Email Address"] *</label><input name="email" type="email" required /></div>
+          <div class="field"><label>@L["Contact Number"] *</label><input name="phone" type="tel" required /></div>
+          <button class="mp-form__submit" type="submit">@L["Submit"]</button>
+        </form>
+      }
+    </div>
+  </div>
+</section>

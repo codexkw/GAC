@@ -122,6 +122,19 @@ using (var scope = app.Services.CreateScope())
     await ContentSeeder.SeedAsync(scope.ServiceProvider);
 }
 
+// ── One-off structured-content backfill (DEV ONLY; off by default). ──
+// Turns each vehicle's BodyHtml into the new structured sections. Idempotent: skips
+// cars that already have structured rows. Enable locally by setting GAC_RUN_BACKFILL=1
+// (or run it from /Admin/ContentMigration in the admin panel). Never enable on startup in prod.
+//if (Environment.GetEnvironmentVariable("GAC_RUN_BACKFILL") == "1")
+//{
+//    using var backfillScope = app.Services.CreateScope();
+//    var db = backfillScope.ServiceProvider.GetRequiredService<GAC.Infrastructure.Data.ApplicationDbContext>();
+//    var report = await GAC.Infrastructure.Content.VehicleContentMigrator.BackfillAllAsync(db);
+//    app.Logger.LogInformation("Vehicle content backfill: scanned {S}, migrated {M}, skipped {K}.",
+//        report.VehiclesScanned, report.VehiclesMigrated, report.VehiclesSkipped);
+//}
+
 app.Run();
 
 public partial class Program { } // exposes Program to the test host

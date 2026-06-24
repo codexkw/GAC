@@ -1,38 +1,65 @@
 @model GAC.Core.Content.Vehicle
 <h2>Trims</h2>
-<table class="adm-table">
-  <thead><tr><th>Order</th><th>Name</th><th>Price</th><th></th></tr></thead>
-  <tbody>
-    @foreach (var t in Model.Trims.OrderBy(x => x.SortOrder))
-    {
-        <tr>
-          <td>
-            <form asp-action="MoveTrim" method="post" style="display:inline">
-              <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
-              <button class="adm-btn">&uarr;</button>
-            </form>
-            <form asp-action="MoveTrim" method="post" style="display:inline">
-              <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
-              <button class="adm-btn">&darr;</button>
-            </form>
-          </td>
-          <td>@t.Name.En</td>
-          <td>@(t.Price?.ToString("N0"))</td>
-          <td>
-            <form asp-action="RemoveTrim" method="post" style="display:inline" onsubmit="return confirm('Remove trim?')">
-              <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
-              <button class="adm-btn adm-btn--danger">Remove</button>
-            </form>
-          </td>
-        </tr>
-    }
-  </tbody>
-</table>
+@foreach (var t in Model.Trims.OrderBy(x => x.SortOrder))
+{
+    <div class="adm-card">
+      <h3>@t.ModelLabel.En @t.Name.En
+        <form asp-action="MoveTrim" method="post" style="display:inline">
+          <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+          <button class="adm-btn">&uarr;</button>
+        </form>
+        <form asp-action="MoveTrim" method="post" style="display:inline">
+          <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+          <button class="adm-btn">&darr;</button>
+        </form>
+        <form asp-action="RemoveTrim" method="post" style="display:inline" onsubmit="return confirm('Remove trim and its price rows?')">
+          <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <button class="adm-btn adm-btn--danger">Remove trim</button>
+        </form>
+      </h3>
+      @if (!string.IsNullOrWhiteSpace(t.ImagePath)) { <img src="@t.ImagePath" class="adm-picker-thumb" alt="" /> }
+      <table class="adm-table">
+        <thead><tr><th>Order</th><th>Price line</th><th></th></tr></thead>
+        <tbody>
+          @foreach (var r in t.PriceRows.OrderBy(x => x.SortOrder))
+          {
+              <tr>
+                <td>
+                  <form asp-action="MoveTrimPriceRow" method="post" style="display:inline">
+                    <input type="hidden" name="rowId" value="@r.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+                    <button class="adm-btn">&uarr;</button>
+                  </form>
+                  <form asp-action="MoveTrimPriceRow" method="post" style="display:inline">
+                    <input type="hidden" name="rowId" value="@r.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+                    <button class="adm-btn">&darr;</button>
+                  </form>
+                </td>
+                <td>@r.Text.En</td>
+                <td>
+                  <form asp-action="RemoveTrimPriceRow" method="post" style="display:inline" onsubmit="return confirm('Remove price line?')">
+                    <input type="hidden" name="rowId" value="@r.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+                    <button class="adm-btn adm-btn--danger">Remove</button>
+                  </form>
+                </td>
+              </tr>
+          }
+        </tbody>
+      </table>
+      <form asp-action="AddTrimPriceRow" method="post" class="adm-inline">
+        <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+        <input name="textEn" placeholder="e.g. Total: 95,000 SAR (EN)" /><input name="textAr" placeholder="Text (AR)" dir="rtl" />
+        <button class="adm-btn">Add price line</button>
+      </form>
+    </div>
+}
 <form asp-action="AddTrim" method="post" class="adm-inline">
   <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="modelLabelEn" placeholder="Model label (EN)" /><input name="modelLabelAr" placeholder="Model label (AR)" dir="rtl" />
   <input name="nameEn" placeholder="Name (EN)" /><input name="nameAr" placeholder="Name (AR)" dir="rtl" />
-  <input type="number" step="any" name="price" placeholder="Price" />
-  <input name="highlightsEn" placeholder="Highlights (EN)" /><input name="highlightsAr" placeholder="Highlights (AR)" dir="rtl" />
+  <span style="display:inline-flex;gap:.4rem;align-items:center">
+    <input type="text" name="imagePath" placeholder="Image" data-media-input />
+    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+  </span>
   <span style="display:inline-flex;gap:.4rem;align-items:center">
     <input type="text" name="specPdf" placeholder="Spec PDF (optional)" data-media-input />
     <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>

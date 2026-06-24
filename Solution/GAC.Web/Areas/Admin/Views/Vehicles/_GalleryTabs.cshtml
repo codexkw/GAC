@@ -1,0 +1,56 @@
+@model GAC.Core.Content.Vehicle
+<h2>Gallery tabs</h2>
+@foreach (var g in Model.GalleryTabs.OrderBy(x => x.SortOrder))
+{
+    <div class="adm-card">
+      <h3>@g.Label.En
+        <form asp-action="MoveGalleryTab" method="post" style="display:inline">
+          <input type="hidden" name="tabId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+          <button class="adm-btn">&uarr;</button>
+        </form>
+        <form asp-action="MoveGalleryTab" method="post" style="display:inline">
+          <input type="hidden" name="tabId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+          <button class="adm-btn">&darr;</button>
+        </form>
+        <form asp-action="RemoveGalleryTab" method="post" style="display:inline" onsubmit="return confirm('Remove tab and its images?')">
+          <input type="hidden" name="tabId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <button class="adm-btn adm-btn--danger">Remove tab</button>
+        </form>
+      </h3>
+      <div class="adm-picker-grid">
+        @foreach (var im in g.Images.OrderBy(x => x.SortOrder))
+        {
+            <div class="adm-picker-item">
+              @if (!string.IsNullOrWhiteSpace(im.ImagePath)) { <img src="@im.ImagePath" class="adm-picker-thumb" alt="" /> }
+              <div>@im.Alt.En</div>
+              <form asp-action="MoveGalleryImage" method="post" style="display:inline">
+                <input type="hidden" name="imageId" value="@im.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+                <button class="adm-btn">&uarr;</button>
+              </form>
+              <form asp-action="MoveGalleryImage" method="post" style="display:inline">
+                <input type="hidden" name="imageId" value="@im.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+                <button class="adm-btn">&darr;</button>
+              </form>
+              <form asp-action="RemoveGalleryImage" method="post" style="display:inline" onsubmit="return confirm('Remove image?')">
+                <input type="hidden" name="imageId" value="@im.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+                <button class="adm-btn adm-btn--danger">Remove</button>
+              </form>
+            </div>
+        }
+      </div>
+      <form asp-action="AddGalleryImage" method="post" class="adm-inline">
+        <input type="hidden" name="galleryTabId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+          <input type="text" name="imagePath" placeholder="Image" data-media-input />
+          <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+        <input name="altEn" placeholder="Alt (EN)" /><input name="altAr" placeholder="Alt (AR)" dir="rtl" />
+        <button class="adm-btn">Add image</button>
+      </form>
+    </div>
+}
+<form asp-action="AddGalleryTab" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="labelEn" placeholder="Tab label (EN)" /><input name="labelAr" placeholder="Tab label (AR)" dir="rtl" />
+  <button class="adm-btn">Add gallery tab</button>
+</form>

@@ -27,8 +27,9 @@ public class FormsControllerTests
     }
     private sealed class FakeVehicles : IVehicleService
     {
+        public Vehicle? BySlug;
         public Task<IReadOnlyList<Vehicle>> GetVisibleAsync() => Task.FromResult<IReadOnlyList<Vehicle>>(new List<Vehicle>());
-        public Task<Vehicle?> GetBySlugAsync(string slug) => Task.FromResult<Vehicle?>(null);
+        public Task<Vehicle?> GetBySlugAsync(string slug) => Task.FromResult(BySlug);
     }
     private sealed class FakeLeads : ILeadService
     {
@@ -48,9 +49,9 @@ public class FormsControllerTests
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => System.Array.Empty<LocalizedString>();
     }
 
-    private static FormsController Build(FakeContent content, FakeLeads leads, IEmailSender email)
+    private static FormsController Build(FakeContent content, FakeLeads leads, IEmailSender email, FakeVehicles? vehicles = null)
     {
-        var c = new FormsController(content, new FakeVehicles(), leads, email, new PassThroughLoc(), NullLogger<FormsController>.Instance);
+        var c = new FormsController(content, vehicles ?? new FakeVehicles(), leads, email, new PassThroughLoc(), NullLogger<FormsController>.Instance);
         var httpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext();
         httpContext.Request.Scheme = "https";
         httpContext.Request.Host = new Microsoft.AspNetCore.Http.HostString("localhost");
@@ -111,5 +112,50 @@ public class FormsControllerTests
         Assert.Equal("Mr Ada Lovelace", leads.Created!.Name);
         Assert.Equal(FormType.TestDrive, leads.Created.FormType);
         Assert.True(email.Called); // email attempted but its exception did not bubble
+    }
+
+    [Fact]
+    public async Task SubmitEnquiry_UnknownSlug_ReturnsNotFound()
+    {
+        var ctrl = Build(new FakeContent(), new FakeLeads(), new ThrowingEmail(), new FakeVehicles { BySlug = null });
+        var result = await ctrl.SubmitEnquiry("nope", ValidCore());
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task SubmitEnquiry_Valid_PersistsQuoteLead_WithVehicleAndSource_AndRedirects_EvenIfEmailThrows()
+    {
+        var leads = new FakeLeads();
+        var email = new ThrowingEmail();
+        var vehicle = new Vehicle { Id = 7, Slug = "emkoo", Name = new LocalizedText { En = "EMKOO" } };
+        var ctrl = Build(new FakeContent(), leads, email, new FakeVehicles { BySlug = vehicle });
+        var input = ValidCore(); input.Branch = "Riyadh Branch"; input.Message = "Interested";
+
+        var result = await ctrl.SubmitEnquiry("emkoo", input);
+
+        var redirect = Assert.IsType<RedirectResult>(result);
+        Assert.Equal("/emkoo#enquiry", redirect.Url);
+        Assert.NotNull(leads.Created);
+        Assert.Equal(FormType.Quote, leads.Created!.FormType);
+        Assert.Equal(7, leads.Created.VehicleId);
+        Assert.Equal("/emkoo", leads.Created.SourcePage);
+        Assert.Equal("Mr Ada Lovelace", leads.Created.Name);
+        Assert.Equal("Riyadh Branch", leads.Created.Branch);
+        Assert.True(email.Called); // attempted; its exception did not bubble
+    }
+
+    [Fact]
+    public async Task SubmitEnquiry_Invalid_RedirectsBack_WithoutLead()
+    {
+        var leads = new FakeLeads();
+        var vehicle = new Vehicle { Id = 1, Slug = "emkoo", Name = new LocalizedText { En = "EMKOO" } };
+        var ctrl = Build(new FakeContent(), leads, new ThrowingEmail(), new FakeVehicles { BySlug = vehicle });
+        ctrl.ModelState.AddModelError("Email", "required");
+
+        var result = await ctrl.SubmitEnquiry("emkoo", new LeadFormInput());
+
+        var redirect = Assert.IsType<RedirectResult>(result);
+        Assert.Equal("/emkoo#enquiry", redirect.Url);
+        Assert.Null(leads.Created);
     }
 }

@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Content Migration";
+}
+
+<h1>Content Migration</h1>
+<p>Backfill vehicle BodyHtml into structured sections. Idempotent: skips cars that already have structured rows unless <em>force</em> is checked.</p>
+
+@if (TempData["MigrationReport"] != null)
+{
+    <div class="adm-flash">@TempData["MigrationReport"]</div>
+}
+
+<h2>Run All Vehicles</h2>
+<form asp-action="RunAll" method="post">
+    <div class="adm-field">
+        <label>
+            <input type="checkbox" name="force" value="true" />
+            Force (overwrites existing structured data)
+        </label>
+    </div>
+    <button type="submit" class="adm-btn" onclick="return confirm('Backfill all vehicles? This may take a moment.')">Run All</button>
+</form>
+
+<h2>Run Single Vehicle</h2>
+<form asp-action="RunOne" method="post">
+    <div class="adm-field">
+        <label for="vehicleId">Vehicle ID</label>
+        <input type="number" id="vehicleId" name="vehicleId" min="1" required />
+    </div>
+    <div class="adm-field">
+        <label>
+            <input type="checkbox" name="force" value="true" />
+            Force (overwrites existing structured data)
+        </label>
+    </div>
+    <button type="submit" class="adm-btn">Run One</button>
+</form>

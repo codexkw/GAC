@@ -2,6 +2,7 @@ using GAC.Core.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+// Task 9: group→child configs (SliderGroup/Slide, GalleryTab/Image, FeatureBullet, TrimPriceRow, QualityBlock)
 namespace GAC.Infrastructure.Data.Configurations;
 
 internal static class OwnedExtensions
@@ -38,6 +39,20 @@ public class VehicleConfig : IEntityTypeConfiguration<Vehicle>
         b.HasMany(v => v.SpecGroups).WithOne().HasForeignKey(s => s.VehicleId).OnDelete(DeleteBehavior.Cascade);
         b.HasMany(v => v.Colors).WithOne().HasForeignKey(c => c.VehicleId).OnDelete(DeleteBehavior.Cascade);
         b.HasMany(v => v.Features).WithOne().HasForeignKey(f => f.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.OwnsLocalized(v => v.StatsNote);
+        b.OwnsLocalized(v => v.EnquiryTitle);
+        b.OwnsLocalized(v => v.EnquirySub);
+        b.OwnsLocalized(v => v.EnquiryLead);
+        b.Property(v => v.TechBannerImage).HasMaxLength(300);
+        b.Property(v => v.EnquiryBgImage).HasMaxLength(300);
+        b.HasMany(v => v.Headings).WithOne().HasForeignKey(h => h.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.Stats).WithOne().HasForeignKey(s => s.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.Sliders).WithOne().HasForeignKey(s => s.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.GalleryTabs).WithOne().HasForeignKey(g => g.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.Cards).WithOne().HasForeignKey(c => c.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.SafetyToggles).WithOne().HasForeignKey(s => s.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(v => v.WarrantyLinks).WithOne().HasForeignKey(w => w.VehicleId).OnDelete(DeleteBehavior.Cascade);
+        b.HasOne(v => v.Quality).WithOne().HasForeignKey<QualityBlock>(q => q.VehicleId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 
@@ -55,8 +70,11 @@ public class TrimConfig : IEntityTypeConfiguration<Trim>
     public void Configure(EntityTypeBuilder<Trim> b)
     {
         b.Property(t => t.Price).HasColumnType("decimal(18,2)");
+        b.Property(t => t.ImagePath).HasMaxLength(300);
         b.OwnsLocalized(t => t.Name);
         b.OwnsLocalized(t => t.Highlights);
+        b.OwnsLocalized(t => t.ModelLabel);
+        b.HasMany(t => t.PriceRows).WithOne().HasForeignKey(x => x.TrimId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 
@@ -93,6 +111,9 @@ public class FeatureSectionConfig : IEntityTypeConfiguration<FeatureSection>
     {
         b.OwnsLocalized(f => f.Heading);
         b.OwnsLocalized(f => f.Body);
+        b.OwnsLocalized(f => f.TabLabel);
+        b.OwnsLocalized(f => f.Lead);
+        b.HasMany(f => f.Bullets).WithOne().HasForeignKey(x => x.FeatureSectionId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 
@@ -220,5 +241,119 @@ public class DockItemConfig : IEntityTypeConfiguration<DockItem>
         b.Property(d => d.Url).HasMaxLength(300);
         b.OwnsLocalized(d => d.Label);
         b.OwnsLocalized(d => d.ShortLabel);
+    }
+}
+
+public class SectionHeadingConfig : IEntityTypeConfiguration<SectionHeading>
+{
+    public void Configure(EntityTypeBuilder<SectionHeading> b)
+    {
+        b.OwnsLocalized(s => s.Title);
+        b.OwnsLocalized(s => s.Sub);
+        b.OwnsLocalized(s => s.Body);
+    }
+}
+
+public class StatItemConfig : IEntityTypeConfiguration<StatItem>
+{
+    public void Configure(EntityTypeBuilder<StatItem> b)
+    {
+        b.OwnsLocalized(s => s.Label);
+        b.OwnsLocalized(s => s.Value);
+    }
+}
+
+public class CardItemConfig : IEntityTypeConfiguration<CardItem>
+{
+    public void Configure(EntityTypeBuilder<CardItem> b)
+    {
+        b.Property(c => c.ImagePath).HasMaxLength(300);
+        b.OwnsLocalized(c => c.Title);
+        b.OwnsLocalized(c => c.Text);
+    }
+}
+
+public class SafetyToggleConfig : IEntityTypeConfiguration<SafetyToggle>
+{
+    public void Configure(EntityTypeBuilder<SafetyToggle> b)
+    {
+        b.Property(s => s.ImagePath).HasMaxLength(300);
+        b.OwnsLocalized(s => s.Title);
+        b.OwnsLocalized(s => s.Strap);
+        b.OwnsLocalized(s => s.Content);
+    }
+}
+
+public class WarrantyLinkConfig : IEntityTypeConfiguration<WarrantyLink>
+{
+    public void Configure(EntityTypeBuilder<WarrantyLink> b)
+    {
+        b.Property(w => w.Url).HasMaxLength(500).IsRequired();
+        b.OwnsLocalized(w => w.Label);
+    }
+}
+
+public class SliderGroupConfig : IEntityTypeConfiguration<SliderGroup>
+{
+    public void Configure(EntityTypeBuilder<SliderGroup> b)
+    {
+        b.OwnsLocalized(s => s.Eyebrow);
+        b.OwnsLocalized(s => s.Title);
+        b.HasMany(s => s.Slides).WithOne().HasForeignKey(x => x.SliderGroupId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class SliderSlideConfig : IEntityTypeConfiguration<SliderSlide>
+{
+    public void Configure(EntityTypeBuilder<SliderSlide> b)
+    {
+        b.Property(s => s.ImagePath).HasMaxLength(300);
+        b.OwnsLocalized(s => s.Alt);
+    }
+}
+
+public class GalleryTabConfig : IEntityTypeConfiguration<GalleryTab>
+{
+    public void Configure(EntityTypeBuilder<GalleryTab> b)
+    {
+        b.OwnsLocalized(g => g.Label);
+        b.HasMany(g => g.Images).WithOne().HasForeignKey(x => x.GalleryTabId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class GalleryImageConfig : IEntityTypeConfiguration<GalleryImage>
+{
+    public void Configure(EntityTypeBuilder<GalleryImage> b)
+    {
+        b.Property(g => g.ImagePath).HasMaxLength(300);
+        b.OwnsLocalized(g => g.Alt);
+    }
+}
+
+public class FeatureBulletConfig : IEntityTypeConfiguration<FeatureBullet>
+{
+    public void Configure(EntityTypeBuilder<FeatureBullet> b)
+    {
+        b.OwnsLocalized(x => x.Label);
+        b.OwnsLocalized(x => x.Text);
+    }
+}
+
+public class TrimPriceRowConfig : IEntityTypeConfiguration<TrimPriceRow>
+{
+    public void Configure(EntityTypeBuilder<TrimPriceRow> b)
+    {
+        b.OwnsLocalized(x => x.Text);
+    }
+}
+
+public class QualityBlockConfig : IEntityTypeConfiguration<QualityBlock>
+{
+    public void Configure(EntityTypeBuilder<QualityBlock> b)
+    {
+        b.Property(q => q.MainImage).HasMaxLength(300);
+        b.Property(q => q.ThumbImage).HasMaxLength(300);
+        b.OwnsLocalized(q => q.Strapline);
+        b.OwnsLocalized(q => q.Content);
     }
 }

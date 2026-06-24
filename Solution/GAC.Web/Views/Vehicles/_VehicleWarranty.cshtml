@@ -1,0 +1,24 @@
+@using System.Linq
+@model GAC.Core.Content.Vehicle
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Warranty);
+    var links = Model.WarrantyLinks.OrderBy(l => l.SortOrder).ToList();
+}
+@if (links.Count > 0 || head != null)
+{
+    <section class="mp-section" id="warranty">
+      <div class="container">
+        <hr class="mp-hr" />
+        <partial name="~/Views/Vehicles/_SectionHead.cshtml" model="head" />
+        @if (links.Count > 0)
+        {
+            <div class="mp-warranty__links">
+              @foreach (var l in links)
+              {
+                  <a class="btn btn--doc" href="@l.Url" target="_blank" rel="noopener">@l.Label.Localize()</a>
+              }
+            </div>
+        }
+      </div>
+    </section>
+}

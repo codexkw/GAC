@@ -56,6 +56,51 @@ public class FormsController : Controller
         return Redirect($"/{slug}");
     }
 
+    [HttpPost("/models/{slug}/enquiry")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> SubmitEnquiry(string slug, [Bind(Prefix = "")] LeadFormInput input)
+    {
+        var vehicle = await _vehicles.GetBySlugAsync(slug);
+        if (vehicle is null) return NotFound();
+
+        if (!ModelState.IsValid)
+        {
+            TempData["FormError"] = "1";
+            return Redirect($"/{slug}#enquiry");
+        }
+
+        var name = string.Join(" ", new[] { input.Title, input.FirstName, input.LastName }
+            .Where(s => !string.IsNullOrWhiteSpace(s)));
+
+        var lead = new Lead
+        {
+            FormType = FormType.Quote,
+            Status = LeadStatus.New,
+            Name = name,
+            Phone = input.Phone,
+            Email = input.Email,
+            Message = string.IsNullOrWhiteSpace(input.Message) ? null : input.Message.Trim(),
+            VehicleId = vehicle.Id,
+            Branch = string.IsNullOrWhiteSpace(input.Branch) ? null : input.Branch,
+            SourcePage = "/" + slug,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+        await _leads.CreateAsync(lead);
+
+        // Best-effort notification — a failure here must never break a valid submission.
+        try
+        {
+            await _email.SendLeadNotificationAsync(lead, $"{vehicle.Name.Localize()} enquiry");
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Enquiry lead notification failed for {Slug}.", slug);
+        }
+
+        TempData["FormSubmitted"] = "1";
+        return Redirect($"/{slug}#enquiry");
+    }
+
     private static bool RequiresModel(FormType t) =>
         t is FormType.ServiceBooking or FormType.TestDrive or FormType.Quote;
 

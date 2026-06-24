@@ -22,6 +22,31 @@ namespace GAC.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GAC.Core.Content.CardItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("CardItems");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.ColorOption", b =>
                 {
                     b.Property<int>("Id")
@@ -130,6 +155,27 @@ namespace GAC.Infrastructure.Migrations
                     b.ToTable("DockItems");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.FeatureBullet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FeatureSectionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeatureSectionId");
+
+                    b.ToTable("FeatureBullets");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.FeatureSection", b =>
                 {
                     b.Property<int>("Id")
@@ -137,6 +183,9 @@ namespace GAC.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GroupKey")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
@@ -182,6 +231,52 @@ namespace GAC.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("FormPages");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.GalleryImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GalleryTabId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GalleryTabId");
+
+                    b.ToTable("GalleryImages");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.GalleryTab", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("GalleryTabs");
                 });
 
             modelBuilder.Entity("GAC.Core.Content.HeroSlide", b =>
@@ -394,6 +489,79 @@ namespace GAC.Infrastructure.Migrations
                     b.ToTable("Offers");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.QualityBlock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("MainImage")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ThumbImage")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId")
+                        .IsUnique();
+
+                    b.ToTable("QualityBlocks");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SafetyToggle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("SafetyToggles");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SectionHeading", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("SectionHeadings");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.SiteSettings", b =>
                 {
                     b.Property<int>("Id")
@@ -429,6 +597,52 @@ namespace GAC.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SiteSettings");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SliderGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("SliderGroups");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SliderSlide", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("SliderGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SliderGroupId");
+
+                    b.ToTable("SliderSlides");
                 });
 
             modelBuilder.Entity("GAC.Core.Content.SpecGroup", b =>
@@ -473,6 +687,27 @@ namespace GAC.Infrastructure.Migrations
                     b.ToTable("SpecRows");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.StatItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("StatItems");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.Trim", b =>
                 {
                     b.Property<int>("Id")
@@ -480,6 +715,10 @@ namespace GAC.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -500,6 +739,27 @@ namespace GAC.Infrastructure.Migrations
                     b.ToTable("Trims");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.TrimPriceRow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrimId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrimId");
+
+                    b.ToTable("TrimPriceRows");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -513,6 +773,10 @@ namespace GAC.Infrastructure.Migrations
 
                     b.Property<int>("Category")
                         .HasColumnType("int");
+
+                    b.Property<string>("EnquiryBgImage")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<bool>("IsVisible")
                         .HasColumnType("bit");
@@ -530,6 +794,10 @@ namespace GAC.Infrastructure.Migrations
 
                     b.Property<string>("SpecPdf")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TechBannerImage")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 
@@ -566,6 +834,32 @@ namespace GAC.Infrastructure.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("VehicleImages");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.WarrantyLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("WarrantyLinks");
                 });
 
             modelBuilder.Entity("GAC.Core.Identity.ApplicationUser", b =>
@@ -767,6 +1061,59 @@ namespace GAC.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.CardItem", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("Cards")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Text", b1 =>
+                        {
+                            b1.Property<int>("CardItemId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("CardItemId");
+
+                            b1.ToTable("CardItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CardItemId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Title", b1 =>
+                        {
+                            b1.Property<int>("CardItemId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("CardItemId");
+
+                            b1.ToTable("CardItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CardItemId");
+                        });
+
+                    b.Navigation("Text")
+                        .IsRequired();
+
+                    b.Navigation("Title")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GAC.Core.Content.ColorOption", b =>
@@ -991,6 +1338,59 @@ namespace GAC.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.FeatureBullet", b =>
+                {
+                    b.HasOne("GAC.Core.Content.FeatureSection", null)
+                        .WithMany("Bullets")
+                        .HasForeignKey("FeatureSectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Label", b1 =>
+                        {
+                            b1.Property<int>("FeatureBulletId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("FeatureBulletId");
+
+                            b1.ToTable("FeatureBullets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FeatureBulletId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Text", b1 =>
+                        {
+                            b1.Property<int>("FeatureBulletId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("FeatureBulletId");
+
+                            b1.ToTable("FeatureBullets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FeatureBulletId");
+                        });
+
+                    b.Navigation("Label")
+                        .IsRequired();
+
+                    b.Navigation("Text")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GAC.Core.Content.FeatureSection", b =>
                 {
                     b.HasOne("GAC.Core.Content.Vehicle", null)
@@ -1037,10 +1437,54 @@ namespace GAC.Infrastructure.Migrations
                                 .HasForeignKey("FeatureSectionId");
                         });
 
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Lead", b1 =>
+                        {
+                            b1.Property<int>("FeatureSectionId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("FeatureSectionId");
+
+                            b1.ToTable("FeatureSections");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FeatureSectionId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "TabLabel", b1 =>
+                        {
+                            b1.Property<int>("FeatureSectionId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("FeatureSectionId");
+
+                            b1.ToTable("FeatureSections");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FeatureSectionId");
+                        });
+
                     b.Navigation("Body")
                         .IsRequired();
 
                     b.Navigation("Heading")
+                        .IsRequired();
+
+                    b.Navigation("Lead")
+                        .IsRequired();
+
+                    b.Navigation("TabLabel")
                         .IsRequired();
                 });
 
@@ -1154,6 +1598,68 @@ namespace GAC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Title")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.GalleryImage", b =>
+                {
+                    b.HasOne("GAC.Core.Content.GalleryTab", null)
+                        .WithMany("Images")
+                        .HasForeignKey("GalleryTabId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Alt", b1 =>
+                        {
+                            b1.Property<int>("GalleryImageId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("GalleryImageId");
+
+                            b1.ToTable("GalleryImages");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GalleryImageId");
+                        });
+
+                    b.Navigation("Alt")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.GalleryTab", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("GalleryTabs")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Label", b1 =>
+                        {
+                            b1.Property<int>("GalleryTabId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("GalleryTabId");
+
+                            b1.ToTable("GalleryTabs");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GalleryTabId");
+                        });
+
+                    b.Navigation("Label")
                         .IsRequired();
                 });
 
@@ -1415,6 +1921,209 @@ namespace GAC.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.QualityBlock", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithOne("Quality")
+                        .HasForeignKey("GAC.Core.Content.QualityBlock", "VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Content", b1 =>
+                        {
+                            b1.Property<int>("QualityBlockId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("QualityBlockId");
+
+                            b1.ToTable("QualityBlocks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("QualityBlockId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Strapline", b1 =>
+                        {
+                            b1.Property<int>("QualityBlockId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("QualityBlockId");
+
+                            b1.ToTable("QualityBlocks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("QualityBlockId");
+                        });
+
+                    b.Navigation("Content")
+                        .IsRequired();
+
+                    b.Navigation("Strapline")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SafetyToggle", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("SafetyToggles")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Content", b1 =>
+                        {
+                            b1.Property<int>("SafetyToggleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SafetyToggleId");
+
+                            b1.ToTable("SafetyToggles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SafetyToggleId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Strap", b1 =>
+                        {
+                            b1.Property<int>("SafetyToggleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SafetyToggleId");
+
+                            b1.ToTable("SafetyToggles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SafetyToggleId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Title", b1 =>
+                        {
+                            b1.Property<int>("SafetyToggleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SafetyToggleId");
+
+                            b1.ToTable("SafetyToggles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SafetyToggleId");
+                        });
+
+                    b.Navigation("Content")
+                        .IsRequired();
+
+                    b.Navigation("Strap")
+                        .IsRequired();
+
+                    b.Navigation("Title")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SectionHeading", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("Headings")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Body", b1 =>
+                        {
+                            b1.Property<int>("SectionHeadingId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SectionHeadingId");
+
+                            b1.ToTable("SectionHeadings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SectionHeadingId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Sub", b1 =>
+                        {
+                            b1.Property<int>("SectionHeadingId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SectionHeadingId");
+
+                            b1.ToTable("SectionHeadings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SectionHeadingId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Title", b1 =>
+                        {
+                            b1.Property<int>("SectionHeadingId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SectionHeadingId");
+
+                            b1.ToTable("SectionHeadings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SectionHeadingId");
+                        });
+
+                    b.Navigation("Body")
+                        .IsRequired();
+
+                    b.Navigation("Sub")
+                        .IsRequired();
+
+                    b.Navigation("Title")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GAC.Core.Content.SiteSettings", b =>
                 {
                     b.OwnsOne("GAC.Core.Content.LocalizedText", "FooterTagline", b1 =>
@@ -1437,6 +2146,90 @@ namespace GAC.Infrastructure.Migrations
                         });
 
                     b.Navigation("FooterTagline")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SliderGroup", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("Sliders")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Eyebrow", b1 =>
+                        {
+                            b1.Property<int>("SliderGroupId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SliderGroupId");
+
+                            b1.ToTable("SliderGroups");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SliderGroupId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Title", b1 =>
+                        {
+                            b1.Property<int>("SliderGroupId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SliderGroupId");
+
+                            b1.ToTable("SliderGroups");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SliderGroupId");
+                        });
+
+                    b.Navigation("Eyebrow")
+                        .IsRequired();
+
+                    b.Navigation("Title")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.SliderSlide", b =>
+                {
+                    b.HasOne("GAC.Core.Content.SliderGroup", null)
+                        .WithMany("Slides")
+                        .HasForeignKey("SliderGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Alt", b1 =>
+                        {
+                            b1.Property<int>("SliderSlideId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("SliderSlideId");
+
+                            b1.ToTable("SliderSlides");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SliderSlideId");
+                        });
+
+                    b.Navigation("Alt")
                         .IsRequired();
                 });
 
@@ -1524,6 +2317,59 @@ namespace GAC.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.StatItem", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("Stats")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Label", b1 =>
+                        {
+                            b1.Property<int>("StatItemId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("StatItemId");
+
+                            b1.ToTable("StatItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StatItemId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Value", b1 =>
+                        {
+                            b1.Property<int>("StatItemId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("StatItemId");
+
+                            b1.ToTable("StatItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StatItemId");
+                        });
+
+                    b.Navigation("Label")
+                        .IsRequired();
+
+                    b.Navigation("Value")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GAC.Core.Content.Trim", b =>
                 {
                     b.HasOne("GAC.Core.Content.Vehicle", null)
@@ -1533,6 +2379,25 @@ namespace GAC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.OwnsOne("GAC.Core.Content.LocalizedText", "Highlights", b1 =>
+                        {
+                            b1.Property<int>("TrimId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("TrimId");
+
+                            b1.ToTable("Trims");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TrimId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "ModelLabel", b1 =>
                         {
                             b1.Property<int>("TrimId")
                                 .HasColumnType("int");
@@ -1573,13 +2438,104 @@ namespace GAC.Infrastructure.Migrations
                     b.Navigation("Highlights")
                         .IsRequired();
 
+                    b.Navigation("ModelLabel")
+                        .IsRequired();
+
                     b.Navigation("Name")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.TrimPriceRow", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Trim", null)
+                        .WithMany("PriceRows")
+                        .HasForeignKey("TrimId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Text", b1 =>
+                        {
+                            b1.Property<int>("TrimPriceRowId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("TrimPriceRowId");
+
+                            b1.ToTable("TrimPriceRows");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TrimPriceRowId");
+                        });
+
+                    b.Navigation("Text")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("GAC.Core.Content.Vehicle", b =>
                 {
                     b.OwnsOne("GAC.Core.Content.LocalizedText", "BodyHtml", b1 =>
+                        {
+                            b1.Property<int>("VehicleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("VehicleId");
+
+                            b1.ToTable("Vehicles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VehicleId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "EnquiryLead", b1 =>
+                        {
+                            b1.Property<int>("VehicleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("VehicleId");
+
+                            b1.ToTable("Vehicles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VehicleId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "EnquirySub", b1 =>
+                        {
+                            b1.Property<int>("VehicleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("VehicleId");
+
+                            b1.ToTable("Vehicles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VehicleId");
+                        });
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "EnquiryTitle", b1 =>
                         {
                             b1.Property<int>("VehicleId")
                                 .HasColumnType("int");
@@ -1674,6 +2630,25 @@ namespace GAC.Infrastructure.Migrations
                                 .HasForeignKey("VehicleId");
                         });
 
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "StatsNote", b1 =>
+                        {
+                            b1.Property<int>("VehicleId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("VehicleId");
+
+                            b1.ToTable("Vehicles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VehicleId");
+                        });
+
                     b.OwnsOne("GAC.Core.Content.LocalizedText", "Tagline", b1 =>
                         {
                             b1.Property<int>("VehicleId")
@@ -1696,6 +2671,15 @@ namespace GAC.Infrastructure.Migrations
                     b.Navigation("BodyHtml")
                         .IsRequired();
 
+                    b.Navigation("EnquiryLead")
+                        .IsRequired();
+
+                    b.Navigation("EnquirySub")
+                        .IsRequired();
+
+                    b.Navigation("EnquiryTitle")
+                        .IsRequired();
+
                     b.Navigation("IntroText")
                         .IsRequired();
 
@@ -1706,6 +2690,9 @@ namespace GAC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Name")
+                        .IsRequired();
+
+                    b.Navigation("StatsNote")
                         .IsRequired();
 
                     b.Navigation("Tagline")
@@ -1740,6 +2727,37 @@ namespace GAC.Infrastructure.Migrations
                         });
 
                     b.Navigation("Alt")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.WarrantyLink", b =>
+                {
+                    b.HasOne("GAC.Core.Content.Vehicle", null)
+                        .WithMany("WarrantyLinks")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GAC.Core.Content.LocalizedText", "Label", b1 =>
+                        {
+                            b1.Property<int>("WarrantyLinkId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Ar")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("En")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("WarrantyLinkId");
+
+                            b1.ToTable("WarrantyLinks");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WarrantyLinkId");
+                        });
+
+                    b.Navigation("Label")
                         .IsRequired();
                 });
 
@@ -1799,6 +2817,16 @@ namespace GAC.Infrastructure.Migrations
                     b.Navigation("Sections");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.FeatureSection", b =>
+                {
+                    b.Navigation("Bullets");
+                });
+
+            modelBuilder.Entity("GAC.Core.Content.GalleryTab", b =>
+                {
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.HomePage", b =>
                 {
                     b.Navigation("Slides");
@@ -1809,22 +2837,48 @@ namespace GAC.Infrastructure.Migrations
                     b.Navigation("Children");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.SliderGroup", b =>
+                {
+                    b.Navigation("Slides");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.SpecGroup", b =>
                 {
                     b.Navigation("Rows");
                 });
 
+            modelBuilder.Entity("GAC.Core.Content.Trim", b =>
+                {
+                    b.Navigation("PriceRows");
+                });
+
             modelBuilder.Entity("GAC.Core.Content.Vehicle", b =>
                 {
+                    b.Navigation("Cards");
+
                     b.Navigation("Colors");
 
                     b.Navigation("Features");
 
+                    b.Navigation("GalleryTabs");
+
+                    b.Navigation("Headings");
+
                     b.Navigation("Images");
+
+                    b.Navigation("Quality");
+
+                    b.Navigation("SafetyToggles");
+
+                    b.Navigation("Sliders");
 
                     b.Navigation("SpecGroups");
 
+                    b.Navigation("Stats");
+
                     b.Navigation("Trims");
+
+                    b.Navigation("WarrantyLinks");
                 });
 #pragma warning restore 612, 618
         }

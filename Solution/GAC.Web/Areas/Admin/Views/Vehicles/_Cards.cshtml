@@ -1,0 +1,34 @@
+@model GAC.Core.Content.Vehicle
+<h2>Technology cards</h2>
+<p class="adm-hint">The technology banner image is set in the main form above (&ldquo;Technology banner image&rdquo;). These cards appear below it.</p>
+<div class="adm-picker-grid">
+  @foreach (var c in Model.Cards.OrderBy(x => x.SortOrder))
+  {
+      <div class="adm-picker-item">
+        @if (!string.IsNullOrWhiteSpace(c.ImagePath)) { <img src="@c.ImagePath" class="adm-picker-thumb" alt="" /> }
+        <div>@c.Title.En</div>
+        <form asp-action="MoveCard" method="post" style="display:inline">
+          <input type="hidden" name="cardId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+          <button class="adm-btn">&uarr;</button>
+        </form>
+        <form asp-action="MoveCard" method="post" style="display:inline">
+          <input type="hidden" name="cardId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+          <button class="adm-btn">&darr;</button>
+        </form>
+        <form asp-action="RemoveCard" method="post" style="display:inline" onsubmit="return confirm('Remove card?')">
+          <input type="hidden" name="cardId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <button class="adm-btn adm-btn--danger">Remove</button>
+        </form>
+      </div>
+  }
+</div>
+<form asp-action="AddCard" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="titleEn" placeholder="Title (EN)" /><input name="titleAr" placeholder="Title (AR)" dir="rtl" />
+  <input name="textEn" placeholder="Text (EN)" /><input name="textAr" placeholder="Text (AR)" dir="rtl" />
+  <span style="display:inline-flex;gap:.4rem;align-items:center">
+    <input type="text" name="imagePath" placeholder="Image" data-media-input />
+    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+  </span>
+  <button class="adm-btn">Add card</button>
+</form>

@@ -1,0 +1,65 @@
+@model GAC.Core.Content.Vehicle
+<h2>Sliders</h2>
+@foreach (var g in Model.Sliders.OrderBy(x => x.SortOrder))
+{
+    <div class="adm-card">
+      <h3>@g.Title.En
+        <form asp-action="MoveSlider" method="post" style="display:inline">
+          <input type="hidden" name="sliderId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+          <button class="adm-btn">&uarr;</button>
+        </form>
+        <form asp-action="MoveSlider" method="post" style="display:inline">
+          <input type="hidden" name="sliderId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+          <button class="adm-btn">&darr;</button>
+        </form>
+        <form asp-action="RemoveSlider" method="post" style="display:inline" onsubmit="return confirm('Remove slider and its slides?')">
+          <input type="hidden" name="sliderId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <button class="adm-btn adm-btn--danger">Remove slider</button>
+        </form>
+      </h3>
+      <p class="adm-hint">Eyebrow: @g.Eyebrow.En &mdash; Title: @g.Title.En</p>
+      <table class="adm-table">
+        <thead><tr><th>Order</th><th>Image</th><th>Alt</th><th></th></tr></thead>
+        <tbody>
+          @foreach (var sl in g.Slides.OrderBy(x => x.SortOrder))
+          {
+              <tr>
+                <td>
+                  <form asp-action="MoveSliderSlide" method="post" style="display:inline">
+                    <input type="hidden" name="slideId" value="@sl.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="-1" />
+                    <button class="adm-btn">&uarr;</button>
+                  </form>
+                  <form asp-action="MoveSliderSlide" method="post" style="display:inline">
+                    <input type="hidden" name="slideId" value="@sl.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" /><input type="hidden" name="direction" value="1" />
+                    <button class="adm-btn">&darr;</button>
+                  </form>
+                </td>
+                <td>@if (!string.IsNullOrWhiteSpace(sl.ImagePath)) { <img src="@sl.ImagePath" class="adm-picker-thumb" alt="" /> }</td>
+                <td>@sl.Alt.En</td>
+                <td>
+                  <form asp-action="RemoveSliderSlide" method="post" style="display:inline" onsubmit="return confirm('Remove slide?')">
+                    <input type="hidden" name="slideId" value="@sl.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+                    <button class="adm-btn adm-btn--danger">Remove</button>
+                  </form>
+                </td>
+              </tr>
+          }
+        </tbody>
+      </table>
+      <form asp-action="AddSliderSlide" method="post" class="adm-inline">
+        <input type="hidden" name="sliderGroupId" value="@g.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+          <input type="text" name="imagePath" placeholder="Image" data-media-input />
+          <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+        <input name="altEn" placeholder="Alt (EN)" /><input name="altAr" placeholder="Alt (AR)" dir="rtl" />
+        <button class="adm-btn">Add slide</button>
+      </form>
+    </div>
+}
+<form asp-action="AddSlider" method="post" class="adm-inline">
+  <input type="hidden" name="vehicleId" value="@Model.Id" />
+  <input name="eyebrowEn" placeholder="Eyebrow (EN)" /><input name="eyebrowAr" placeholder="Eyebrow (AR)" dir="rtl" />
+  <input name="titleEn" placeholder="Title (EN)" /><input name="titleAr" placeholder="Title (AR)" dir="rtl" />
+  <button class="adm-btn">Add slider</button>
+</form>

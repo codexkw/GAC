@@ -1,0 +1,40 @@
+@using System.Linq
+@model GAC.Core.Content.Vehicle
+@{
+    var head = Model.Headings.FirstOrDefault(h => h.Key == GAC.Core.Content.SectionKey.Technology);
+    var cards = Model.Cards.OrderBy(c => c.SortOrder).ToList();
+}
+@if (cards.Count > 0 || !string.IsNullOrWhiteSpace(Model.TechBannerImage) || head != null)
+{
+    <section class="mp-section mp-section--grey" id="technology">
+      <div class="container">
+        <partial name="~/Views/Vehicles/_SectionHead.cshtml" model="head" />
+        @if (!string.IsNullOrWhiteSpace(Model.TechBannerImage))
+        {
+            <div class="mp-tech-banner"><img src="@Model.TechBannerImage" alt="@Model.Name.Localize()" /></div>
+        }
+        @if (cards.Count > 0)
+        {
+            <div class="mp-cards">
+              @foreach (var c in cards)
+              {
+                  <article class="mp-card">
+                    @if (!string.IsNullOrWhiteSpace(c.ImagePath))
+                    {
+                        <div class="mp-card__media"><img src="@c.ImagePath" alt="@c.Title.Localize()" /></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(c.Title.Localize()))
+                    {
+                        <h3 class="mp-card__title">@c.Title.Localize()</h3>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(c.Text.Localize()))
+                    {
+                        <p class="mp-card__text">@c.Text.Localize()</p>
+                    }
+                  </article>
+              }
+            </div>
+        }
+      </div>
+    </section>
+}

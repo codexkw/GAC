@@ -1,7 +1,7 @@
 @model GAC.Core.Content.Vehicle
 <h2>Feature sections</h2>
 <table class="adm-table">
-  <thead><tr><th>Order</th><th>Heading</th><th>Layout</th><th></th></tr></thead>
+  <thead><tr><th>Order</th><th>Heading</th><th>Group</th><th>Layout</th><th></th></tr></thead>
   <tbody>
     @foreach (var f in Model.Features.OrderBy(x => x.SortOrder))
     {
@@ -21,6 +21,7 @@
             </form>
           </td>
           <td>@f.Heading.En</td>
+          <td>@f.GroupKey</td>
           <td>@f.Layout</td>
           <td>
             <a asp-area="Admin" asp-action="FeatureEdit" asp-route-vehicleId="@Model.Id" asp-route-id="@f.Id">Edit</a>

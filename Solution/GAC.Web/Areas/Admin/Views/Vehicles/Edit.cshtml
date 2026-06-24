@@ -64,15 +64,63 @@
         <input asp-for="SortOrder" type="number" />
     </div>
 
+    <hr />
+    <h2>Page-level images &amp; enquiry</h2>
+
+    <div class="adm-field">
+        <label asp-for="TechBannerImage">Technology banner image</label>
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input asp-for="TechBannerImage" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Stats note", NameEn = "StatsNote.En", NameAr = "StatsNote.Ar", ValueEn = Model.StatsNote.En, ValueAr = Model.StatsNote.Ar }' />
+
+    <div class="adm-field">
+        <label asp-for="EnquiryBgImage">Enquiry background image</label>
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input asp-for="EnquiryBgImage" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Enquiry title", NameEn = "EnquiryTitle.En", NameAr = "EnquiryTitle.Ar", ValueEn = Model.EnquiryTitle.En, ValueAr = Model.EnquiryTitle.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Enquiry sub", NameEn = "EnquirySub.En", NameAr = "EnquirySub.Ar", ValueEn = Model.EnquirySub.En, ValueAr = Model.EnquirySub.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Enquiry lead", NameEn = "EnquiryLead.En", NameAr = "EnquiryLead.Ar", ValueEn = Model.EnquiryLead.En, ValueAr = Model.EnquiryLead.Ar, Multiline = true }' />
+
     <button type="submit" class="adm-btn">Save</button>
 </form>
 
 @if (!isNew)
 {
-    <partial name="_Images" model="Model" />
-    <partial name="_Features" model="Model" />
+    <nav class="adm-section-nav" aria-label="Vehicle content sections">
+        <a href="#sec-images">Images</a>
+        <a href="#sec-headings">Section headings</a>
+        <a href="#sec-stats">Stats</a>
+        <a href="#sec-sliders">Sliders</a>
+        <a href="#sec-features">Features</a>
+        <a href="#sec-gallery">Gallery</a>
+        <a href="#sec-quality">Quality</a>
+        <a href="#sec-cards">Technology cards</a>
+        <a href="#sec-safety">Safety</a>
+        <a href="#sec-trims">Trims</a>
+        <a href="#sec-warranty">Warranty</a>
+    </nav>
+
+    <section id="sec-images"><partial name="_Images" model="Model" /></section>
+    <section id="sec-headings"><partial name="_SectionHeadings" model="Model" /></section>
+    <section id="sec-stats"><partial name="_Stats" model="Model" /></section>
+    <section id="sec-sliders"><partial name="_Sliders" model="Model" /></section>
+    <section id="sec-features"><partial name="_Features" model="Model" /></section>
+    <section id="sec-gallery"><partial name="_GalleryTabs" model="Model" /></section>
+    <section id="sec-quality"><partial name="_Quality" model="Model" /></section>
+    <section id="sec-cards"><partial name="_Cards" model="Model" /></section>
+    <section id="sec-safety"><partial name="_Safety" model="Model" /></section>
+    <section id="sec-trims"><partial name="_Trims" model="Model" /></section>
+    <section id="sec-warranty"><partial name="_Warranty" model="Model" /></section>
+
     <partial name="_SpecGroups" model="Model" />
     <partial name="_Colors" model="Model" />
-    <partial name="_Trims" model="Model" />
     <partial name="_PickerModal" />
 }
