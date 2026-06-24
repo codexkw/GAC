@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using AngleSharp.Dom;
 using GAC.Infrastructure.Content;
 using Xunit;
@@ -170,7 +170,7 @@ public class BodyHtmlParserTests
     // True when the string contains at least one Arabic-script code point (U+0600-U+06FF).
     // Use \u escapes (not literal Arabic chars) so this is independent of source-file encoding.
     private static bool HasArabic(string? s)
-        => !string.IsNullOrWhiteSpace(s) && s.Any(c => c >= '؀' && c <= 'ۿ');
+        => !string.IsNullOrWhiteSpace(s) && s.Any(c => c >= '\u0600' && c <= '\u06FF');
 
     [Fact]
     public void ParsesArabic_StatsAndFeatures_WithCounts()
