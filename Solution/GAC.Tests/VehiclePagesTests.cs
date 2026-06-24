@@ -18,6 +18,7 @@ public class VehiclePagesTests : IClassFixture<DevWebApplicationFactory>
     [InlineData("/empow-sport")]
     [InlineData("/hyptec-ht")]
     [InlineData("/gs4")]
+    [InlineData("/gn6")]
     public async Task VehiclePages_Render200(string url)
     {
         var res = await _factory.CreateClient().GetAsync(url);
