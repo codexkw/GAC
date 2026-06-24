@@ -30,6 +30,9 @@ public class AdminVehicleService : IAdminVehicleService
             .Include(v => v.SafetyToggles)
             .Include(v => v.WarrantyLinks)
             .Include(v => v.Quality)
+            // Split into one query per collection to avoid a cartesian-explosion timeout on
+            // content-rich cars (same reason as VehicleService.GetBySlugAsync).
+            .AsSplitQuery()
             .FirstOrDefaultAsync(v => v.Id == id, ct);
 
     public async Task<bool> SlugExistsAsync(string slug, int? exceptId = null, CancellationToken ct = default)

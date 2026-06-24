@@ -34,6 +34,12 @@ public class VehicleService : IVehicleService
             .Include(v => v.SafetyToggles)
             .Include(v => v.WarrantyLinks)
             .Include(v => v.Quality)
+            // One query per collection. A single query with ~13 collection JOINs produces a
+            // cartesian explosion (row count = product of every collection's size) that times out
+            // on SQL Server for content-rich cars. AsSplitQuery issues a separate query per
+            // collection instead. NOTE: this only reproduces on a real relational provider —
+            // EF InMemory (used by the unit/integration tests) does not JOIN, so it cannot catch it.
+            .AsSplitQuery()
             .AsNoTracking()
             .Where(v => v.IsVisible && v.Slug == slug)
             .FirstOrDefaultAsync();
