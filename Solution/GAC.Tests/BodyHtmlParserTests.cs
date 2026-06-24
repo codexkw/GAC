@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using AngleSharp.Dom;
 using GAC.Infrastructure.Content;
 using Xunit;
