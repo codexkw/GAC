@@ -2,7 +2,7 @@
 
 **Branch:** `feature/vehicle-content-management` (off `main`, now pushed to `origin`)
 **Repo:** github.com/codexkw/GAC (public)
-**Status as of 2026-06-24:** Phases 1–5 COMPLETE (57/67 tasks), all committed + pushed. **No production-DB write has happened. The live site is UNCHANGED.**
+**Status as of 2026-06-24 (rev. session 2):** Phases 1–5 COMPLETE + render path CUT OVER and verified end-to-end. Full test suite **322/322 green**. **No production-DB write has happened. The live site is UNCHANGED** (old build still deployed; it renders `BodyHtml`). Done since the first handoff: Task 73 (render cutover, keep-gate), Task 74 (marker test), **Task R1 (critical fix — `GetBySlugAsync` now eager-loads the structured graph; without it the new sections rendered empty)**, Task R2 (hermetic end-to-end render guard), Task 97 (hermetic all-cars parity guard). Remaining: docs polish + final whole-branch review + deploy.
 **Plan:** `Solution/docs/superpowers/plans/2026-06-23-vehicle-content-management.md` (67 tasks, 6 phases)
 **Spec:** `Solution/docs/superpowers/specs/2026-06-23-vehicle-content-management-design.md`
 **Detailed per-task ledger (git-ignored scratch):** `.superpowers/sdd/progress.md` — read this for the blow-by-blow record.
@@ -22,7 +22,7 @@ Lets non-technical admins edit **all** vehicle detail-page content (text, images
 - **Phase 1 — Data layer (Tasks 1–12):** 12 new entities/tables (SectionHeading, StatItem, SliderGroup/Slide, FeatureBullet, GalleryTab/Image, QualityBlock, CardItem, SafetyToggle, TrimPriceRow, WarrantyLink) + extended Vehicle/FeatureSection/Trim. Migration `20260623213147_AddVehicleRichSections`. **Guarded SQL `Solution/docs/migrations/2026-06-23-AddVehicleRichSections.sql` is ALREADY APPLIED to the shared prod DB (2026-06-24).**
 - **Phase 2 — Admin backend (Tasks 20–31):** `IAdminVehicleService`/`AdminVehicleService` full CRUD over every section + `Areas/Admin/Controllers/VehiclesController`.
 - **Phase 3 — Admin views (Tasks 40–51):** per-section editor partials (text/image-picker/PDF, EN+AR side by side).
-- **Phase 4 — Render partials (Tasks 60–72):** all public render partials under `Views/Vehicles/` matching the live design + JS hooks. **NOT yet wired into `Detail.cshtml` (that is Task 73, deferred).**
+- **Phase 4 — Render partials (Tasks 60–72):** all public render partials under `Views/Vehicles/` matching the live design + JS hooks. **Now wired into `Detail.cshtml` (Task 73, done) behind the kept per-vehicle gate.**
 - **Phase 5 — Parser & migration (Tasks 80–88):**
   - `GAC.Infrastructure/Content/BodyHtmlParser.cs` — parses one language's `BodyHtml` into entity lists (13 sections). 17 tests.
   - `GAC.Infrastructure/Content/VehicleContentMigrator.cs` — per car: build from EN, positional AR merge, FK/SortOrder wiring. Idempotent (skip if already structured), `force` clears+rebuilds, images from EN only, **never touches `BodyHtml`**, never runs at startup. 6 tests (in-memory DB).
@@ -61,21 +61,23 @@ Implication the owner accepted: gn6's standard sections become editable, but its
 
 ## NEXT STEPS to resume (in order)
 
-1. **Run the backfill against prod (all 10 cars).** This is the owner-authorized one-time data write. Options:
-   - Deploy the Web app, sign in as Admin → `/Admin/ContentMigration` → **Run All**; or
-   - Locally set `GAC_RUN_BACKFILL=1` (uncomment the `Program.cs` hook) and start the app once, then unset; or
-   - Call `VehicleContentMigrator.BackfillAllAsync(db)`.
-   It only adds rows, keeps `BodyHtml`, is idempotent, re-runnable per car (`Run One` + force).
-2. **Task 73 — `Detail.cshtml` render cutover:** wire ALL new render partials; include `_VehicleGallery`/`_Lightbox` exactly once; wire the enquiry section to `FormsController`; resolve the `HasStructuredContent` gate per the cutover decision above.
-3. **Task 74 — all-markers integration test** (needs structured data present from step 1).
-4. **Phase 6 (Tasks 95–101):** parity verification per car, deploy runbook, full-suite gate, and update/remove the now-obsolete `VehicleDetailRenderTests.StructuredContentVehicle_Renders_HeroSection`.
-5. **Final whole-branch code review** (most-capable model) → then `superpowers:finishing-a-development-branch`.
-6. **Deploy** the Web app (the schema is already applied to prod).
+The code is complete and green. What remains is the final review and the **deploy**, in this exact order:
+
+1. **Final whole-branch code review** (most-capable model) → then `superpowers:finishing-a-development-branch`.
+2. **Deploy the Web app FIRST** (schema is already applied to prod). The deploy alone changes nothing visible — every car keeps rendering its `BodyHtml` until backfilled.
+3. **THEN run the backfill** (owner-authorized one-time write): sign in as Admin → `/Admin/ContentMigration` → **Run One** on one car, eyeball its page, then **Run All**. It only adds rows, keeps `BodyHtml`, is idempotent, re-runnable per car.
+   - ⚠️ **Never backfill before the deploy.** The currently-deployed view shares the `HasStructuredContent` gate; backfilling first flips that gate true under the OLD code and renders half-broken live pages. See the run-book's CRITICAL warning.
+4. **Optional fidelity:** to keep gn6 on its full `BodyHtml` (preserving its `#space`/`#dimensions`), simply don't backfill gn6 — the kept gate leaves it on `BodyHtml`. Backfilling gn6 (owner's accepted decision) drops those two custom sections from the structured render.
+
+Already done (no longer pending): Task 73 cutover, Task 74 marker test, the `GetBySlugAsync` eager-load fix (Task R1), the hermetic render + parity guards (R2/97). The old `VehicleDetailRenderTests.StructuredContentVehicle_Renders_HeroSection` was replaced by the hermetic render test.
 
 ---
 
 ## Critical constraints & gotchas (read before resuming)
 
+- **DEPLOY BEFORE BACKFILL (hard ordering rule).** The currently-deployed `Detail.cshtml` gates on `HasStructuredContent` (`Features|SpecGroups|Colors|Trims`) and renders the OLD 2026-06-15 partials when true. The backfill populates `Features`+`Trims` → flips that gate true → the OLD deployed code would render half-broken pages for backfilled cars. So the backfill MUST run only AFTER the new build is deployed. (Earlier handoff text that said "step 1 = run the backfill" was wrong and has been corrected.)
+- **`GetBySlugAsync` eager-loads the full structured graph (Task R1).** This was a missing prerequisite — the public render query previously loaded only `Images/Trims/SpecGroups/Colors/Features`, so the new sections would have rendered empty. It now mirrors `AdminVehicleService.GetAsync`. Guarded by the hermetic `VehicleRenderLoadingTests`.
+- **The integration tests are hermetic where they need structured data.** `VehicleDetailRenderTests` (end-to-end render) and `VehicleRichSectionsParityTests` (all-cars parity) boot the app against an InMemory DB, seed it, and backfill in-memory — they do NOT touch the shared DB and stay green pre-deploy. `VehiclePagesTests`/`HomePageSmokeTests` still smoke the real shared DB (read-only).
 - **Prod DB writes require explicit owner authorization.** The shared prod DB is at `83.229.86.221/GAC`. The connection string + SMTP password live ONLY in gitignored `Solution/GAC.Web/appsettings.Development.json` under `ConnectionStrings:Default`. **NEVER put the DB password on a command line** — read it from that file inside the script (e.g. PowerShell `ConvertFrom-Json`).
 - **The AddVehicleRichSections schema is ALREADY APPLIED to prod** (2026-06-24, real stamp `20260623213147_AddVehicleRichSections`). Don't re-apply for the current DB. Never `dotnet ef database update` on prod (history-gap rule) — use the guarded SQL only on a fresh DB.
 - **Apps don't auto-migrate.** Deploying does not change the DB.
