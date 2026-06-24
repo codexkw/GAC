@@ -153,4 +153,60 @@ public class BodyHtmlParserTests
         Assert.False(string.IsNullOrWhiteSpace(bg));
         Assert.False(string.IsNullOrWhiteSpace(title));
     }
+
+    // Loads the embedded real-production Arabic emkoo body (resource name ends "Fixtures.emkoo-ar.html").
+    internal static string LoadArFixture()
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        var name = asm.GetManifestResourceNames()
+            .Single(n => n.EndsWith("Fixtures.emkoo-ar.html", StringComparison.Ordinal));
+        using var s = asm.GetManifestResourceStream(name)!;
+        using var r = new StreamReader(s);
+        return r.ReadToEnd();
+    }
+
+    private static IDocument ArDoc() => BodyHtmlParser.ParseHtml(LoadArFixture());
+
+    // True when the string contains at least one Arabic-script code point (U+0600-U+06FF).
+    // Use \u escapes (not literal Arabic chars) so this is independent of source-file encoding.
+    private static bool HasArabic(string? s)
+        => !string.IsNullOrWhiteSpace(s) && s.Any(c => c >= '؀' && c <= 'ۿ');
+
+    [Fact]
+    public void ParsesArabic_StatsAndFeatures_WithCounts()
+    {
+        var stats = BodyHtmlParser.ParseStats(ArDoc());
+        Assert.Equal(4, stats.Count);
+        // Parser is language-blind: AR text lands in the .En slot. Assert it is real Arabic,
+        // not a brittle exact-word match (the real first stat is "fuel consumption", not "power").
+        Assert.True(HasArabic(stats[0].Label.En), "first stat label should contain Arabic script");
+        Assert.True(HasArabic(stats[0].Value.En), "first stat value should contain Arabic script");
+
+        var feats = BodyHtmlParser.ParseFeatures(ArDoc());
+        Assert.Equal(6, feats.Count);
+        var firstDesign = feats.First(f => f.GroupKey == GAC.Core.Content.FeatureGroup.Design);
+        Assert.True(HasArabic(firstDesign.Heading.En), "design feature heading should contain Arabic script");
+        Assert.False(string.IsNullOrWhiteSpace(feats[0].Bullets[0].Text.En));
+        Assert.True(HasArabic(feats[0].Bullets[0].Text.En), "first bullet text should contain Arabic script");
+    }
+
+    [Fact]
+    public void EnAndAr_ProduceSamePositionalCounts_ForMerge()
+    {
+        var en = BodyHtmlParser.ParseAll(Doc());
+        var ar = BodyHtmlParser.ParseAll(ArDoc());
+
+        // Full-structure positional parity — the real EN/AR bodies come from the same prod row,
+        // so every collection must line up for the migrator's positional EN→AR merge to be safe.
+        Assert.Equal(en.Stats.Count, ar.Stats.Count);
+        Assert.Equal(en.Sliders.Count, ar.Sliders.Count);
+        Assert.Equal(en.Features.Count, ar.Features.Count);
+        Assert.Equal(en.GalleryTabs.Count, ar.GalleryTabs.Count);
+        Assert.Equal(en.GalleryTabs.Sum(t => t.Images.Count), ar.GalleryTabs.Sum(t => t.Images.Count));
+        Assert.Equal(en.Cards.Count, ar.Cards.Count);
+        Assert.Equal(en.Safety.Count, ar.Safety.Count);
+        // bullet counts line up per feature so positional EN/AR bullet merge is safe
+        for (var i = 0; i < en.Features.Count; i++)
+            Assert.Equal(en.Features[i].Bullets.Count, ar.Features[i].Bullets.Count);
+    }
 }

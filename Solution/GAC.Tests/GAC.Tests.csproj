@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Fixtures\emkoo.html" />
+    <EmbeddedResource Include="Fixtures\emkoo-ar.html" />
   </ItemGroup>
 
 </Project>
