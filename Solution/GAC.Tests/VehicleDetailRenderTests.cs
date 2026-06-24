@@ -75,5 +75,7 @@ public class VehicleDetailRenderTests : IClassFixture<StructuredRenderFactory>
         Assert.Contains("mp-trim__name", html);                    // trims
         Assert.Contains("id=\"warranty\"", html);                  // warranty
         Assert.Contains("id=\"enquiry\"", html);                   // enquiry
+        Assert.Contains("/models/emkoo/enquiry", html);            // enquiry form posts to SubmitEnquiry
+        Assert.Contains("__RequestVerificationToken", html);       // anti-forgery token rendered
     }
 }
