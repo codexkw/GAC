@@ -34,4 +34,35 @@ public class VehiclePagesTests : IClassFixture<DevWebApplicationFactory>
         var res = await _factory.CreateClient().GetAsync(url);
         Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
     }
+
+    [Fact]
+    public async Task Emkoo_RendersAllSectionMarkers()
+    {
+        var res = await _factory.CreateClient().GetAsync("/emkoo");
+        Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+        var html = await res.Content.ReadAsStringAsync();
+
+        Assert.Contains("mp-hero", html);            // hero
+        Assert.Contains("mp-subnav", html);          // jump nav
+        Assert.Contains("id=\"exterior\"", html);    // overview/stats
+        Assert.Contains("mp-stat__value", html);     // stats values
+        Assert.Contains("data-slider", html);        // sliders
+        Assert.Contains("id=\"design\"", html);      // design tabs
+        Assert.Contains("data-tabs-wrap", html);     // tab contract
+        Assert.Contains("data-tab-panel=\"d1\"", html);
+        Assert.Contains("id=\"interior\"", html);    // 2nd slider wrap
+        Assert.Contains("id=\"gallery\"", html);     // gallery
+        Assert.Contains("mp-gshot", html);           // gallery shots
+        Assert.Contains("data-lightbox", html);      // single lightbox
+        Assert.Contains("id=\"technology\"", html);  // technology
+        Assert.Contains("mp-card__title", html);     // tech cards
+        Assert.Contains("id=\"performance\"", html); // performance tabs
+        Assert.Contains("data-tab-panel=\"p1\"", html);
+        Assert.Contains("id=\"safety\"", html);      // safety toggles
+        Assert.Contains("mp-stoggle", html);
+        Assert.Contains("id=\"trims\"", html);       // trims
+        Assert.Contains("mp-trim__name", html);
+        Assert.Contains("id=\"warranty\"", html);    // warranty
+        Assert.Contains("id=\"enquiry\"", html);     // enquiry
+    }
 }
