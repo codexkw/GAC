@@ -6,6 +6,8 @@
 @{
     var specBtn = !string.IsNullOrWhiteSpace(Model.SpecPdf);
     var sliders = Model.Sliders.OrderBy(s => s.SortOrder).ToList();
+    // The fixed GAC design has exactly two slider groups: exterior (after stats) and interior
+    // (after design). Any 3rd+ slider group is intentionally not rendered.
     var exteriorSlider = sliders.ElementAtOrDefault(0);
     var interiorSlider = sliders.ElementAtOrDefault(1);
 }

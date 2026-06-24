@@ -36,6 +36,12 @@ public class VehiclePagesTests : IClassFixture<DevWebApplicationFactory>
         Assert.Equal(HttpStatusCode.NotFound, res.StatusCode);
     }
 
+    // Page-level marker guard against the REAL shared DB: the /emkoo page must emit every section
+    // marker. These markers exist in BOTH render states — the BodyHtml fallback today and the
+    // structured master template post-backfill — so this guards the live page in either state (it
+    // catches a truncated/corrupted body or a post-deploy section drop). It does NOT prove WHICH
+    // path rendered; the structured-render-specific path is verified hermetically by
+    // VehicleDetailRenderTests.
     [Fact]
     public async Task Emkoo_RendersAllSectionMarkers()
     {

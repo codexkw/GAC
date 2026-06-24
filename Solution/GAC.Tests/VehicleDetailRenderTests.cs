@@ -64,7 +64,7 @@ public class VehicleDetailRenderTests : IClassFixture<StructuredRenderFactory>
 
         // Markers that only appear when the structured branch renders WITH eager-loaded data:
         Assert.Contains("mp-hero", html);                          // hero
-        Assert.Contains("mp-subnav", html);                        // subnav (headings)
+        Assert.Contains("mp-subnav", html);                        // subnav partial resolved (static markup)
         Assert.Contains("mp-stat__value", html);                   // stats loaded + rendered
         Assert.Contains("id=\"interior\"", html);                  // 2nd slider wrap (Sliders loaded)
         Assert.Contains("data-tab-panel=\"d1\"", html);            // design feature tab (Features)

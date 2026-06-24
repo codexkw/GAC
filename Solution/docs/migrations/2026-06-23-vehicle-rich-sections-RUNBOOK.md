@@ -18,7 +18,9 @@ on prod (history-gap rule) — use the guarded SQL.
 fallback (owner decision 2026-06-24) — it does NOT remove it. A car renders the new structured master
 template when it has structured rows, else its `BodyHtml`. The deployed build also includes the fix to
 `VehicleService.GetBySlugAsync` so the public render eager-loads the full structured graph (without it,
-the new sections render empty).
+the new sections render empty). **Gating condition: the build you deploy in step 2 MUST contain this
+`GetBySlugAsync` eager-load fix** — if an older build (new partials, old query) were deployed, every
+backfilled car would render empty sections.
 
 ## 1. Apply the schema (guarded, history-stamped)
 - STATUS: **already applied to the shared GAC DB (83.229.86.221/GAC) on 2026-06-24.** The 12 new
