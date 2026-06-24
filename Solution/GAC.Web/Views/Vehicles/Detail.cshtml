@@ -1,9 +1,13 @@
+@using System.Linq
 @using GAC.Web.Infrastructure
 @model GAC.Core.Content.Vehicle
 @{ Layout = "_Layout"; }
 
 @{
     var specBtn = !string.IsNullOrWhiteSpace(Model.SpecPdf);
+    var sliders = Model.Sliders.OrderBy(s => s.SortOrder).ToList();
+    var exteriorSlider = sliders.ElementAtOrDefault(0);
+    var interiorSlider = sliders.ElementAtOrDefault(1);
 }
 
 @if (VehicleContent.HasStructuredContent(Model))
@@ -16,10 +20,35 @@
     {
         <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a></div></section>
     }
-    <partial name="~/Views/Vehicles/_VehicleFeatures.cshtml" model="Model" />
-    <partial name="~/Views/Vehicles/_VehicleSpecs.cshtml" model="Model" />
-    <partial name="~/Views/Vehicles/_VehicleColors.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleSubnav.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleStats.cshtml" model="Model" />
+
+    @if (exteriorSlider != null)
+    {
+        <section class="mp-slider-wrap">
+          <partial name="~/Views/Vehicles/_VehicleSlider.cshtml" model="exteriorSlider" />
+        </section>
+    }
+
+    <partial name="~/Views/Vehicles/_VehicleDesign.cshtml" model="Model" />
+
+    @if (interiorSlider != null)
+    {
+        <section class="mp-slider-wrap" id="interior">
+          <partial name="~/Views/Vehicles/_VehicleSlider.cshtml" model="interiorSlider" />
+        </section>
+    }
+
+    <partial name="~/Views/Vehicles/_VehicleGallery.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleQuality.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleTechnology.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehiclePerformance.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleSafety.cshtml" model="Model" />
     <partial name="~/Views/Vehicles/_VehicleTrims.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleWarranty.cshtml" model="Model" />
+    <partial name="~/Views/Vehicles/_VehicleEnquiry.cshtml" model="Model" />
+
+    <partial name="~/Views/Vehicles/_Lightbox.cshtml" model="Model" />
 }
 else
 {
