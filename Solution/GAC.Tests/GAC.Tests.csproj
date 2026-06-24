@@ -29,6 +29,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Fixtures\emkoo.html" />
     <EmbeddedResource Include="Fixtures\emkoo-ar.html" />
+    <EmbeddedResource Include="Fixtures\gn6-variant.html" />
   </ItemGroup>
 
 </Project>

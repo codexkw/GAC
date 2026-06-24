@@ -209,4 +209,26 @@ public class BodyHtmlParserTests
         for (var i = 0; i < en.Features.Count; i++)
             Assert.Equal(en.Features[i].Bullets.Count, ar.Features[i].Bullets.Count);
     }
+
+    private static IDocument Gn6Doc()
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        var name = asm.GetManifestResourceNames().Single(n => n.EndsWith("Fixtures.gn6-variant.html", StringComparison.Ordinal));
+        using var s = asm.GetManifestResourceStream(name)!;
+        using var r = new StreamReader(s);
+        return BodyHtmlParser.ParseHtml(r.ReadToEnd());
+    }
+
+    [Fact]
+    public void Parser_IsCountTolerant_ForGn6Variant()
+    {
+        var d = Gn6Doc();
+        Assert.Equal(8, BodyHtmlParser.ParseStats(d).Count);                       // not clamped to 4
+        var tabs = BodyHtmlParser.ParseGalleryTabs(d);
+        Assert.Equal(3, tabs.Count);
+        Assert.Equal(13, tabs.Sum(t => t.Images.Count));                           // not clamped to 15
+        var (banner, cards) = BodyHtmlParser.ParseTechnology(d);
+        Assert.False(string.IsNullOrWhiteSpace(banner));
+        Assert.Equal(6, cards.Count);                                              // not clamped to 3
+    }
 }
