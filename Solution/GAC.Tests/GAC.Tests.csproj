@@ -26,4 +26,8 @@
     <ProjectReference Include="..\GAC.Infrastructure\GAC.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Fixtures\emkoo.html" />
+  </ItemGroup>
+
 </Project>
