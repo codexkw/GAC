@@ -9,6 +9,7 @@ public interface IAdminVehicleService
     Task<bool> SlugExistsAsync(string slug, int? exceptId = null, CancellationToken ct = default);
     Task<int> CreateAsync(Vehicle vehicle, CancellationToken ct = default);          // returns new Id
     Task<bool> UpdateAsync(Vehicle vehicle, CancellationToken ct = default);         // scalar + localized fields
+    Task<bool> UpdatePreviewLinkAsync(int id, string? link, CancellationToken ct = default); // vehicle-level Preview button link (SpecPdf)
     Task<bool> DeleteAsync(int id, CancellationToken ct = default);
     Task<bool> MoveAsync(int id, int direction, CancellationToken ct = default);     // -1 up, +1 down (swaps SortOrder)
     Task<int> AddImageAsync(int vehicleId, string path, VehicleImageKind kind, CancellationToken ct = default);

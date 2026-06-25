@@ -32,14 +32,9 @@
         <input asp-for="PriceFrom" type="number" step="any" />
     </div>
 
-    <div class="adm-field">
-        <label asp-for="SpecPdf">Preview button link</label>
-        <span class="adm-hint">Sets the &ldquo;Preview&rdquo; button shown under the hero on the model page. Paste any URL, or use Choose to pick an uploaded PDF. Leave blank to hide the button.</span>
-        <span style="display:inline-flex;gap:.4rem;align-items:center">
-            <input asp-for="SpecPdf" data-media-input placeholder="https://… or /uploads/file.pdf" />
-            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
-        </span>
-    </div>
+    @* Preview button link is edited by its own link-only form below (sec-preview);
+       kept here as hidden so saving the main form never wipes it. *@
+    <input type="hidden" asp-for="SpecPdf" />
 
     <div class="adm-field">
         <label asp-for="BrochurePdf">Brochure PDF</label>
@@ -95,7 +90,20 @@
 
 @if (!isNew)
 {
+    <section id="sec-preview" class="adm-card">
+      <h2>Preview button</h2>
+      <form method="post" asp-action="UpdatePreviewLink" class="adm-field">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <span class="adm-hint">The &ldquo;Preview&rdquo; button shown under the hero on the model page. Paste any link (URL). Leave blank to hide the button.</span>
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+          <input name="link" type="text" value="@Model.SpecPdf" placeholder="https://…" style="min-width:22rem" />
+          <button type="submit" class="adm-btn">Save</button>
+        </span>
+      </form>
+    </section>
+
     <nav class="adm-section-nav" aria-label="Vehicle content sections">
+        <a href="#sec-preview">Preview</a>
         <a href="#sec-images">Images</a>
         <a href="#sec-headings">Section headings</a>
         <a href="#sec-stats">Stats</a>

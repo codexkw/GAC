@@ -72,6 +72,15 @@ public class AdminVehicleService : IAdminVehicleService
         return true;
     }
 
+    public async Task<bool> UpdatePreviewLinkAsync(int id, string? link, CancellationToken ct = default)
+    {
+        var e = await _db.Vehicles.FirstOrDefaultAsync(v => v.Id == id, ct);
+        if (e is null) return false;
+        e.SpecPdf = string.IsNullOrWhiteSpace(link) ? null : link.Trim();
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
     {
         var v = await _db.Vehicles.FindAsync([id], ct);

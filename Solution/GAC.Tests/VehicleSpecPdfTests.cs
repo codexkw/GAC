@@ -30,6 +30,24 @@ public class VehicleSpecPdfTests
 
         Assert.Equal("/uploads/gs4-spec.pdf", (await db.Vehicles.FindAsync(1))!.SpecPdf);
     }
+
+    [Fact]
+    public async Task UpdatePreviewLinkAsync_Sets_Trims_And_Clears()
+    {
+        var db = NewDb(nameof(UpdatePreviewLinkAsync_Sets_Trims_And_Clears));
+        db.Vehicles.Add(new Vehicle { Id = 1, Slug = "emkoo", Name = new LocalizedText { En = "EMKOO" } });
+        await db.SaveChangesAsync();
+        var svc = new AdminVehicleService(db, new NoopSanitizer());
+
+        Assert.True(await svc.UpdatePreviewLinkAsync(1, "  https://example.com/preview  "));
+        Assert.Equal("https://example.com/preview", (await db.Vehicles.FindAsync(1))!.SpecPdf);
+
+        // Blank clears the link (hides the Preview button).
+        Assert.True(await svc.UpdatePreviewLinkAsync(1, "   "));
+        Assert.Null((await db.Vehicles.FindAsync(1))!.SpecPdf);
+
+        Assert.False(await svc.UpdatePreviewLinkAsync(404, "x"));
+    }
 }
 
 public class VehicleSpecPdfRenderTests : IClassFixture<DevWebApplicationFactory>

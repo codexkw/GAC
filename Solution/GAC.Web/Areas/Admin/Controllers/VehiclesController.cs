@@ -44,6 +44,9 @@ public class VehiclesController : Controller
         return RedirectToAction(nameof(Edit), new { id = vehicle.Id });
     }
 
+    [HttpPost] public async Task<IActionResult> UpdatePreviewLink(int id, string? link)
+    { await _svc.UpdatePreviewLinkAsync(id, link); TempData["Flash"] = "Preview link saved."; return RedirectToAction(nameof(Edit), new { id }); }
+
     [HttpPost] public async Task<IActionResult> Delete(int id)
     { await _svc.DeleteAsync(id); TempData["Flash"] = "Vehicle deleted."; return RedirectToAction(nameof(Index)); }
 
