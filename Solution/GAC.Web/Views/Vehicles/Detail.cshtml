@@ -20,7 +20,7 @@
     <partial name="~/Views/Vehicles/_VehicleHero.cshtml" model="Model" />
     @if (specBtn)
     {
-        <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a></div></section>
+        <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Preview"]</a></div></section>
     }
     <partial name="~/Views/Vehicles/_VehicleSubnav.cshtml" model="Model" />
     <partial name="~/Views/Vehicles/_VehicleStats.cshtml" model="Model" />
@@ -56,7 +56,7 @@ else
 {
     @if (specBtn)
     {
-        <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Specifications"]</a></div></section>
+        <section class="mp-spec-cta"><div class="container"><a class="btn btn--primary" href="@Model.SpecPdf" target="_blank" rel="noopener">@L["Preview"]</a></div></section>
     }
     @Html.Raw(Model.BodyHtml.Localize())
 }

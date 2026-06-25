@@ -33,9 +33,10 @@
     </div>
 
     <div class="adm-field">
-        <label asp-for="SpecPdf">Specifications PDF</label>
+        <label asp-for="SpecPdf">Preview button link</label>
+        <span class="adm-hint">Sets the &ldquo;Preview&rdquo; button shown under the hero on the model page. Paste any URL, or use Choose to pick an uploaded PDF. Leave blank to hide the button.</span>
         <span style="display:inline-flex;gap:.4rem;align-items:center">
-            <input asp-for="SpecPdf" data-media-input />
+            <input asp-for="SpecPdf" data-media-input placeholder="https://… or /uploads/file.pdf" />
             <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
         </span>
     </div>
