@@ -16,10 +16,25 @@ public class SmtpEmailSender : IEmailSender
     public SmtpEmailSender(IOptions<SmtpOptions> opt, ILogger<SmtpEmailSender> log)
     { _opt = opt.Value; _log = log; }
 
+    /// <summary>
+    /// Splits the configured notify list (comma- or semicolon-separated) into individual
+    /// recipient addresses, trimming whitespace and dropping blanks. Falls back to FromEmail
+    /// when no notify address is configured.
+    /// </summary>
+    public static IReadOnlyList<string> ParseRecipients(string? adminNotify, string? fromEmail)
+    {
+        var source = string.IsNullOrWhiteSpace(adminNotify) ? fromEmail : adminNotify;
+        if (string.IsNullOrWhiteSpace(source)) return Array.Empty<string>();
+        return source
+            .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .ToList();
+    }
+
     public async Task SendLeadNotificationAsync(Lead lead, string formTitle, CancellationToken ct = default)
     {
-        var to = string.IsNullOrWhiteSpace(_opt.AdminNotifyEmail) ? _opt.FromEmail : _opt.AdminNotifyEmail;
-        if (!_opt.Enabled || string.IsNullOrWhiteSpace(_opt.Host) || string.IsNullOrWhiteSpace(to))
+        var recipients = ParseRecipients(_opt.AdminNotifyEmail, _opt.FromEmail);
+        if (!_opt.Enabled || string.IsNullOrWhiteSpace(_opt.Host) || recipients.Count == 0)
         {
             _log.LogInformation("SMTP disabled or unconfigured — skipping lead notification for {FormType}.", lead.FormType);
             return;
@@ -29,7 +44,7 @@ public class SmtpEmailSender : IEmailSender
         {
             var msg = new MimeMessage();
             msg.From.Add(new MailboxAddress(_opt.FromName, _opt.FromEmail));
-            msg.To.Add(MailboxAddress.Parse(to));
+            foreach (var r in recipients) msg.To.Add(MailboxAddress.Parse(r));
             if (!string.IsNullOrWhiteSpace(lead.Email))
                 msg.ReplyTo.Add(new MailboxAddress("", lead.Email));
             msg.Subject = $"New {formTitle} enquiry — {lead.Name}";
@@ -52,7 +67,7 @@ public class SmtpEmailSender : IEmailSender
                 await client.AuthenticateAsync(_opt.Username, _opt.Password, ct);
             await client.SendAsync(msg, ct);
             await client.DisconnectAsync(true, CancellationToken.None);
-            _log.LogInformation("Lead notification sent for {FormType} to {To}.", lead.FormType, to);
+            _log.LogInformation("Lead notification sent for {FormType} to {To}.", lead.FormType, string.Join(", ", recipients));
         }
         catch (Exception ex)
         {
