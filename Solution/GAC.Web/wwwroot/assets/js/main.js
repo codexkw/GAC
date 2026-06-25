@@ -146,13 +146,40 @@
     });
   }
 
-  /* ---------- Header scroll-shrink (collapse utility + brand rows) ---------- */
+  /* ---------- Header scroll-shrink (collapse utility + brand rows) ----------
+     rAF-throttled with a hysteresis dead-zone: shrink past SHRINK_AT, expand
+     only below EXPAND_AT. A single threshold made the 66px collapse flip-flop
+     when the scroll position hovered near it, which read as menu "stutter". */
   const gacHeader = document.querySelector('[data-header]');
   if (gacHeader) {
-    const onScroll = () => gacHeader.classList.toggle('is-shrunk', window.scrollY > 120);
-    onScroll();
+    const SHRINK_AT = 140, EXPAND_AT = 60;
+    let shrunk = false, ticking = false;
+    const apply = () => {
+      const y = window.scrollY;
+      if (!shrunk && y > SHRINK_AT) { shrunk = true; gacHeader.classList.add('is-shrunk'); }
+      else if (shrunk && y < EXPAND_AT) { shrunk = false; gacHeader.classList.remove('is-shrunk'); }
+      ticking = false;
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
+    apply();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
+
+  /* ---------- Smooth in-page anchor jumps (replaces removed CSS smooth-scroll) ----------
+     Keeps subnav/back-to-top anchor clicks smooth while leaving wheel/touch
+     scrolling native. Defensive: only same-page links to an existing element. */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href');
+    if (!id || id === '#') return;            // skip placeholder/menu-tab anchors
+    let target = null;
+    try { target = document.querySelector(id); } catch (_) { return; } // guard bad selectors
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.pushState(null, '', id);
+  });
 
   /* ---------- MODELS mega-menu filter ---------- */
   document.querySelectorAll('[data-mm]').forEach((mm) => {

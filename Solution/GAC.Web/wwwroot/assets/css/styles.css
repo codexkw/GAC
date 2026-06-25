@@ -46,7 +46,11 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+/* No global scroll-behavior: smooth — it animates every wheel scroll, and when
+   the sticky header collapses 66px mid-animation the layout shift fights the
+   scroll, reading as menu jump/stutter on desktop. Native scroll is crisp.
+   Smooth in-page anchor jumps are restored via JS (smooth-anchor handler). */
+html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   font-family: var(--font-sans);
