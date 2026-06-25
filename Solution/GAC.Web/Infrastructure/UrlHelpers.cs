@@ -1,9 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using GAC.Core.Content;
 
 namespace GAC.Web.Infrastructure;
 
 public static class UrlHelpers
 {
+    /// <summary>Friendly enum label from its [Display(Name)] (falls back to the member name).
+    /// Keeps admin list labels in sync with the GetEnumSelectList dropdown.</summary>
+    public static string DisplayName(this Enum value)
+    {
+        var member = value.GetType().GetMember(value.ToString()).FirstOrDefault();
+        return member?.GetCustomAttribute<DisplayAttribute>()?.Name ?? value.ToString();
+    }
+
     /// <summary>Defensively normalize a stored link to a clean app path (handles legacy ".html").</summary>
     public static string NormalizeUrl(string? url)
     {

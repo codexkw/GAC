@@ -1,13 +1,19 @@
+@using GAC.Web.Infrastructure
 @model GAC.Core.Content.Vehicle
 
 <h2>Images</h2>
+<p class="adm-hint">
+    <strong>Banner (detail page)</strong> = the large hero image on the model page.
+    <strong>Menu thumbnail</strong> = the small image in the menu / model strip.
+    If no menu thumbnail is set, the banner image is used for both.
+</p>
 
 <div class="adm-picker-grid">
     @foreach (var img in Model.Images.OrderBy(i => i.SortOrder))
     {
         <div class="adm-picker-item">
             <img src="@img.Path" class="adm-picker-thumb" alt="" />
-            <div>@img.Kind</div>
+            <div>@img.Kind.DisplayName()</div>
             <form asp-action="MoveImage" method="post" style="display:inline">
                 <input type="hidden" name="imageId" value="@img.Id" />
                 <input type="hidden" name="vehicleId" value="@Model.Id" />
