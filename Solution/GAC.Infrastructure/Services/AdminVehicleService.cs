@@ -255,6 +255,20 @@ public class AdminVehicleService : IAdminVehicleService
         return trim.Id;
     }
 
+    public async Task<bool> UpdateTrimAsync(Trim trim, CancellationToken ct = default)
+    {
+        var existing = await _db.Set<Trim>().FirstOrDefaultAsync(t => t.Id == trim.Id, ct);
+        if (existing is null) return false;
+        // Edit only the fields the admin trim form exposes; SortOrder, VehicleId and
+        // PriceRows are managed separately and must survive a field edit.
+        existing.Name = trim.Name;
+        existing.ModelLabel = trim.ModelLabel;
+        existing.ImagePath = trim.ImagePath;
+        existing.SpecPdf = trim.SpecPdf;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     public async Task<bool> RemoveTrimAsync(int trimId, CancellationToken ct = default)
         => await RemoveByIdAsync<Trim>(trimId, ct);
 

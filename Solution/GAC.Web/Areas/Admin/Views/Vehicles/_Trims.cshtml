@@ -18,6 +18,20 @@
         </form>
       </h3>
       @if (!string.IsNullOrWhiteSpace(t.ImagePath)) { <img src="@t.ImagePath" class="adm-picker-thumb" alt="" /> }
+      <form asp-action="UpdateTrim" method="post" class="adm-inline">
+        <input type="hidden" name="trimId" value="@t.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+        <input name="modelLabelEn" value="@t.ModelLabel.En" placeholder="Model label (EN)" /><input name="modelLabelAr" value="@t.ModelLabel.Ar" placeholder="Model label (AR)" dir="rtl" />
+        <input name="nameEn" value="@t.Name.En" placeholder="Name (EN)" /><input name="nameAr" value="@t.Name.Ar" placeholder="Name (AR)" dir="rtl" />
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+          <input type="text" name="imagePath" value="@t.ImagePath" placeholder="Image" data-media-input />
+          <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+          <input type="text" name="specPdf" value="@t.SpecPdf" placeholder="Spec PDF (optional)" data-media-input />
+          <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+        <button class="adm-btn">Save trim</button>
+      </form>
       <table class="adm-table">
         <thead><tr><th>Order</th><th>Price line</th><th></th></tr></thead>
         <tbody>

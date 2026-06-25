@@ -116,6 +116,19 @@ public class VehiclesController : Controller
         });
         return RedirectToAction(nameof(Edit), new { id = vehicleId });
     }
+    [HttpPost] public async Task<IActionResult> UpdateTrim(int trimId, int vehicleId, string? nameEn, string? nameAr, string? modelLabelEn, string? modelLabelAr, string? imagePath, string? specPdf)
+    {
+        await _svc.UpdateTrimAsync(new Trim
+        {
+            Id = trimId,
+            Name = new() { En = nameEn, Ar = nameAr },
+            ModelLabel = new() { En = modelLabelEn, Ar = modelLabelAr },
+            ImagePath = imagePath,
+            SpecPdf = specPdf
+        });
+        TempData["Flash"] = "Trim saved.";
+        return RedirectToAction(nameof(Edit), new { id = vehicleId });
+    }
     [HttpPost] public async Task<IActionResult> RemoveTrim(int trimId, int vehicleId)
     { await _svc.RemoveTrimAsync(trimId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveTrim(int trimId, int vehicleId, int direction)

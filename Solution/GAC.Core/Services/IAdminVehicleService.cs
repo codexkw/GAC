@@ -34,6 +34,7 @@ public interface IAdminVehicleService
     Task<bool> MoveColorAsync(int colorId, int direction, CancellationToken ct = default);
     // Trims
     Task<int> AddTrimAsync(int vehicleId, Trim trim, CancellationToken ct = default);
+    Task<bool> UpdateTrimAsync(Trim trim, CancellationToken ct = default);
     Task<bool> RemoveTrimAsync(int trimId, CancellationToken ct = default);
     Task<bool> MoveTrimAsync(int trimId, int direction, CancellationToken ct = default);
 
