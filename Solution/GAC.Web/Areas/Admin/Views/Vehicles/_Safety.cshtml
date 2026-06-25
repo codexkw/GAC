@@ -20,6 +20,17 @@
       @if (!string.IsNullOrWhiteSpace(s.ImagePath)) { <img src="@s.ImagePath" class="adm-picker-thumb" alt="" /> }
       <p><strong>Strap:</strong> @s.Strap.En</p>
       <p>@s.Content.En</p>
+      <form asp-action="UpdateSafetyToggle" method="post" class="adm-inline">
+        <input type="hidden" name="toggleId" value="@s.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+        <input name="titleEn" value="@s.Title.En" placeholder="Title (EN)" /><input name="titleAr" value="@s.Title.Ar" placeholder="Title (AR)" dir="rtl" />
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+          <input type="text" name="imagePath" value="@s.ImagePath" placeholder="Image" data-media-input />
+          <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+        <input name="strapEn" value="@s.Strap.En" placeholder="Strap (EN)" /><input name="strapAr" value="@s.Strap.Ar" placeholder="Strap (AR)" dir="rtl" />
+        <input name="contentEn" value="@s.Content.En" placeholder="Content (EN)" /><input name="contentAr" value="@s.Content.Ar" placeholder="Content (AR)" dir="rtl" />
+        <button class="adm-btn">Save safety toggle</button>
+      </form>
     </div>
 }
 <form asp-action="AddSafetyToggle" method="post" class="adm-inline">

@@ -19,6 +19,16 @@
           <input type="hidden" name="cardId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
           <button class="adm-btn adm-btn--danger">Remove</button>
         </form>
+        <form asp-action="UpdateCard" method="post" class="adm-inline">
+          <input type="hidden" name="cardId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <input name="titleEn" value="@c.Title.En" placeholder="Title (EN)" /><input name="titleAr" value="@c.Title.Ar" placeholder="Title (AR)" dir="rtl" />
+          <input name="textEn" value="@c.Text.En" placeholder="Text (EN)" /><input name="textAr" value="@c.Text.Ar" placeholder="Text (AR)" dir="rtl" />
+          <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input type="text" name="imagePath" value="@c.ImagePath" placeholder="Image" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+          </span>
+          <button class="adm-btn">Save card</button>
+        </form>
       </div>
   }
 </div>

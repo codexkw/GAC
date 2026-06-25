@@ -12,6 +12,7 @@ public interface IAdminVehicleService
     Task<bool> DeleteAsync(int id, CancellationToken ct = default);
     Task<bool> MoveAsync(int id, int direction, CancellationToken ct = default);     // -1 up, +1 down (swaps SortOrder)
     Task<int> AddImageAsync(int vehicleId, string path, VehicleImageKind kind, CancellationToken ct = default);
+    Task<bool> UpdateImageAsync(int imageId, string path, VehicleImageKind kind, CancellationToken ct = default);
     Task<bool> RemoveImageAsync(int imageId, CancellationToken ct = default);
     Task<bool> MoveImageAsync(int imageId, int direction, CancellationToken ct = default);
 
@@ -30,6 +31,7 @@ public interface IAdminVehicleService
     Task<bool> RemoveSpecRowAsync(int rowId, CancellationToken ct = default);
     // Colours
     Task<int> AddColorAsync(int vehicleId, LocalizedText name, string hex, string? imagePath, CancellationToken ct = default);
+    Task<bool> UpdateColorAsync(int colorId, LocalizedText name, string hex, string? imagePath, CancellationToken ct = default);
     Task<bool> RemoveColorAsync(int colorId, CancellationToken ct = default);
     Task<bool> MoveColorAsync(int colorId, int direction, CancellationToken ct = default);
     // Trims
@@ -51,6 +53,7 @@ public interface IAdminVehicleService
     Task<bool> RemoveSliderAsync(int sliderId, CancellationToken ct = default);
     Task<bool> MoveSliderAsync(int sliderId, int direction, CancellationToken ct = default);
     Task<int> AddSliderSlideAsync(int sliderGroupId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
+    Task<bool> UpdateSliderSlideAsync(int slideId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
     Task<bool> RemoveSliderSlideAsync(int slideId, CancellationToken ct = default);
     Task<bool> MoveSliderSlideAsync(int slideId, int direction, CancellationToken ct = default);
 
@@ -64,6 +67,7 @@ public interface IAdminVehicleService
     Task<bool> RemoveGalleryTabAsync(int tabId, CancellationToken ct = default);
     Task<bool> MoveGalleryTabAsync(int tabId, int direction, CancellationToken ct = default);
     Task<int> AddGalleryImageAsync(int galleryTabId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
+    Task<bool> UpdateGalleryImageAsync(int imageId, string? imagePath, LocalizedText alt, CancellationToken ct = default);
     Task<bool> RemoveGalleryImageAsync(int imageId, CancellationToken ct = default);
     Task<bool> MoveGalleryImageAsync(int imageId, int direction, CancellationToken ct = default);
 
@@ -73,11 +77,13 @@ public interface IAdminVehicleService
 
     // Card items (technology cards)
     Task<int> AddCardAsync(int vehicleId, LocalizedText title, LocalizedText text, string? imagePath, CancellationToken ct = default);
+    Task<bool> UpdateCardAsync(int cardId, LocalizedText title, LocalizedText text, string? imagePath, CancellationToken ct = default);
     Task<bool> RemoveCardAsync(int cardId, CancellationToken ct = default);
     Task<bool> MoveCardAsync(int cardId, int direction, CancellationToken ct = default);
 
     // Safety toggles
     Task<int> AddSafetyToggleAsync(int vehicleId, LocalizedText title, string? imagePath, LocalizedText strap, LocalizedText content, CancellationToken ct = default);
+    Task<bool> UpdateSafetyToggleAsync(int toggleId, LocalizedText title, string? imagePath, LocalizedText strap, LocalizedText content, CancellationToken ct = default);
     Task<bool> RemoveSafetyToggleAsync(int toggleId, CancellationToken ct = default);
     Task<bool> MoveSafetyToggleAsync(int toggleId, int direction, CancellationToken ct = default);
 

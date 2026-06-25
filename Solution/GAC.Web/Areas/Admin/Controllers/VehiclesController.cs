@@ -53,6 +53,8 @@ public class VehiclesController : Controller
     [HttpPost] public async Task<IActionResult> AddImage(int vehicleId, string path, VehicleImageKind kind)
     { if (!string.IsNullOrWhiteSpace(path)) await _svc.AddImageAsync(vehicleId, path, kind); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 
+    [HttpPost] public async Task<IActionResult> UpdateImage(int imageId, int vehicleId, string path, VehicleImageKind kind)
+    { if (!string.IsNullOrWhiteSpace(path)) await _svc.UpdateImageAsync(imageId, path, kind); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> RemoveImage(int imageId, int vehicleId)
     { await _svc.RemoveImageAsync(imageId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
 
@@ -98,6 +100,8 @@ public class VehiclesController : Controller
 
     [HttpPost] public async Task<IActionResult> AddColor(int vehicleId, string? nameEn, string? nameAr, string hex, string? imagePath)
     { await _svc.AddColorAsync(vehicleId, new() { En = nameEn, Ar = nameAr }, hex, imagePath); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> UpdateColor(int colorId, int vehicleId, string? nameEn, string? nameAr, string hex, string? imagePath)
+    { await _svc.UpdateColorAsync(colorId, new() { En = nameEn, Ar = nameAr }, hex, imagePath); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> RemoveColor(int colorId, int vehicleId)
     { await _svc.RemoveColorAsync(colorId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveColor(int colorId, int vehicleId, int direction)
@@ -152,6 +156,8 @@ public class VehiclesController : Controller
     { await _svc.MoveSliderAsync(sliderId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> AddSliderSlide(int sliderGroupId, int vehicleId, string? imagePath, string? altEn, string? altAr)
     { await _svc.AddSliderSlideAsync(sliderGroupId, imagePath, new() { En = altEn, Ar = altAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> UpdateSliderSlide(int slideId, int vehicleId, string? imagePath, string? altEn, string? altAr)
+    { await _svc.UpdateSliderSlideAsync(slideId, imagePath, new() { En = altEn, Ar = altAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> RemoveSliderSlide(int slideId, int vehicleId)
     { await _svc.RemoveSliderSlideAsync(slideId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveSliderSlide(int slideId, int vehicleId, int direction)
@@ -172,6 +178,8 @@ public class VehiclesController : Controller
     { await _svc.MoveGalleryTabAsync(tabId, direction); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> AddGalleryImage(int galleryTabId, int vehicleId, string? imagePath, string? altEn, string? altAr)
     { await _svc.AddGalleryImageAsync(galleryTabId, imagePath, new() { En = altEn, Ar = altAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> UpdateGalleryImage(int imageId, int vehicleId, string? imagePath, string? altEn, string? altAr)
+    { await _svc.UpdateGalleryImageAsync(imageId, imagePath, new() { En = altEn, Ar = altAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> RemoveGalleryImage(int imageId, int vehicleId)
     { await _svc.RemoveGalleryImageAsync(imageId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveGalleryImage(int imageId, int vehicleId, int direction)
@@ -184,6 +192,8 @@ public class VehiclesController : Controller
 
     [HttpPost] public async Task<IActionResult> AddCard(int vehicleId, string? titleEn, string? titleAr, string? textEn, string? textAr, string? imagePath)
     { await _svc.AddCardAsync(vehicleId, new() { En = titleEn, Ar = titleAr }, new() { En = textEn, Ar = textAr }, imagePath); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> UpdateCard(int cardId, int vehicleId, string? titleEn, string? titleAr, string? textEn, string? textAr, string? imagePath)
+    { await _svc.UpdateCardAsync(cardId, new() { En = titleEn, Ar = titleAr }, new() { En = textEn, Ar = textAr }, imagePath); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> RemoveCard(int cardId, int vehicleId)
     { await _svc.RemoveCardAsync(cardId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveCard(int cardId, int vehicleId, int direction)
@@ -191,6 +201,8 @@ public class VehiclesController : Controller
 
     [HttpPost] public async Task<IActionResult> AddSafetyToggle(int vehicleId, string? titleEn, string? titleAr, string? imagePath, string? strapEn, string? strapAr, string? contentEn, string? contentAr)
     { await _svc.AddSafetyToggleAsync(vehicleId, new() { En = titleEn, Ar = titleAr }, imagePath, new() { En = strapEn, Ar = strapAr }, new() { En = contentEn, Ar = contentAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
+    [HttpPost] public async Task<IActionResult> UpdateSafetyToggle(int toggleId, int vehicleId, string? titleEn, string? titleAr, string? imagePath, string? strapEn, string? strapAr, string? contentEn, string? contentAr)
+    { await _svc.UpdateSafetyToggleAsync(toggleId, new() { En = titleEn, Ar = titleAr }, imagePath, new() { En = strapEn, Ar = strapAr }, new() { En = contentEn, Ar = contentAr }); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> RemoveSafetyToggle(int toggleId, int vehicleId)
     { await _svc.RemoveSafetyToggleAsync(toggleId); return RedirectToAction(nameof(Edit), new { id = vehicleId }); }
     [HttpPost] public async Task<IActionResult> MoveSafetyToggle(int toggleId, int vehicleId, int direction)

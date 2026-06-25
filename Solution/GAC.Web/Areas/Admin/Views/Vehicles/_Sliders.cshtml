@@ -41,6 +41,15 @@
                     <input type="hidden" name="slideId" value="@sl.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
                     <button class="adm-btn adm-btn--danger">Remove</button>
                   </form>
+                  <form asp-action="UpdateSliderSlide" method="post" class="adm-inline">
+                    <input type="hidden" name="slideId" value="@sl.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+                    <span style="display:inline-flex;gap:.4rem;align-items:center">
+                      <input type="text" name="imagePath" value="@sl.ImagePath" data-media-input />
+                      <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+                    </span>
+                    <input name="altEn" value="@sl.Alt.En" placeholder="Alt (EN)" /><input name="altAr" value="@sl.Alt.Ar" placeholder="Alt (AR)" dir="rtl" />
+                    <button class="adm-btn">Save</button>
+                  </form>
                 </td>
               </tr>
           }

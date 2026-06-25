@@ -21,6 +21,16 @@
           <input type="hidden" name="colorId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
           <button class="adm-btn adm-btn--danger">Remove</button>
         </form>
+        <form asp-action="UpdateColor" method="post" class="adm-inline">
+          <input type="hidden" name="colorId" value="@c.Id" /><input type="hidden" name="vehicleId" value="@Model.Id" />
+          <input name="nameEn" value="@c.Name.En" placeholder="Name (EN)" /><input name="nameAr" value="@c.Name.Ar" placeholder="Name (AR)" dir="rtl" />
+          <input type="color" name="hex" value="@c.Hex" />
+          <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input type="text" name="imagePath" value="@c.ImagePath" placeholder="Image (optional)" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+          </span>
+          <button class="adm-btn">Save colour</button>
+        </form>
       </div>
   }
 </div>

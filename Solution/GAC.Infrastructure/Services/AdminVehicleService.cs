@@ -103,6 +103,15 @@ public class AdminVehicleService : IAdminVehicleService
         return img.Id;
     }
 
+    public async Task<bool> UpdateImageAsync(int imageId, string path, VehicleImageKind kind, CancellationToken ct = default)
+    {
+        var e = await _db.VehicleImages.FindAsync([imageId], ct);
+        if (e is null) return false;
+        e.Path = path; e.Kind = kind;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     public async Task<bool> RemoveImageAsync(int imageId, CancellationToken ct = default)
     {
         var img = await _db.VehicleImages.FindAsync([imageId], ct);
@@ -233,6 +242,17 @@ public class AdminVehicleService : IAdminVehicleService
         return c.Id;
     }
 
+    public async Task<bool> UpdateColorAsync(int colorId, LocalizedText name, string hex, string? imagePath, CancellationToken ct = default)
+    {
+        var e = await _db.Set<ColorOption>().FindAsync([colorId], ct);
+        if (e is null) return false;
+        e.Name = name;
+        e.Hex = string.IsNullOrWhiteSpace(hex) ? "#000000" : hex;
+        e.ImagePath = imagePath;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     public async Task<bool> RemoveColorAsync(int colorId, CancellationToken ct = default)
         => await RemoveByIdAsync<ColorOption>(colorId, ct);
 
@@ -308,6 +328,15 @@ public class AdminVehicleService : IAdminVehicleService
         return e.Id;
     }
 
+    public async Task<bool> UpdateGalleryImageAsync(int imageId, string? imagePath, LocalizedText alt, CancellationToken ct = default)
+    {
+        var e = await _db.Set<GalleryImage>().FindAsync([imageId], ct);
+        if (e is null) return false;
+        e.ImagePath = imagePath; e.Alt = alt;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     public async Task<bool> RemoveGalleryImageAsync(int imageId, CancellationToken ct = default)
         => await RemoveByIdAsync<GalleryImage>(imageId, ct);
 
@@ -365,6 +394,15 @@ public class AdminVehicleService : IAdminVehicleService
         _db.Set<SliderSlide>().Add(e);
         await _db.SaveChangesAsync(ct);
         return e.Id;
+    }
+
+    public async Task<bool> UpdateSliderSlideAsync(int slideId, string? imagePath, LocalizedText alt, CancellationToken ct = default)
+    {
+        var e = await _db.Set<SliderSlide>().FindAsync([slideId], ct);
+        if (e is null) return false;
+        e.ImagePath = imagePath; e.Alt = alt;
+        await _db.SaveChangesAsync(ct);
+        return true;
     }
 
     public async Task<bool> RemoveSliderSlideAsync(int slideId, CancellationToken ct = default)
@@ -455,6 +493,15 @@ public class AdminVehicleService : IAdminVehicleService
         return e.Id;
     }
 
+    public async Task<bool> UpdateCardAsync(int cardId, LocalizedText title, LocalizedText text, string? imagePath, CancellationToken ct = default)
+    {
+        var e = await _db.CardItems.FindAsync([cardId], ct);
+        if (e is null) return false;
+        e.Title = title; e.Text = text; e.ImagePath = imagePath;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     public async Task<bool> RemoveCardAsync(int cardId, CancellationToken ct = default)
         => await RemoveByIdAsync<CardItem>(cardId, ct);
 
@@ -477,6 +524,15 @@ public class AdminVehicleService : IAdminVehicleService
         _db.SafetyToggles.Add(e);
         await _db.SaveChangesAsync(ct);
         return e.Id;
+    }
+
+    public async Task<bool> UpdateSafetyToggleAsync(int toggleId, LocalizedText title, string? imagePath, LocalizedText strap, LocalizedText content, CancellationToken ct = default)
+    {
+        var e = await _db.SafetyToggles.FindAsync([toggleId], ct);
+        if (e is null) return false;
+        e.Title = title; e.ImagePath = imagePath; e.Strap = strap; e.Content = content;
+        await _db.SaveChangesAsync(ct);
+        return true;
     }
 
     public async Task<bool> RemoveSafetyToggleAsync(int toggleId, CancellationToken ct = default)

@@ -32,6 +32,19 @@
                 <input type="hidden" name="vehicleId" value="@Model.Id" />
                 <button type="submit" class="adm-btn adm-btn--danger">Remove</button>
             </form>
+            <form asp-action="UpdateImage" method="post" class="adm-inline">
+                <input type="hidden" name="imageId" value="@img.Id" />
+                <input type="hidden" name="vehicleId" value="@Model.Id" />
+                <span style="display:inline-flex;gap:.4rem;align-items:center">
+                    <input type="text" name="path" value="@img.Path" data-media-input />
+                    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+                </span>
+                <select name="kind">
+                    <option value="0" selected="@(img.Kind == VehicleImageKind.Hero)">@(VehicleImageKind.Hero.DisplayName())</option>
+                    <option value="1" selected="@(img.Kind == VehicleImageKind.Gallery)">@(VehicleImageKind.Gallery.DisplayName())</option>
+                </select>
+                <button class="adm-btn">Save image</button>
+            </form>
         </div>
     }
 </div>
