@@ -47,6 +47,9 @@
   if (uploadForm) {
     uploadForm.addEventListener("submit", function (e) {
       e.preventDefault();
+      // Remember which field this upload is for: closing the modal (or a stray
+      // click) can null activeInput before the request resolves.
+      var target = activeInput;
       var data = new FormData(uploadForm);
       data.append("json", "true");
       fetch("/Admin/Media/Upload", {
@@ -54,10 +57,35 @@
         headers: { "RequestVerificationToken": token ? token.value : "" },
         body: data
       })
-        .then(function (r) { return r.json(); })
+        .then(function (r) {
+          // A non-JSON body means the request never reached the upload action
+          // (request too large, expired anti-forgery token, signed-out session
+          // redirecting to the login page, or a 500). Surface it instead of
+          // silently leaving the field on its old value.
+          return r.text().then(function (body) {
+            var res;
+            try { res = JSON.parse(body); }
+            catch (_) {
+              throw new Error(
+                "Upload failed (HTTP " + r.status + "). The file may be too " +
+                "large, or your session/anti-forgery token expired — reload " +
+                "the page and sign in again, then retry.");
+            }
+            if (!r.ok) throw new Error(res.error || ("Upload failed (HTTP " + r.status + ")."));
+            return res;
+          });
+        })
         .then(function (res) {
-          if (res.path && activeInput) { activeInput.value = res.path; loadGrid(); }
-          else if (res.error) { alert(res.error); }
+          if (res.path && target) {
+            target.value = res.path;
+            loadGrid();
+            close(); // confirm the selection so it's obvious the field was set
+          } else if (res.error) {
+            alert(res.error);
+          }
+        })
+        .catch(function (err) {
+          alert(err && err.message ? err.message : "Upload failed.");
         });
     });
   }
