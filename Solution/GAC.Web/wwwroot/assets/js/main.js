@@ -27,7 +27,7 @@
   const heroNext = document.querySelector('[data-hero-next]');
   let heroIdx = 0;
   let heroTimer = null;
-  const HERO_INTERVAL = 6000;
+  const HERO_INTERVAL = 4000;
 
   function activateSlide(i) {
     if (slides.length === 0) return;
