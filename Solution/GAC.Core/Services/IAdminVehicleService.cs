@@ -8,6 +8,7 @@ public interface IAdminVehicleService
     Task<Vehicle?> GetAsync(int id, CancellationToken ct = default);                 // +Images
     Task<bool> SlugExistsAsync(string slug, int? exceptId = null, CancellationToken ct = default);
     Task<int> CreateAsync(Vehicle vehicle, CancellationToken ct = default);          // returns new Id
+    Task<int> CloneAsync(int sourceId, CancellationToken ct = default);              // deep-copy a vehicle; returns new Id (0 if source missing)
     Task<bool> UpdateAsync(Vehicle vehicle, CancellationToken ct = default);         // scalar + localized fields
     Task<bool> UpdatePreviewLinkAsync(int id, string? link, CancellationToken ct = default); // vehicle-level Preview button link (SpecPdf)
     Task<bool> DeleteAsync(int id, CancellationToken ct = default);

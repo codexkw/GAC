@@ -45,6 +45,94 @@ public class AdminVehicleService : IAdminVehicleService
         return vehicle.Id;
     }
 
+    public async Task<int> CloneAsync(int sourceId, CancellationToken ct = default)
+    {
+        // Load the full aggregate untracked so the entire graph can be re-inserted as new rows.
+        // Split query mirrors GetAsync — avoids a cartesian-explosion timeout on content-rich cars.
+        var src = await _db.Vehicles
+            .Include(v => v.Images)
+            .Include(v => v.Features).ThenInclude(f => f.Bullets)
+            .Include(v => v.SpecGroups).ThenInclude(g => g.Rows)
+            .Include(v => v.Colors)
+            .Include(v => v.Trims).ThenInclude(t => t.PriceRows)
+            .Include(v => v.Headings)
+            .Include(v => v.Stats)
+            .Include(v => v.Sliders).ThenInclude(s => s.Slides)
+            .Include(v => v.GalleryTabs).ThenInclude(g => g.Images)
+            .Include(v => v.Cards)
+            .Include(v => v.SafetyToggles)
+            .Include(v => v.WarrantyLinks)
+            .Include(v => v.Quality)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(v => v.Id == sourceId, ct);
+        if (src is null) return 0;
+
+        // A unique slug is required (Slug is unique-indexed): "{slug}-copy", then -2, -3, …
+        var baseSlug = $"{src.Slug}-copy";
+        var slug = baseSlug;
+        for (var n = 2; await _db.Vehicles.AnyAsync(v => v.Slug == slug, ct); n++)
+            slug = $"{baseSlug}-{n}";
+        src.Slug = slug;
+
+        // Rename the copy and start it hidden so a half-edited clone never shows publicly.
+        src.Name = WithCopySuffix(src.Name);
+        src.IsVisible = false;
+        src.SortOrder = (await _db.Vehicles.MaxAsync(v => (int?)v.SortOrder, ct) ?? -1) + 1;
+
+        ResetGraphIds(src);
+
+        _db.Vehicles.Add(src);
+        await _db.SaveChangesAsync(ct);
+        return src.Id;
+    }
+
+    private static LocalizedText WithCopySuffix(LocalizedText name) => new()
+    {
+        En = string.IsNullOrWhiteSpace(name.En) ? name.En : $"{name.En} -copy",
+        Ar = string.IsNullOrWhiteSpace(name.Ar) ? name.Ar : $"{name.Ar} -copy",
+    };
+
+    // Zero every PK and parent-FK in the detached graph so EF inserts brand-new rows
+    // and re-fixes the foreign keys from the navigation links.
+    private static void ResetGraphIds(Vehicle v)
+    {
+        v.Id = 0;
+        foreach (var i in v.Images) { i.Id = 0; i.VehicleId = 0; }
+        foreach (var f in v.Features)
+        {
+            f.Id = 0; f.VehicleId = 0;
+            foreach (var b in f.Bullets) { b.Id = 0; b.FeatureSectionId = 0; }
+        }
+        foreach (var g in v.SpecGroups)
+        {
+            g.Id = 0; g.VehicleId = 0;
+            foreach (var r in g.Rows) { r.Id = 0; r.SpecGroupId = 0; }
+        }
+        foreach (var c in v.Colors) { c.Id = 0; c.VehicleId = 0; }
+        foreach (var t in v.Trims)
+        {
+            t.Id = 0; t.VehicleId = 0;
+            foreach (var r in t.PriceRows) { r.Id = 0; r.TrimId = 0; }
+        }
+        foreach (var h in v.Headings) { h.Id = 0; h.VehicleId = 0; }
+        foreach (var s in v.Stats) { s.Id = 0; s.VehicleId = 0; }
+        foreach (var s in v.Sliders)
+        {
+            s.Id = 0; s.VehicleId = 0;
+            foreach (var sl in s.Slides) { sl.Id = 0; sl.SliderGroupId = 0; }
+        }
+        foreach (var gt in v.GalleryTabs)
+        {
+            gt.Id = 0; gt.VehicleId = 0;
+            foreach (var im in gt.Images) { im.Id = 0; im.GalleryTabId = 0; }
+        }
+        foreach (var c in v.Cards) { c.Id = 0; c.VehicleId = 0; }
+        foreach (var s in v.SafetyToggles) { s.Id = 0; s.VehicleId = 0; }
+        foreach (var w in v.WarrantyLinks) { w.Id = 0; w.VehicleId = 0; }
+        if (v.Quality is not null) { v.Quality.Id = 0; v.Quality.VehicleId = 0; }
+    }
+
     public async Task<bool> UpdateAsync(Vehicle vehicle, CancellationToken ct = default)
     {
         var existing = await _db.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicle.Id, ct);

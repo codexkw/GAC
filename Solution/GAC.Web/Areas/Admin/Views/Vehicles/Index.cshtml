@@ -40,6 +40,11 @@
                 <td>@(v.IsVisible ? "Yes" : "No")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@v.Id">Edit</a>
+                    <form asp-action="Clone" method="post" style="display:inline"
+                          onsubmit="return confirm('Clone this vehicle with all its content? The copy starts hidden so you can edit it before publishing.')">
+                        <input type="hidden" name="id" value="@v.Id" />
+                        <button type="submit" class="adm-btn" title="Duplicate this vehicle and all its content">Clone</button>
+                    </form>
                     <form asp-action="Delete" method="post" style="display:inline"
                           onsubmit="return confirm('Delete this vehicle?')">
                         <input type="hidden" name="id" value="@v.Id" />

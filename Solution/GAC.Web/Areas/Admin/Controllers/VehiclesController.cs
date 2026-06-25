@@ -47,6 +47,14 @@ public class VehiclesController : Controller
     [HttpPost] public async Task<IActionResult> UpdatePreviewLink(int id, string? link)
     { await _svc.UpdatePreviewLinkAsync(id, link); TempData["Flash"] = "Preview link saved."; return RedirectToAction(nameof(Edit), new { id }); }
 
+    [HttpPost] public async Task<IActionResult> Clone(int id)
+    {
+        var newId = await _svc.CloneAsync(id);
+        if (newId == 0) { TempData["Flash"] = "Could not clone — vehicle not found."; return RedirectToAction(nameof(Index)); }
+        TempData["Flash"] = "Vehicle cloned — it's hidden until you publish it. Edit the copy below.";
+        return RedirectToAction(nameof(Edit), new { id = newId });
+    }
+
     [HttpPost] public async Task<IActionResult> Delete(int id)
     { await _svc.DeleteAsync(id); TempData["Flash"] = "Vehicle deleted."; return RedirectToAction(nameof(Index)); }
 
