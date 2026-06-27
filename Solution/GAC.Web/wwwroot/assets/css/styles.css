@@ -1880,6 +1880,13 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
   .mp-slider__arrow--prev { left: 8px; } .mp-slider__arrow--next { right: 8px; }
 }
 
+/* 8. Trim card CTAs (Book a Test Drive / Specifications) stacked almost flush on
+      phones — the 12px gap reads as cramped for two large black buttons. Give the
+      stacked pair clearer vertical breathing room on small screens. */
+@media (max-width: 620px) {
+  .mp-trim__cta { gap: var(--space-4); }
+}
+
 /* ===================== Fixed quick-action dock ===================== */
 /* Desktop: vertical rail hugging the right edge, vertically centered.
    Icons rest collapsed; labels slide out to the left on hover/focus. */
