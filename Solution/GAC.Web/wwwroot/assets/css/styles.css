@@ -1880,10 +1880,11 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
   .mp-slider__arrow--prev { left: 8px; } .mp-slider__arrow--next { right: 8px; }
 }
 
-/* 8. Trim card CTAs (Book a Test Drive / Specifications) stacked almost flush on
-      phones — the 12px gap reads as cramped for two large black buttons. Give the
-      stacked pair clearer vertical breathing room on small screens. */
+/* 8. Trim cards on phones: stack them one-per-row (the flex row otherwise squeezes
+      2–3 cards side-by-side into unreadable slivers), and give each card's stacked
+      CTAs (Book a Test Drive / Specifications) clearer vertical breathing room. */
 @media (max-width: 620px) {
+  .mp-trims { flex-direction: column; align-items: center; gap: var(--space-6); }
   .mp-trim__cta { gap: var(--space-4); }
 }
 
