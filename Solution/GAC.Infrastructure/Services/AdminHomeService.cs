@@ -68,4 +68,55 @@ public class AdminHomeService : IAdminHomeService
         await _db.SaveChangesAsync(ct);
         return true;
     }
+
+    public async Task<HomePage> GetHomeAggregateAsync(CancellationToken ct = default)
+    {
+        var home = await EnsureHomeAsync(ct);
+        return await _db.HomePages
+            .Include(h => h.Promo!).ThenInclude(p => p.Campaigns.OrderBy(c => c.SortOrder))
+            .Include(h => h.DualCards.OrderBy(c => c.SortOrder))
+            .FirstAsync(h => h.Id == home.Id, ct);
+    }
+
+    public async Task SavePromoAsync(PromoSection promo, CancellationToken ct = default)
+    {
+        var home = await EnsureHomeAsync(ct);
+        var existing = await _db.PromoSections.Include(p => p.Campaigns)
+            .FirstOrDefaultAsync(p => p.HomePageId == home.Id, ct);
+        if (existing is null)
+        {
+            promo.Id = 0;
+            promo.HomePageId = home.Id;
+            promo.Campaigns = NormalizeCampaigns(promo.Campaigns);
+            _db.PromoSections.Add(promo);
+        }
+        else
+        {
+            existing.ImagePath = promo.ImagePath;
+            existing.Eyebrow = promo.Eyebrow; existing.Heading = promo.Heading;
+            existing.Description = promo.Description; existing.CtaText = promo.CtaText;
+            existing.CtaLink = promo.CtaLink;
+            _db.PromoCampaigns.RemoveRange(existing.Campaigns);   // replace the bullet list wholesale
+            existing.Campaigns = NormalizeCampaigns(promo.Campaigns);
+        }
+        await _db.SaveChangesAsync(ct);
+    }
+
+    // Drop blank rows (the admin "add row" UI can submit empties) and re-index.
+    private static List<PromoCampaign> NormalizeCampaigns(IEnumerable<PromoCampaign> campaigns)
+        => campaigns
+            .Where(c => !string.IsNullOrWhiteSpace(c.Text?.En) || !string.IsNullOrWhiteSpace(c.Text?.Ar))
+            .Select((c, i) => new PromoCampaign { Text = c.Text ?? new LocalizedText(), SortOrder = i })
+            .ToList();
+
+    public async Task<bool> SaveCardAsync(DualCard card, CancellationToken ct = default)
+    {
+        var e = await _db.DualCards.FirstOrDefaultAsync(c => c.Id == card.Id, ct);
+        if (e is null) return false;
+        e.ImagePath = card.ImagePath; e.Link = card.Link;
+        e.Eyebrow = card.Eyebrow; e.Title = card.Title;
+        e.Description = card.Description; e.ButtonText = card.ButtonText;
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
 }
