@@ -11,4 +11,5 @@ public class FormPage
     public LocalizedText BodyHtml { get; set; } = new();
     public LocalizedText MetaTitle { get; set; } = new();
     public LocalizedText MetaDescription { get; set; } = new();
+    public string? BannerImagePath { get; set; }
 }

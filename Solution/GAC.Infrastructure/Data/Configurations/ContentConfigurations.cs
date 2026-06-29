@@ -151,6 +151,7 @@ public class FormPageConfig : IEntityTypeConfiguration<FormPage>
         b.OwnsLocalized(p => p.BodyHtml);
         b.OwnsLocalized(p => p.MetaTitle);
         b.OwnsLocalized(p => p.MetaDescription);
+        b.Property(p => p.BannerImagePath).HasMaxLength(300);
     }
 }
 
@@ -193,6 +194,43 @@ public class HomePageConfig : IEntityTypeConfiguration<HomePage>
     public void Configure(EntityTypeBuilder<HomePage> b)
     {
         b.HasMany(h => h.Slides).WithOne().HasForeignKey(s => s.HomePageId).OnDelete(DeleteBehavior.Cascade);
+        b.HasOne(h => h.Promo).WithOne().HasForeignKey<PromoSection>(p => p.HomePageId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(h => h.DualCards).WithOne().HasForeignKey(c => c.HomePageId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class PromoSectionConfig : IEntityTypeConfiguration<PromoSection>
+{
+    public void Configure(EntityTypeBuilder<PromoSection> b)
+    {
+        b.Property(p => p.ImagePath).HasMaxLength(300).IsRequired();
+        b.Property(p => p.CtaLink).HasMaxLength(300);
+        b.OwnsLocalized(p => p.Eyebrow);
+        b.OwnsLocalized(p => p.Heading);
+        b.OwnsLocalized(p => p.Description);
+        b.OwnsLocalized(p => p.CtaText);
+        b.HasMany(p => p.Campaigns).WithOne().HasForeignKey(c => c.PromoSectionId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class PromoCampaignConfig : IEntityTypeConfiguration<PromoCampaign>
+{
+    public void Configure(EntityTypeBuilder<PromoCampaign> b)
+    {
+        b.OwnsLocalized(c => c.Text);
+    }
+}
+
+public class DualCardConfig : IEntityTypeConfiguration<DualCard>
+{
+    public void Configure(EntityTypeBuilder<DualCard> b)
+    {
+        b.Property(c => c.ImagePath).HasMaxLength(300).IsRequired();
+        b.Property(c => c.Link).HasMaxLength(300);
+        b.OwnsLocalized(c => c.Eyebrow);
+        b.OwnsLocalized(c => c.Title);
+        b.OwnsLocalized(c => c.Description);
+        b.OwnsLocalized(c => c.ButtonText);
     }
 }
 

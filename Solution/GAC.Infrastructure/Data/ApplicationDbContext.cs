@@ -28,6 +28,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Lead> Leads => Set<Lead>();
     public DbSet<HomePage> HomePages => Set<HomePage>();
     public DbSet<HeroSlide> HeroSlides => Set<HeroSlide>();
+    public DbSet<PromoSection> PromoSections => Set<PromoSection>();
+    public DbSet<PromoCampaign> PromoCampaigns => Set<PromoCampaign>();
+    public DbSet<DualCard> DualCards => Set<DualCard>();
     public DbSet<SiteSettings> SiteSettings => Set<SiteSettings>();
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<MediaAsset> MediaAssets => Set<MediaAsset>();
