@@ -26,6 +26,24 @@
         <label><input asp-for="IsVisible" /> Visible</label>
     </div>
 
+    <div class="adm-field">
+        <label asp-for="BannerImagePath">Banner image</label>
+        <div class="adm-media">
+            @if (string.IsNullOrWhiteSpace(Model.BannerImagePath))
+            {
+                <img data-media-preview alt="" class="adm-media__preview is-empty" />
+            }
+            else
+            {
+                <img data-media-preview alt="" class="adm-media__preview" src="@Model.BannerImagePath" />
+            }
+            <div class="adm-media__controls">
+                <input asp-for="BannerImagePath" data-media-input />
+                <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+            </div>
+        </div>
+    </div>
+
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = Model.Title.En, ValueAr = Model.Title.Ar }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Intro text", NameEn = "IntroText.En", NameAr = "IntroText.Ar", ValueEn = Model.IntroText.En, ValueAr = Model.IntroText.Ar, Multiline = true }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta title", NameEn = "MetaTitle.En", NameAr = "MetaTitle.Ar", ValueEn = Model.MetaTitle.En, ValueAr = Model.MetaTitle.Ar }' />
@@ -42,3 +60,25 @@
 
     <button type="submit" class="adm-btn">Save</button>
 </form>
+
+<partial name="_PickerModal" />
+
+@section Scripts {
+<script>
+(function () {
+  "use strict";
+  Array.prototype.forEach.call(document.querySelectorAll("[data-media-input]"), function (input) {
+    function sync() {
+      var media = input.closest(".adm-media");
+      var prev = media ? media.querySelector("[data-media-preview]") : null;
+      if (!prev) return;
+      var v = (input.value || "").trim();
+      if (v) { prev.setAttribute("src", v); prev.classList.remove("is-empty"); }
+      else { prev.removeAttribute("src"); prev.classList.add("is-empty"); }
+    }
+    input.addEventListener("input", sync);
+    input.addEventListener("change", sync); // dispatched by the media picker
+  });
+})();
+</script>
+}

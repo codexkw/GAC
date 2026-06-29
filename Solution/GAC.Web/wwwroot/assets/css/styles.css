@@ -829,6 +829,11 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
 .section--mute { background: var(--c-bg-2); }
 .eyebrow { font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; color: var(--c-accent); font-weight: 600; margin-bottom: var(--space-3); display: inline-block; }
 .muted { color: var(--c-mute); }
+
+/* Editable form-page intro + Contact banner */
+.form-intro { padding: var(--space-6) 0 0; }
+.form-intro p { max-width: 70ch; margin: 0 auto; color: var(--c-mute); text-align: center; }
+.form-banner { height: 320px; background-size: cover; background-position: center; }
 .section__head { display: flex; align-items: end; justify-content: space-between; gap: var(--space-5); margin-bottom: var(--space-6); flex-wrap: wrap; }
 .section__head h2 { margin: 0; }
 

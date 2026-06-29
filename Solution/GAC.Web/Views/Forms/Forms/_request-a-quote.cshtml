@@ -7,7 +7,11 @@
   </div>
 </div>
 
-<section class="bas-hero" style="background-image:url('/assets/img/book-a-test-drive/hero.jpg')">
+@if (!string.IsNullOrWhiteSpace(Model.Page.IntroText.Localize()))
+{
+  <div class="form-intro"><div class="container"><p>@Model.Page.IntroText.Localize()</p></div></div>
+}
+<section class="bas-hero" style="background-image:url('@(string.IsNullOrEmpty(Model.Page.BannerImagePath) ? "/assets/img/book-a-test-drive/hero.jpg" : Model.Page.BannerImagePath)')">
   <div class="container">
     <div class="btd-aside">
       <hr class="btd-aside__hr" />

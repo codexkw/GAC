@@ -39,6 +39,7 @@ public class AdminPageService : IAdminPageService
         if (e is null) return false;
         e.Title = page.Title; e.IntroText = page.IntroText;
         e.BodyHtml = page.BodyHtml;
+        e.BannerImagePath = page.BannerImagePath;
         e.MetaTitle = page.MetaTitle; e.MetaDescription = page.MetaDescription; e.IsVisible = page.IsVisible;
         await _db.SaveChangesAsync(ct);
         return true;
