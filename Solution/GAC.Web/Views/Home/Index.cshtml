@@ -155,60 +155,51 @@
   <!-- =================================================
        PROMO STRIP — Latest Offers
        ================================================= -->
+@{ var promo = Model.Home?.Promo; }
+@if (promo != null)
+{
   <section class="promo">
-    <div class="promo__image promo__image--photo" style="background-image:url('/assets/img/feature-gs8-traveller.jpg')"></div>
+    <div class="promo__image promo__image--photo" style="background-image:url('@promo.ImagePath')"></div>
     <div class="promo__content">
-      <div class="promo__eyebrow">@L["Promotions"]</div>
-      <h2>@L["Latest Offers"]</h2>
-      <p>@L["Discover our extensive selection of GAC offers and promotions from Mutawa Alkadi Automotive."]</p>
+      <div class="promo__eyebrow">@promo.Eyebrow.Localize()</div>
+      <h2>@promo.Heading.Localize()</h2>
+      <p>@promo.Description.Localize()</p>
       <ul class="promo__campaigns">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>@L["Buy now, pay after 2 years"]</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>@L["0% interest"]</li>
+@foreach (var c in promo.Campaigns)
+{
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>@c.Text.Localize()</li>
+}
       </ul>
-      <a class="btn btn--outline-light" href="/offers">@L["View Offers"]</a>
+      <a class="btn btn--outline-light" href="@UrlHelpers.NormalizeUrl(promo.CtaLink)">@promo.CtaText.Localize()</a>
     </div>
   </section>
+}
 
   <!-- =================================================
        JUMP TILES — Locations / Book a Service / Parts & Accessories
        ================================================= -->
+@{ var cards = Model.Home?.DualCards ?? new List<DualCard>(); }
+@if (cards.Count > 0)
+{
   <section class="dual">
     <div class="container">
       <div class="dual__grid">
-
+@foreach (var card in cards)
+{
         <div class="dual__card">
-          <a class="dual__media dual__media--photo" href="/contact-us" aria-label="Locations" style="background-image:url('/assets/img/tile-locations.jpg')"></a>
+          <a class="dual__media dual__media--photo" href="@UrlHelpers.NormalizeUrl(card.Link)" aria-label="@card.Title.Localize()" style="background-image:url('@card.ImagePath')"></a>
           <div class="dual__body">
-            <div class="dual__eyebrow">@L["Our showrooms"]</div>
-            <h3 class="dual__title">@L["Locations"]</h3>
-            <p class="dual__text">@L["Mutawa Alkadi Automotive has a strong presence across Kuwait with a number of showrooms that stretch across the country."]</p>
-            <a class="btn btn--ghost" href="/contact-us">@L["Find Us"]</a>
+            <div class="dual__eyebrow">@card.Eyebrow.Localize()</div>
+            <h3 class="dual__title">@card.Title.Localize()</h3>
+            <p class="dual__text">@card.Description.Localize()</p>
+            <a class="btn btn--ghost" href="@UrlHelpers.NormalizeUrl(card.Link)">@card.ButtonText.Localize()</a>
           </div>
         </div>
-
-        <div class="dual__card">
-          <a class="dual__media dual__media--photo" href="/book-a-service" aria-label="Book a service" style="background-image:url('/assets/img/tile-service.jpg')"></a>
-          <div class="dual__body">
-            <div class="dual__eyebrow">@L["Aftersales"]</div>
-            <h3 class="dual__title">@L["Book a service"]</h3>
-            <p class="dual__text">@L["We are here to help make sure your GAC is running smoothly so you can continue to drive worry-free."]</p>
-            <a class="btn btn--ghost" href="/book-a-service">@L["Book Now"]</a>
-          </div>
-        </div>
-
-        <div class="dual__card">
-          <a class="dual__media dual__media--photo" href="#" aria-label="Parts &amp; Accessories" style="background-image:url('/assets/img/tile-parts.jpg')"></a>
-          <div class="dual__body">
-            <div class="dual__eyebrow">@L["GAC"]</div>
-            <h3 class="dual__title">@L["Parts & Accessories"]</h3>
-            <p class="dual__text">@L["Browse our range of GAC accessories which are most suited to your needs, including functional and practical accessories."]</p>
-            <a class="btn btn--ghost" href="#">@L["Discover More"]</a>
-          </div>
-        </div>
-
+}
       </div>
     </div>
   </section>
+}
 
   <!-- =================================================
        NEWS & EVENTS — header + square-thumb carousel (DB-driven)
