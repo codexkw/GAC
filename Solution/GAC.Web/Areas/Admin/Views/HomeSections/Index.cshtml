@@ -1,0 +1,148 @@
+@model GAC.Core.Content.HomePage
+@using GAC.Web.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Home Sections";
+    var promo = Model.Promo ?? new GAC.Core.Content.PromoSection();
+    var cards = Model.DualCards;
+}
+<h1>Home Sections</h1>
+<p class="adm-muted">Edit the home page "Latest Offers" promo block and the three feature cards. Changes appear on the public home page.</p>
+
+<h2>Promo block</h2>
+<form method="post" asp-action="SavePromo" class="adm-form">
+    <div class="adm-field">
+        <label>Image</label>
+        <div class="adm-media">
+            @if (string.IsNullOrWhiteSpace(promo.ImagePath))
+            {
+                <img data-media-preview alt="" class="adm-media__preview is-empty" />
+            }
+            else
+            {
+                <img data-media-preview alt="" class="adm-media__preview" src="@promo.ImagePath" />
+            }
+            <div class="adm-media__controls">
+                <input name="ImagePath" value="@promo.ImagePath" data-media-input />
+                <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Eyebrow", NameEn = "Eyebrow.En", NameAr = "Eyebrow.Ar", ValueEn = promo.Eyebrow.En, ValueAr = promo.Eyebrow.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "Heading.En", NameAr = "Heading.Ar", ValueEn = promo.Heading.En, ValueAr = promo.Heading.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Description", NameEn = "Description.En", NameAr = "Description.Ar", ValueEn = promo.Description.En, ValueAr = promo.Description.Ar, Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Button text", NameEn = "CtaText.En", NameAr = "CtaText.Ar", ValueEn = promo.CtaText.En, ValueAr = promo.CtaText.Ar }' />
+
+    <div class="adm-field">
+        <label>Button link</label>
+        <input name="CtaLink" value="@promo.CtaLink" />
+    </div>
+
+    <div class="adm-field">
+        <label>Campaign bullets</label>
+        <div data-campaigns>
+@for (var i = 0; i < promo.Campaigns.Count; i++)
+{
+            <div class="adm-campaign-row" data-campaign-row>
+                <input name="Campaigns[@i].Text.En" value="@promo.Campaigns[i].Text.En" placeholder="English" />
+                <input name="Campaigns[@i].Text.Ar" value="@promo.Campaigns[i].Text.Ar" placeholder="Arabic" dir="rtl" />
+                <button type="button" class="adm-btn adm-btn--danger" data-campaign-remove title="Remove">&times;</button>
+            </div>
+}
+        </div>
+        <button type="button" class="adm-btn" data-campaign-add>Add bullet</button>
+    </div>
+
+    <button type="submit" class="adm-btn">Save promo</button>
+</form>
+
+<template data-campaign-template>
+    <div class="adm-campaign-row" data-campaign-row>
+        <input name="Campaigns[0].Text.En" placeholder="English" />
+        <input name="Campaigns[0].Text.Ar" placeholder="Arabic" dir="rtl" />
+        <button type="button" class="adm-btn adm-btn--danger" data-campaign-remove title="Remove">&times;</button>
+    </div>
+</template>
+
+<hr />
+<h2>Feature cards</h2>
+@foreach (var card in cards)
+{
+    <form method="post" asp-action="SaveCard" class="adm-form adm-card-edit">
+        <input type="hidden" name="Id" value="@card.Id" />
+        <h3>Card @(card.SortOrder + 1)@(string.IsNullOrWhiteSpace(card.Title.Localize()) ? "" : ": " + card.Title.Localize())</h3>
+        <div class="adm-field">
+            <label>Image</label>
+            <div class="adm-media">
+                @if (string.IsNullOrWhiteSpace(card.ImagePath))
+                {
+                    <img data-media-preview alt="" class="adm-media__preview is-empty" />
+                }
+                else
+                {
+                    <img data-media-preview alt="" class="adm-media__preview" src="@card.ImagePath" />
+                }
+                <div class="adm-media__controls">
+                    <input name="ImagePath" value="@card.ImagePath" data-media-input />
+                    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+                </div>
+            </div>
+        </div>
+        <div class="adm-field">
+            <label>Link</label>
+            <input name="Link" value="@card.Link" />
+        </div>
+        <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Eyebrow", NameEn = "Eyebrow.En", NameAr = "Eyebrow.Ar", ValueEn = card.Eyebrow.En, ValueAr = card.Eyebrow.Ar }' />
+        <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = card.Title.En, ValueAr = card.Title.Ar }' />
+        <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Description", NameEn = "Description.En", NameAr = "Description.Ar", ValueEn = card.Description.En, ValueAr = card.Description.Ar, Multiline = true }' />
+        <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Button text", NameEn = "ButtonText.En", NameAr = "ButtonText.Ar", ValueEn = card.ButtonText.En, ValueAr = card.ButtonText.Ar }' />
+        <button type="submit" class="adm-btn">Save card</button>
+    </form>
+}
+
+<partial name="_PickerModal" />
+
+@section Scripts {
+<script>
+(function () {
+  "use strict";
+
+  // Live image preview for every picker field on the page.
+  Array.prototype.forEach.call(document.querySelectorAll("[data-media-input]"), function (input) {
+    function sync() {
+      var media = input.closest(".adm-media");
+      var prev = media ? media.querySelector("[data-media-preview]") : null;
+      if (!prev) return;
+      var v = (input.value || "").trim();
+      if (v) { prev.setAttribute("src", v); prev.classList.remove("is-empty"); }
+      else { prev.removeAttribute("src"); prev.classList.add("is-empty"); }
+    }
+    input.addEventListener("input", sync);
+    input.addEventListener("change", sync); // dispatched by the media picker
+  });
+
+  // Add/remove campaign bullet rows, keeping the Campaigns[i] indices contiguous.
+  var container = document.querySelector("[data-campaigns]");
+  var tpl = document.querySelector("[data-campaign-template]");
+  var addBtn = document.querySelector("[data-campaign-add]");
+  if (!container || !tpl || !addBtn) return;
+
+  function reindex() {
+    var rows = container.querySelectorAll("[data-campaign-row]");
+    Array.prototype.forEach.call(rows, function (row, i) {
+      var inputs = row.querySelectorAll("input");
+      if (inputs[0]) inputs[0].name = "Campaigns[" + i + "].Text.En";
+      if (inputs[1]) inputs[1].name = "Campaigns[" + i + "].Text.Ar";
+    });
+  }
+  addBtn.addEventListener("click", function () {
+    container.appendChild(tpl.content.cloneNode(true));
+    reindex();
+  });
+  container.addEventListener("click", function (e) {
+    var rm = e.target.closest("[data-campaign-remove]");
+    if (rm) { rm.closest("[data-campaign-row]").remove(); reindex(); }
+  });
+})();
+</script>
+}

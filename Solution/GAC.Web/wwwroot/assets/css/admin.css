@@ -262,3 +262,10 @@ trix-toolbar .trix-button-group--file-tools { display: none; }
 .adm-media__preview.is-empty { border-style: dashed; font-size: 0; color: transparent; }
 .adm-media__controls { flex: 1; min-width: 0; }
 .adm-media__controls .adm-btn { margin-top: 8px; }
+
+/* Home Sections: campaign bullet rows + per-card edit blocks */
+.adm-campaign-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
+.adm-campaign-row input { width: auto; flex: 1; }
+.adm-campaign-row .adm-btn--danger { flex: 0 0 auto; }
+.adm-card-edit { border: 1px solid #e4e7eb; border-radius: 6px; padding: 16px 20px; margin-bottom: 20px; background: #fff; }
+.adm-card-edit h3 { margin-top: 0; }

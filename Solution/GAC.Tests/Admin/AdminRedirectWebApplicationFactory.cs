@@ -22,7 +22,22 @@ public class AdminRedirectWebApplicationFactory : AdminWebApplicationFactory
             // Registered after the app's services → last registration wins on resolve.
             services.AddScoped<IAdminNewsService, FakeNews>();
             services.AddScoped<IAdminOfferService, FakeOffers>();
+            services.AddScoped<IAdminHomeService, FakeHome>();
         });
+    }
+
+    private sealed class FakeHome : IAdminHomeService
+    {
+        public Task<IReadOnlyList<HeroSlide>> ListSlidesAsync(CancellationToken ct = default)
+            => Task.FromResult<IReadOnlyList<HeroSlide>>(new List<HeroSlide>());
+        public Task<HeroSlide?> GetSlideAsync(int id, CancellationToken ct = default) => Task.FromResult<HeroSlide?>(null);
+        public Task<int> CreateSlideAsync(HeroSlide slide, CancellationToken ct = default) => Task.FromResult(1);
+        public Task<bool> UpdateSlideAsync(HeroSlide slide, CancellationToken ct = default) => Task.FromResult(true);
+        public Task<bool> DeleteSlideAsync(int id, CancellationToken ct = default) => Task.FromResult(true);
+        public Task<bool> MoveSlideAsync(int id, int direction, CancellationToken ct = default) => Task.FromResult(true);
+        public Task<HomePage> GetHomeAggregateAsync(CancellationToken ct = default) => Task.FromResult(new HomePage());
+        public Task SavePromoAsync(PromoSection promo, CancellationToken ct = default) => Task.CompletedTask;
+        public Task<bool> SaveCardAsync(DualCard card, CancellationToken ct = default) => Task.FromResult(true);
     }
 
     private sealed class FakeNews : IAdminNewsService
