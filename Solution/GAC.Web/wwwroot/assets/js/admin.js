@@ -11,6 +11,14 @@
   function open(input) { activeInput = input; modal.classList.add("is-open"); loadGrid(); }
   function close() { modal.classList.remove("is-open"); activeInput = null; }
 
+  // Set a field's value and notify any view-specific listeners (e.g. live
+  // image previews). A plain assignment fires no event, so dispatch one.
+  function setValue(input, value) {
+    if (!input) return;
+    input.value = value;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
   function loadGrid() {
     fetch("/Admin/Media/List", { headers: { "Accept": "application/json" } })
       .then(function (r) { return r.json(); })
@@ -29,7 +37,7 @@
             el.src = it.path; el.title = it.path; el.className = "adm-picker-thumb";
           }
           el.addEventListener("click", function () {
-            if (activeInput) activeInput.value = it.path;
+            setValue(activeInput, it.path);
             close();
           });
           grid.appendChild(el);
@@ -77,7 +85,7 @@
         })
         .then(function (res) {
           if (res.path && target) {
-            target.value = res.path;
+            setValue(target, res.path);
             loadGrid();
             close(); // confirm the selection so it's obvious the field was set
           } else if (res.error) {

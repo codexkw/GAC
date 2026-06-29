@@ -6,38 +6,59 @@
 }
 <p><a asp-area="Admin" asp-action="Index">&larr; Back to news</a></p>
 
-<h1>@(isNew ? "New article" : "Edit article")</h1>
+<div class="adm-pagehead">
+    <h1>@(isNew ? "New article" : "Edit article")</h1>
+    @if (!isNew && Model.IsPublished && !string.IsNullOrWhiteSpace(Model.Slug))
+    {
+        <a class="adm-btn adm-btn--ghost" href="/news/@Model.Slug" target="_blank" rel="noopener">View on site &#8599;</a>
+    }
+</div>
 
-<form method="post" asp-action="Save">
+<form method="post" asp-action="Save" class="adm-form" data-news-form>
     <input type="hidden" asp-for="Id" />
     <div asp-validation-summary="All" class="adm-error"></div>
 
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = Model.Title.En, ValueAr = Model.Title.Ar }' />
+
     <div class="adm-field">
         <label asp-for="Slug">Slug</label>
-        <input asp-for="Slug" />
+        <input asp-for="Slug" data-news-slug autocomplete="off" />
+        <p class="adm-help">Article URL: <code>/news/<span data-slug-preview>@(string.IsNullOrWhiteSpace(Model.Slug) ? "your-title" : Model.Slug)</span></code>. Leave blank to generate it from the English title.</p>
+    </div>
+
+    <div class="adm-grid2">
+        <div class="adm-field">
+            <label asp-for="PublishedOn">Published on</label>
+            <input asp-for="PublishedOn" type="date" />
+        </div>
+        <div class="adm-field">
+            <label asp-for="SortOrder">Sort order</label>
+            <input asp-for="SortOrder" type="number" />
+        </div>
     </div>
 
     <div class="adm-field">
-        <label asp-for="PublishedOn">Published on</label>
-        <input asp-for="PublishedOn" type="date" />
-    </div>
-
-    <div class="adm-field">
-        <label><input asp-for="IsPublished" /> Published</label>
-    </div>
-
-    <div class="adm-field">
-        <label asp-for="SortOrder">Sort order</label>
-        <input asp-for="SortOrder" type="number" />
+        <label class="adm-check"><input asp-for="IsPublished" /> Published <span class="adm-help adm-help--inline">— unpublished articles are hidden from the public site</span></label>
     </div>
 
     <div class="adm-field">
         <label asp-for="ImagePath">Image</label>
-        <input asp-for="ImagePath" data-media-input />
-        <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        <div class="adm-media">
+            @if (string.IsNullOrWhiteSpace(Model.ImagePath))
+            {
+                <img data-media-preview alt="" class="adm-media__preview is-empty" />
+            }
+            else
+            {
+                <img data-media-preview alt="" class="adm-media__preview" src="@Model.ImagePath" />
+            }
+            <div class="adm-media__controls">
+                <input asp-for="ImagePath" data-media-input />
+                <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+            </div>
+        </div>
     </div>
 
-    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = Model.Title.En, ValueAr = Model.Title.Ar }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Excerpt", NameEn = "Excerpt.En", NameAr = "Excerpt.Ar", ValueEn = Model.Excerpt.En, ValueAr = Model.Excerpt.Ar, Multiline = true }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Body", NameEn = "Body.En", NameAr = "Body.Ar", ValueEn = Model.Body.En, ValueAr = Model.Body.Ar, Multiline = true }' />
 
@@ -45,3 +66,53 @@
 </form>
 
 <partial name="_PickerModal" />
+
+@section Scripts {
+<script>
+(function () {
+  "use strict";
+  var form = document.querySelector("[data-news-form]");
+  if (!form) return;
+
+  // --- Live image preview: reflect the picked/typed path --------------------
+  var imgInput = form.querySelector("[data-media-input]");
+  var preview = form.querySelector("[data-media-preview]");
+  function syncPreview() {
+    if (!preview || !imgInput) return;
+    var v = (imgInput.value || "").trim();
+    if (v) { preview.setAttribute("src", v); preview.classList.remove("is-empty"); }
+    else { preview.removeAttribute("src"); preview.classList.add("is-empty"); }
+  }
+  if (imgInput) {
+    imgInput.addEventListener("input", syncPreview);
+    imgInput.addEventListener("change", syncPreview); // dispatched by the media picker
+  }
+
+  // --- Auto-slug from the English title (new articles only) -----------------
+  var titleEn = form.querySelector('[name="Title.En"]');
+  var slug = form.querySelector("[data-news-slug]");
+  var slugPreview = document.querySelector("[data-slug-preview]");
+  var isNew = @(isNew ? "true" : "false");
+  var slugEdited = !!(slug && slug.value.trim());
+
+  function slugify(s) {
+    return (s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+  function updateSlugPreview() {
+    // Mirror the server's Slug.From normalization so the preview matches the
+    // URL that will actually be stored (slugify() is its character-for-character twin).
+    var s = slug ? slugify(slug.value) : "";
+    if (slugPreview) slugPreview.textContent = s || "your-title";
+  }
+  if (slug) {
+    slug.addEventListener("input", function () { slugEdited = true; updateSlugPreview(); });
+  }
+  if (titleEn && slug) {
+    titleEn.addEventListener("input", function () {
+      // Only auto-fill while the user hasn't taken the slug over themselves.
+      if (isNew && !slugEdited) { slug.value = slugify(titleEn.value); updateSlugPreview(); }
+    });
+  }
+})();
+</script>
+}

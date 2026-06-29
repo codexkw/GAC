@@ -28,10 +28,17 @@ public class NewsController : Controller
     [HttpPost]
     public async Task<IActionResult> Save(NewsArticle a)
     {
+        // Auto-derive the slug from the English title when left blank; otherwise
+        // normalize whatever was typed so the stored slug is always URL-safe.
+        a.Slug = string.IsNullOrWhiteSpace(a.Slug) ? Slug.From(a.Title.En) : Slug.From(a.Slug);
+
+        if (string.IsNullOrWhiteSpace(a.Title.En))
+            ModelState.AddModelError("Title.En", "An English title is required.");
         if (string.IsNullOrWhiteSpace(a.Slug))
-            ModelState.AddModelError(nameof(a.Slug), "Slug is required.");
+            ModelState.AddModelError(nameof(a.Slug), "Enter a slug, or an English title to generate one from.");
         else if (await _svc.SlugExistsAsync(a.Slug, a.Id == 0 ? null : a.Id))
             ModelState.AddModelError(nameof(a.Slug), "That slug is already in use.");
+
         if (!ModelState.IsValid) return View("Edit", a);
 
         if (a.Id == 0)

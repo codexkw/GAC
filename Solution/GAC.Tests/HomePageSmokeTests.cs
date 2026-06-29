@@ -49,12 +49,12 @@ public class HomePageSmokeTests : IClassFixture<DevWebApplicationFactory>
     }
 
     [Fact]
-    public async Task Home_RendersVehicles_FromDb()
+    public async Task Home_RendersVehiclesAndNews_FromDb()
     {
         var client = _factory.CreateClient();
         var html = await (await client.GetAsync("/")).Content.ReadAsStringAsync();
         Assert.Contains("GS8", html);            // a seeded vehicle name
         Assert.Contains("data-tab-panel", html); // model-strip per-category panels rendered
-        Assert.DoesNotContain("/news/", html);   // news section is hidden from the home page
+        Assert.Contains("/news/", html);         // a news card link
     }
 }

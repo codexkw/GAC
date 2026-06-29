@@ -4,33 +4,116 @@
 }
 <h1>News</h1>
 
-<p><a asp-action="Create" class="adm-btn">New article</a></p>
+<div class="adm-toolbar">
+    <a asp-action="Create" class="adm-btn">New article</a>
+    <input type="search" class="adm-input" placeholder="Search title or slug…" data-news-search aria-label="Search articles" />
+    <select class="adm-input" data-news-filter aria-label="Filter by status">
+        <option value="all">All statuses</option>
+        <option value="published">Published</option>
+        <option value="draft">Drafts</option>
+    </select>
+    <span class="adm-toolbar__spacer"></span>
+    <span class="adm-muted" data-news-count>@Model.Count article@(Model.Count == 1 ? "" : "s")</span>
+</div>
 
-<table class="adm-table">
-    <thead>
-        <tr>
-            <th>Published on</th>
-            <th>Title</th>
-            <th>Published?</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var a in Model)
-        {
+@if (Model.Count == 0)
+{
+    <p class="adm-muted">No articles yet. <a asp-action="Create">Create the first one</a>.</p>
+}
+else
+{
+    <table class="adm-table" data-news-table>
+        <thead>
             <tr>
-                <td>@a.PublishedOn.ToString("yyyy-MM-dd")</td>
-                <td>@a.Title.Localize()</td>
-                <td>@(a.IsPublished ? "Yes" : "No")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@a.Id">Edit</a>
-                    <form asp-action="Delete" method="post" style="display:inline"
-                          onsubmit="return confirm('Delete this article?')">
-                        <input type="hidden" name="id" value="@a.Id" />
-                        <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
-                    </form>
-                </td>
+                <th></th>
+                <th>Title</th>
+                <th>Published on</th>
+                <th>Status</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                var title = a.Title.Localize();
+                <tr data-news-row
+                    data-title="@title.ToLowerInvariant()"
+                    data-slug="@a.Slug.ToLowerInvariant()"
+                    data-status="@(a.IsPublished ? "published" : "draft")">
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(a.ImagePath))
+                        {
+                            <img class="adm-thumb" src="@a.ImagePath" alt="" loading="lazy" />
+                        }
+                        else
+                        {
+                            <span class="adm-thumb adm-thumb--empty" aria-hidden="true"></span>
+                        }
+                    </td>
+                    <td>
+                        <strong>@(string.IsNullOrWhiteSpace(title) ? "(untitled)" : title)</strong>
+                        <div class="adm-muted">/news/@a.Slug</div>
+                    </td>
+                    <td>@a.PublishedOn.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (a.IsPublished)
+                        {
+                            <span class="adm-badge adm-badge--ok">Published</span>
+                        }
+                        else
+                        {
+                            <span class="adm-badge adm-badge--muted">Draft</span>
+                        }
+                    </td>
+                    <td class="adm-actions">
+                        <a asp-action="Edit" asp-route-id="@a.Id">Edit</a>
+                        @if (a.IsPublished)
+                        {
+                            <a href="/news/@a.Slug" target="_blank" rel="noopener">View</a>
+                        }
+                        <form asp-action="Delete" method="post" style="display:inline"
+                              onsubmit="return confirm('Delete this article?')">
+                            <input type="hidden" name="id" value="@a.Id" />
+                            <button type="submit" class="adm-btn adm-btn--danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p class="adm-muted" data-news-empty hidden>No articles match the current filters.</p>
+}
+
+@section Scripts {
+<script>
+(function () {
+  "use strict";
+  var table = document.querySelector("[data-news-table]");
+  if (!table) return;
+  var search = document.querySelector("[data-news-search]");
+  var filter = document.querySelector("[data-news-filter]");
+  var count = document.querySelector("[data-news-count]");
+  var empty = document.querySelector("[data-news-empty]");
+  var rows = Array.prototype.slice.call(table.querySelectorAll("[data-news-row]"));
+
+  function apply() {
+    var q = (search && search.value || "").trim().toLowerCase();
+    var status = (filter && filter.value) || "all";
+    var shown = 0;
+    rows.forEach(function (row) {
+      var matchText = !q
+        || row.getAttribute("data-title").indexOf(q) !== -1
+        || row.getAttribute("data-slug").indexOf(q) !== -1;
+      var matchStatus = status === "all" || row.getAttribute("data-status") === status;
+      var show = matchText && matchStatus;
+      row.hidden = !show;
+      if (show) shown++;
+    });
+    if (count) count.textContent = shown + " article" + (shown === 1 ? "" : "s");
+    if (empty) empty.hidden = shown !== 0;
+  }
+  if (search) search.addEventListener("input", apply);
+  if (filter) filter.addEventListener("change", apply);
+})();
+</script>
+}
