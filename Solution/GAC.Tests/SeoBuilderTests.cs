@@ -87,7 +87,7 @@ public class SeoBuilderTests
             FacebookUrl = "", XUrl = "https://x.com/gac" };
         var json = SeoBuilder.AutoDealerJsonLd(s, "https://x.test");
         Assert.Contains("\"@type\":\"AutoDealer\"", json);
-        Assert.Contains("GAC Mutawa Alkadi", json);
+        Assert.Contains("GAC MUTAWAALKAZI", json);
         Assert.Contains("https://x.test/", json);
         Assert.Contains("instagram.com/gac", json);
         Assert.Contains("x.com/gac", json);

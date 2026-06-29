@@ -6,7 +6,7 @@ namespace GAC.Web.Infrastructure;
 /// <summary>Pure, testable helpers that build per-page SeoData (incl. JSON-LD) from entities.</summary>
 public static class SeoBuilder
 {
-    public const string SiteName = "GAC Mutawa Alkadi";
+    public const string SiteName = "GAC MUTAWAALKAZI";
     public const string DefaultDescription =
         "Discover the GAC Motor range — SUVs, sedans and EVs — from Mutawa Alkadi Automotive.";
     public const string DefaultOgImage = "/assets/img/logo.png";

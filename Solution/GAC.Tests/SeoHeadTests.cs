@@ -34,7 +34,7 @@ public class SeoHeadTests : IClassFixture<DevWebApplicationFactory>
     public async Task VehiclePage_TitleUsesVehicleName()
     {
         var html = await GetHtml("/gs8");
-        Assert.Matches("<title>[^<]*GS8[^<]*GAC Mutawa Alkadi</title>", html);
+        Assert.Matches("<title>[^<]*GS8[^<]*GAC MUTAWAALKAZI</title>", html);
     }
 
     [Fact]
