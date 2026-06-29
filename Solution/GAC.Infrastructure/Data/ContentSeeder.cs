@@ -19,10 +19,13 @@ public static class ContentSeeder
         await SeedSiteSettingsAsync(db);
         await SeedVehiclesAsync(db);
         await SeedHomePageAsync(db);
+        await SeedPromoAsync(db);
+        await SeedDualCardsAsync(db);
         await SeedMenuAsync(db);
         await SeedDockItemsAsync(db);
         await SeedContentPagesAsync(db);
         await SeedFormPagesAsync(db);
+        await EnsureFormBannersAsync(db);
         await SeedNewsArticlesAsync(db);
         await SeedOffersAsync(db);
         await EnsureArabicAsync(db);
@@ -380,6 +383,100 @@ public static class ContentSeeder
             Heading = headingEn,
             CtaLink = ctaLink
         };
+    }
+
+    // ──────────────────────────────────────────────
+    //  Home "Latest Offers" promo block (1:1 on the singleton HomePage).
+    //  Write-only-when-empty: seeds only if no PromoSection exists.
+    // ──────────────────────────────────────────────
+    public static async Task SeedPromoAsync(ApplicationDbContext db)
+    {
+        if (await db.PromoSections.AnyAsync()) return;
+        var home = await db.HomePages.FirstOrDefaultAsync();
+        if (home is null) return;
+
+        db.PromoSections.Add(new PromoSection
+        {
+            HomePageId  = home.Id,
+            ImagePath   = "/assets/img/feature-gs8-traveller.jpg",
+            Eyebrow     = new LocalizedText { En = "Promotions", Ar = "العروض الترويجية" },
+            Heading     = new LocalizedText { En = "Latest Offers", Ar = "أحدث العروض" },
+            Description  = new LocalizedText { En = "Discover our extensive selection of GAC offers and promotions from Mutawa Alkadi Automotive.", Ar = "اكتشف تشكيلتنا الواسعة من عروض وتخفيضات جي إيه سي من مطوع القاضي للسيارات." },
+            CtaText     = new LocalizedText { En = "View Offers", Ar = "اطّلع على العروض" },
+            CtaLink     = "/offers",
+            Campaigns =
+            {
+                new PromoCampaign { SortOrder = 0, Text = new LocalizedText { En = "Buy now, pay after 2 years", Ar = "اشترِ الآن وادفع بعد سنتين" } },
+                new PromoCampaign { SortOrder = 1, Text = new LocalizedText { En = "0% interest", Ar = "بدون فوائد" } },
+            }
+        });
+        await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Home "dual" cards (3 fixed tiles on the singleton HomePage).
+    //  Write-only-when-empty: seeds only if no DualCard exists.
+    // ──────────────────────────────────────────────
+    public static async Task SeedDualCardsAsync(ApplicationDbContext db)
+    {
+        if (await db.DualCards.AnyAsync()) return;
+        var home = await db.HomePages.FirstOrDefaultAsync();
+        if (home is null) return;
+
+        db.DualCards.AddRange(
+            new DualCard
+            {
+                HomePageId = home.Id, SortOrder = 0,
+                ImagePath = "/assets/img/tile-locations.jpg", Link = "/contact-us",
+                Eyebrow = new LocalizedText { En = "Our showrooms", Ar = "معارضنا" },
+                Title = new LocalizedText { En = "Locations", Ar = "المواقع" },
+                Description = new LocalizedText { En = "Mutawa Alkadi Automotive has a strong presence across Kuwait with a number of showrooms that stretch across the country.", Ar = "تتمتع مطوع القاضي للسيارات بحضور قوي في جميع أنحاء الكويت من خلال عدد من المعارض المنتشرة في كل أرجاء البلاد." },
+                ButtonText = new LocalizedText { En = "Find Us", Ar = "أوجدنا" },
+            },
+            new DualCard
+            {
+                HomePageId = home.Id, SortOrder = 1,
+                ImagePath = "/assets/img/tile-service.jpg", Link = "/book-a-service",
+                Eyebrow = new LocalizedText { En = "Aftersales", Ar = "خدمة ما بعد البيع" },
+                Title = new LocalizedText { En = "Book a service", Ar = "احجز صيانة" },
+                Description = new LocalizedText { En = "We are here to help make sure your GAC is running smoothly so you can continue to drive worry-free.", Ar = "نحن هنا لمساعدتك في الحفاظ على سيارتك جي إيه سي بأفضل حال لتواصل القيادة دون قلق." },
+                ButtonText = new LocalizedText { En = "Book Now", Ar = "احجز الآن" },
+            },
+            new DualCard
+            {
+                HomePageId = home.Id, SortOrder = 2,
+                ImagePath = "/assets/img/tile-parts.jpg", Link = "#",
+                Eyebrow = new LocalizedText { En = "GAC", Ar = "جي إيه سي" },
+                Title = new LocalizedText { En = "Parts & Accessories", Ar = "قطع الغيار والإكسسوارات" },
+                Description = new LocalizedText { En = "Browse our range of GAC accessories which are most suited to your needs, including functional and practical accessories.", Ar = "تصفّح مجموعتنا من إكسسوارات جي إيه سي الأنسب لاحتياجاتك، بما في ذلك الإكسسوارات العملية والوظيفية." },
+                ButtonText = new LocalizedText { En = "Discover More", Ar = "اكتشف المزيد" },
+            });
+        await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Form-page banners. Write-only-when-empty: sets BannerImagePath to its
+    //  current default per slug ONLY where the column is null/empty — never
+    //  overwrites a value an editor already set.
+    // ──────────────────────────────────────────────
+    public static async Task EnsureFormBannersAsync(ApplicationDbContext db)
+    {
+        var defaults = new Dictionary<string, string>
+        {
+            ["book-a-service"]    = "/assets/img/book-a-service/hero.jpg",
+            ["book-a-test-drive"] = "/assets/img/book-a-test-drive/hero.jpg",
+            ["request-a-quote"]   = "/assets/img/book-a-test-drive/hero.jpg",
+            ["fleet"]             = "/assets/img/fleet/vehicles.jpg",
+            ["recall-enquiry"]    = "/assets/img/book-a-service/hero.jpg",
+        };
+        var changed = false;
+        foreach (var (slug, img) in defaults)
+        {
+            var page = await db.FormPages.FirstOrDefaultAsync(f => f.Slug == slug);
+            if (page is null) continue;
+            if (string.IsNullOrEmpty(page.BannerImagePath)) { page.BannerImagePath = img; changed = true; }
+        }
+        if (changed) await db.SaveChangesAsync();
     }
 
     // ──────────────────────────────────────────────
