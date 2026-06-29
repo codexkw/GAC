@@ -14,6 +14,8 @@ public class ContentService : IContentService
     public async Task<HomePage?> GetHomePageAsync()
         => await _db.HomePages
             .Include(h => h.Slides.OrderBy(s => s.SortOrder))
+            .Include(h => h.Promo!).ThenInclude(p => p.Campaigns.OrderBy(c => c.SortOrder))
+            .Include(h => h.DualCards.OrderBy(c => c.SortOrder))
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
