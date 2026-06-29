@@ -43,7 +43,10 @@ public class OffersController : Controller
             await _svc.UpdateAsync(a);
             TempData["Flash"] = "Offer saved.";
         }
-        return RedirectToAction(nameof(Index));
+        // Pin the area: a public OffersController ([HttpGet("/offers")]) shares
+        // this controller name, so without an explicit area the redirect can
+        // resolve to the public /offers page instead of the admin list.
+        return RedirectToAction(nameof(Index), new { area = "Admin" });
     }
 
     [HttpPost]
@@ -51,6 +54,9 @@ public class OffersController : Controller
     {
         await _svc.DeleteAsync(id);
         TempData["Flash"] = "Offer deleted.";
-        return RedirectToAction(nameof(Index));
+        // Pin the area: a public OffersController ([HttpGet("/offers")]) shares
+        // this controller name, so without an explicit area the redirect can
+        // resolve to the public /offers page instead of the admin list.
+        return RedirectToAction(nameof(Index), new { area = "Admin" });
     }
 }

@@ -51,7 +51,10 @@ public class NewsController : Controller
             await _svc.UpdateAsync(a);
             TempData["Flash"] = "Article saved.";
         }
-        return RedirectToAction(nameof(Index));
+        // Pin the area: a public NewsController ([HttpGet("/news")]) shares this
+        // controller name, so without an explicit area the redirect can resolve
+        // to the public /news page instead of the admin list.
+        return RedirectToAction(nameof(Index), new { area = "Admin" });
     }
 
     [HttpPost]
@@ -59,6 +62,9 @@ public class NewsController : Controller
     {
         await _svc.DeleteAsync(id);
         TempData["Flash"] = "Article deleted.";
-        return RedirectToAction(nameof(Index));
+        // Pin the area: a public NewsController ([HttpGet("/news")]) shares this
+        // controller name, so without an explicit area the redirect can resolve
+        // to the public /news page instead of the admin list.
+        return RedirectToAction(nameof(Index), new { area = "Admin" });
     }
 }
