@@ -24,7 +24,16 @@
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta title", NameEn = "MetaTitle.En", NameAr = "MetaTitle.Ar", ValueEn = Model.MetaTitle.En, ValueAr = Model.MetaTitle.Ar }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Meta description", NameEn = "MetaDescription.En", NameAr = "MetaDescription.Ar", ValueEn = Model.MetaDescription.En, ValueAr = Model.MetaDescription.Ar, Multiline = true }' />
 
-    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Page body (HTML)", NameEn = "BodyHtml.En", NameAr = "BodyHtml.Ar", ValueEn = Model.BodyHtml.En, ValueAr = Model.BodyHtml.Ar, Code = true }' />
+    @if (Model.Slug == "warranty")
+    {
+        <input type="hidden" asp-for="BodyHtml.En" />
+        <input type="hidden" asp-for="BodyHtml.Ar" />
+        <p class="adm-note">This page's content is edited in <a asp-area="Admin" asp-controller="Warranty" asp-action="Index">Warranty page</a>. Only its title and meta are editable here.</p>
+    }
+    else
+    {
+        <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Page body (HTML)", NameEn = "BodyHtml.En", NameAr = "BodyHtml.Ar", ValueEn = Model.BodyHtml.En, ValueAr = Model.BodyHtml.Ar, Code = true }' />
+    }
 
     <button type="submit" class="adm-btn">Save</button>
 </form>
