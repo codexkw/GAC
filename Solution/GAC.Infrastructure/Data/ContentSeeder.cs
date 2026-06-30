@@ -26,6 +26,7 @@ public static class ContentSeeder
         await SeedContentPagesAsync(db);
         await SeedWarrantyAsync(db);
         await SeedRoadAssistanceAsync(db);
+        await SeedCostOfServiceAsync(db);
         await SeedFormPagesAsync(db);
         await EnsureFormBannersAsync(db);
         await SeedNewsArticlesAsync(db);
@@ -672,6 +673,83 @@ public static class ContentSeeder
             CallButtonLabel = new LocalizedText { En = "Call 1833334", Ar = "اتصل 1833334" }
         });
         await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Cost-of-service page (singleton, structured price matrix). Write-only-when-empty.
+    //  Parses the canonical embedded SeedContent/content/[ar/]cost-of-service.html table
+    //  (no hand-transcription of the 18×21 price grid).
+    // ──────────────────────────────────────────────
+    public static async Task SeedCostOfServiceAsync(ApplicationDbContext db)
+    {
+        if (await db.CostOfServicePages.AnyAsync()) return;
+
+        var en = ReadSeedBody("content", "cost-of-service");
+        if (string.IsNullOrWhiteSpace(en)) return;             // no seed source → skip
+        var ar = ReadSeedBody("content", "cost-of-service", "ar");
+
+        var pEn = ParseCostTable(en);
+        var pAr = ar is null ? null : ParseCostTable(ar);
+
+        var page = new CostOfServicePage
+        {
+            Title          = new LocalizedText { En = pEn.Title,     Ar = pAr?.Title },
+            ButtonLabel    = new LocalizedText { En = pEn.Button,    Ar = pAr?.Button },
+            TableHeadLabel = new LocalizedText { En = pEn.HeadLabel, Ar = pAr?.HeadLabel },
+            FooterNote     = new LocalizedText { En = pEn.Footer,    Ar = pAr?.Footer },
+        };
+        for (var i = 0; i < pEn.RowLabels.Count; i++)
+            page.Rows.Add(new CostServiceRow
+            {
+                SortOrder = i,
+                Label = new LocalizedText { En = pEn.RowLabels[i], Ar = pAr is not null && i < pAr.RowLabels.Count ? pAr.RowLabels[i] : null }
+            });
+        for (var m = 0; m < pEn.ModelNames.Count; m++)
+        {
+            var model = new CostServiceModel { SortOrder = m, Name = pEn.ModelNames[m] };
+            for (var i = 0; i < pEn.RowLabels.Count; i++)
+                model.Cells.Add(new CostServiceCell { SortOrder = i, Value = pEn.Prices[i][m] });
+            page.Models.Add(model);
+        }
+
+        db.CostOfServicePages.Add(page);
+        await db.SaveChangesAsync();
+    }
+
+    private sealed class ParsedCostTable
+    {
+        public string Title = "", Button = "", HeadLabel = "", Footer = "";
+        public List<string> RowLabels = new();
+        public List<string> ModelNames = new();
+        public List<string[]> Prices = new();   // Prices[rowIndex][modelIndex]
+    }
+
+    private static ParsedCostTable ParseCostTable(string html)
+    {
+        var doc = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(html);
+        var r = new ParsedCostTable
+        {
+            Title     = doc.QuerySelector("h1")?.TextContent.Trim() ?? "",
+            Button    = doc.QuerySelector(".cos-policy-btn")?.TextContent.Trim() ?? "",
+        };
+        var ths = doc.QuerySelectorAll("table.datatable thead th").Select(t => t.TextContent.Trim()).ToList();
+        if (ths.Count > 0) { r.HeadLabel = ths[0]; r.ModelNames = ths.Skip(1).ToList(); }
+        foreach (var tr in doc.QuerySelectorAll("table.datatable tbody tr"))
+        {
+            var tds = tr.QuerySelectorAll("td").Select(t => t.TextContent.Trim()).ToList();
+            if (tds.Count == 0) continue;
+            r.RowLabels.Add(tds[0]);
+            r.Prices.Add(tds.Skip(1).ToArray());
+        }
+        var note = doc.QuerySelector(".cos-note");
+        if (note is not null)
+        {
+            // Preserve line breaks: <br> → newline, then collapse to clean lines.
+            var withBreaks = System.Text.RegularExpressions.Regex.Replace(note.InnerHtml, "<br\\s*/?>", "\n", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            var text = new AngleSharp.Html.Parser.HtmlParser().ParseDocument("<p>" + withBreaks + "</p>").QuerySelector("p")!.TextContent;
+            r.Footer = string.Join("\n", text.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0));
+        }
+        return r;
     }
 
     // ──────────────────────────────────────────────

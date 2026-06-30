@@ -30,6 +30,14 @@ public class ContentService : IContentService
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
+    public async Task<CostOfServicePage?> GetCostOfServicePageAsync()
+        => await _db.CostOfServicePages
+            .Include(p => p.Rows.OrderBy(r => r.SortOrder))
+            .Include(p => p.Models.OrderBy(m => m.SortOrder)).ThenInclude(m => m.Cells.OrderBy(c => c.SortOrder))
+            .AsSplitQuery()
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
     public async Task<ContentPage?> GetContentPageBySlugAsync(string slug)
         => await _db.ContentPages
             .Include(p => p.Sections.OrderBy(s => s.SortOrder))
