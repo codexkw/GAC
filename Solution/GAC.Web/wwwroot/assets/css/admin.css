@@ -285,3 +285,10 @@ trix-toolbar .trix-button-group--file-tools { display: none; }
 .cos-grid__rowhead input { width: 8rem; display: block; margin-bottom: 4px; }
 .cos-grid td[data-cell] input { width: 5.5rem; }
 .cos-grid .adm-btn--danger { padding: 2px 8px; }
+
+/* Warranty brand-table editor: one card per brand row. */
+.adm-brand-card { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+.adm-brand-card__top { display: flex; gap: 8px; margin-bottom: 8px; }
+.adm-brand-card__top input { flex: 1; }
+.adm-brand-card__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.adm-brand-card__grid textarea { min-height: 44px; resize: vertical; }

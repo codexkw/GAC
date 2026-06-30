@@ -74,7 +74,43 @@
     <h2>Extended Warranty</h2>
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "ExtendedHeading.En", NameAr = "ExtendedHeading.Ar", ValueEn = Model.ExtendedHeading.En, ValueAr = Model.ExtendedHeading.Ar }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Paragraphs (one per line)", NameEn = "ExtendedIntro.En", NameAr = "ExtendedIntro.Ar", ValueEn = Model.ExtendedIntro.En, ValueAr = Model.ExtendedIntro.Ar, Multiline = true }' />
-    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Brand table (HTML)", NameEn = "ExtendedTableHtml.En", NameAr = "ExtendedTableHtml.Ar", ValueEn = Model.ExtendedTableHtml.En, ValueAr = Model.ExtendedTableHtml.Ar, Code = true }' />
+    <h3>Brand table — column headers</h3>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Brand column", NameEn = "TableBrandHeader.En", NameAr = "TableBrandHeader.Ar", ValueEn = Model.TableBrandHeader.En, ValueAr = Model.TableBrandHeader.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Manufacturer Warranty column", NameEn = "TableMfrWarrantyHeader.En", NameAr = "TableMfrWarrantyHeader.Ar", ValueEn = Model.TableMfrWarrantyHeader.En, ValueAr = Model.TableMfrWarrantyHeader.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Manufacturer Roadside column", NameEn = "TableMfrRoadsideHeader.En", NameAr = "TableMfrRoadsideHeader.Ar", ValueEn = Model.TableMfrRoadsideHeader.En, ValueAr = Model.TableMfrRoadsideHeader.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Extended Warranty column", NameEn = "TableExtWarrantyHeader.En", NameAr = "TableExtWarrantyHeader.Ar", ValueEn = Model.TableExtWarrantyHeader.En, ValueAr = Model.TableExtWarrantyHeader.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Extended Roadside column", NameEn = "TableExtRoadsideHeader.En", NameAr = "TableExtRoadsideHeader.Ar", ValueEn = Model.TableExtRoadsideHeader.En, ValueAr = Model.TableExtRoadsideHeader.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Policy column", NameEn = "TablePolicyHeader.En", NameAr = "TablePolicyHeader.Ar", ValueEn = Model.TablePolicyHeader.En, ValueAr = Model.TablePolicyHeader.Ar }' />
+
+    <div class="adm-field">
+        <label>Brands (one card per brand — values are multi-line; press Enter inside a box for a second line)</label>
+        <div data-brand-rows>
+@for (var i = 0; i < Model.BrandRows.Count; i++)
+{
+            <div class="adm-brand-card" data-brand-row>
+                <div class="adm-brand-card__top">
+                    <input name="BrandRows[@i].Brand" value="@Model.BrandRows[i].Brand" placeholder="Brand (e.g. GAC)" />
+                    <button type="button" class="adm-btn adm-btn--danger" data-brand-remove title="Remove brand">&times;</button>
+                </div>
+                <div class="adm-brand-card__grid">
+                    <textarea name="BrandRows[@i].ManufacturerWarranty.En" placeholder="Manufacturer Warranty (EN)">@Model.BrandRows[i].ManufacturerWarranty.En</textarea>
+                    <textarea name="BrandRows[@i].ManufacturerWarranty.Ar" dir="rtl" placeholder="(AR)">@Model.BrandRows[i].ManufacturerWarranty.Ar</textarea>
+                    <textarea name="BrandRows[@i].ManufacturerRoadside.En" placeholder="Manufacturer Roadside (EN)">@Model.BrandRows[i].ManufacturerRoadside.En</textarea>
+                    <textarea name="BrandRows[@i].ManufacturerRoadside.Ar" dir="rtl" placeholder="(AR)">@Model.BrandRows[i].ManufacturerRoadside.Ar</textarea>
+                    <textarea name="BrandRows[@i].ExtendedWarranty.En" placeholder="Extended Warranty (EN)">@Model.BrandRows[i].ExtendedWarranty.En</textarea>
+                    <textarea name="BrandRows[@i].ExtendedWarranty.Ar" dir="rtl" placeholder="(AR)">@Model.BrandRows[i].ExtendedWarranty.Ar</textarea>
+                    <textarea name="BrandRows[@i].ExtendedRoadside.En" placeholder="Extended Roadside (EN)">@Model.BrandRows[i].ExtendedRoadside.En</textarea>
+                    <textarea name="BrandRows[@i].ExtendedRoadside.Ar" dir="rtl" placeholder="(AR)">@Model.BrandRows[i].ExtendedRoadside.Ar</textarea>
+                </div>
+                <div class="adm-media__controls">
+                    <input name="BrandRows[@i].PolicyUrl" value="@Model.BrandRows[i].PolicyUrl" data-media-input placeholder="Policy link or PDF" />
+                    <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+                </div>
+            </div>
+}
+        </div>
+        <button type="button" class="adm-btn" data-brand-add>Add brand</button>
+    </div>
 
     <button type="submit" class="adm-btn">Save warranty page</button>
 </form>
@@ -86,6 +122,29 @@
         <input name="Callouts[0].Text.En" placeholder="Rest (English)" />
         <input name="Callouts[0].Text.Ar" placeholder="Rest (Arabic)" dir="rtl" />
         <button type="button" class="adm-btn adm-btn--danger" data-callout-remove title="Remove">&times;</button>
+    </div>
+</template>
+
+<template data-brand-template>
+    <div class="adm-brand-card" data-brand-row>
+        <div class="adm-brand-card__top">
+            <input name="BrandRows[0].Brand" placeholder="Brand (e.g. GAC)" />
+            <button type="button" class="adm-btn adm-btn--danger" data-brand-remove title="Remove brand">&times;</button>
+        </div>
+        <div class="adm-brand-card__grid">
+            <textarea name="BrandRows[0].ManufacturerWarranty.En" placeholder="Manufacturer Warranty (EN)"></textarea>
+            <textarea name="BrandRows[0].ManufacturerWarranty.Ar" dir="rtl" placeholder="(AR)"></textarea>
+            <textarea name="BrandRows[0].ManufacturerRoadside.En" placeholder="Manufacturer Roadside (EN)"></textarea>
+            <textarea name="BrandRows[0].ManufacturerRoadside.Ar" dir="rtl" placeholder="(AR)"></textarea>
+            <textarea name="BrandRows[0].ExtendedWarranty.En" placeholder="Extended Warranty (EN)"></textarea>
+            <textarea name="BrandRows[0].ExtendedWarranty.Ar" dir="rtl" placeholder="(AR)"></textarea>
+            <textarea name="BrandRows[0].ExtendedRoadside.En" placeholder="Extended Roadside (EN)"></textarea>
+            <textarea name="BrandRows[0].ExtendedRoadside.Ar" dir="rtl" placeholder="(AR)"></textarea>
+        </div>
+        <div class="adm-media__controls">
+            <input name="BrandRows[0].PolicyUrl" data-media-input placeholder="Policy link or PDF" />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </div>
     </div>
 </template>
 
@@ -133,6 +192,40 @@
   container.addEventListener("click", function (e) {
     var rm = e.target.closest("[data-callout-remove]");
     if (rm) { rm.closest("[data-callout-row]").remove(); reindex(); }
+  });
+})();
+
+// Add/remove brand cards, keeping BrandRows[i].* indices contiguous. Separate IIFE so
+// the callouts block's early return above can't skip this. The media picker is wired
+// globally in admin.js via delegation, so dynamically-added pick buttons work.
+(function () {
+  "use strict";
+  var brandWrap = document.querySelector("[data-brand-rows]");
+  var brandTpl = document.querySelector("[data-brand-template]");
+  var brandAdd = document.querySelector("[data-brand-add]");
+  if (!brandWrap || !brandTpl || !brandAdd) return;
+
+  var FIELDS = ["ManufacturerWarranty", "ManufacturerRoadside", "ExtendedWarranty", "ExtendedRoadside"];
+  function reindexBrands() {
+    var cards = brandWrap.querySelectorAll("[data-brand-row]");
+    Array.prototype.forEach.call(cards, function (card, i) {
+      card.querySelector(".adm-brand-card__top input").name = "BrandRows[" + i + "].Brand";
+      var areas = card.querySelectorAll(".adm-brand-card__grid textarea");
+      FIELDS.forEach(function (f, fi) {
+        if (areas[fi * 2]) areas[fi * 2].name = "BrandRows[" + i + "]." + f + ".En";
+        if (areas[fi * 2 + 1]) areas[fi * 2 + 1].name = "BrandRows[" + i + "]." + f + ".Ar";
+      });
+      var purl = card.querySelector(".adm-media__controls [data-media-input]");
+      if (purl) purl.name = "BrandRows[" + i + "].PolicyUrl";
+    });
+  }
+  brandAdd.addEventListener("click", function () {
+    brandWrap.appendChild(brandTpl.content.cloneNode(true));
+    reindexBrands();
+  });
+  brandWrap.addEventListener("click", function (e) {
+    var rm = e.target.closest("[data-brand-remove]");
+    if (rm) { rm.closest("[data-brand-row]").remove(); reindexBrands(); }
   });
 })();
 </script>
