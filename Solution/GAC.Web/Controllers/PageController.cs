@@ -37,6 +37,12 @@ public class PageController : Controller
                 var road = await _content.GetRoadAssistancePageAsync() ?? new GAC.Core.Content.RoadAssistancePage();
                 return View("~/Views/Content/RoadAssistance.cshtml", road);
             }
+            // The cost-of-service page is a structured price matrix, not the ContentPage HTML.
+            if (content.Slug == "cost-of-service")
+            {
+                var cos = await _content.GetCostOfServicePageAsync() ?? new GAC.Core.Content.CostOfServicePage();
+                return View("~/Views/Content/CostOfService.cshtml", cos);
+            }
             return View("~/Views/Content/Page.cshtml", content);
         }
 
