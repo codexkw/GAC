@@ -63,4 +63,27 @@ public class AdminOfferServiceTests
         Assert.True(await svc.DeleteAsync(id));
         Assert.Null(await db.Offers.FindAsync(id));
     }
+
+    [Fact]
+    public async Task Update_Persists_ButtonLabel()
+    {
+        var db = NewDb(nameof(Update_Persists_ButtonLabel));
+        var svc = new AdminOfferService(db);
+        var id = await svc.CreateAsync(new Offer { Slug = "deal", Title = "T", IsActive = true });
+
+        var ok = await svc.UpdateAsync(new Offer
+        {
+            Id = id,
+            Slug = "deal",
+            Title = "T",
+            IsActive = true,
+            ButtonLabel = new LocalizedText { En = "Enquire Now", Ar = "استفسر الآن" }
+        });
+
+        Assert.True(ok);
+        db.ChangeTracker.Clear();
+        var o = await db.Offers.AsNoTracking().FirstAsync(x => x.Id == id);
+        Assert.Equal("Enquire Now", o.ButtonLabel.En);
+        Assert.Equal("استفسر الآن", o.ButtonLabel.Ar);
+    }
 }

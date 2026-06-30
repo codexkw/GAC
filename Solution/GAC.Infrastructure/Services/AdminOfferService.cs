@@ -31,7 +31,7 @@ public class AdminOfferService : IAdminOfferService
         var e = await _db.Offers.FirstOrDefaultAsync(x => x.Id == a.Id, ct);
         if (e is null) return false;
         e.Slug = a.Slug; e.IsActive = a.IsActive;
-        e.Title = a.Title; e.Body = a.Body; e.ImagePath = a.ImagePath; e.ValidUntil = a.ValidUntil; e.SortOrder = a.SortOrder;
+        e.Title = a.Title; e.Body = a.Body; e.ButtonLabel = a.ButtonLabel; e.ImagePath = a.ImagePath; e.ValidUntil = a.ValidUntil; e.SortOrder = a.SortOrder;
         await _db.SaveChangesAsync(ct);
         return true;
     }
