@@ -34,6 +34,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<WarrantyPage> WarrantyPages => Set<WarrantyPage>();
     public DbSet<WarrantyCallout> WarrantyCallouts => Set<WarrantyCallout>();
     public DbSet<RoadAssistancePage> RoadAssistancePages => Set<RoadAssistancePage>();
+    public DbSet<CostOfServicePage> CostOfServicePages => Set<CostOfServicePage>();
+    public DbSet<CostServiceRow> CostServiceRows => Set<CostServiceRow>();
+    public DbSet<CostServiceModel> CostServiceModels => Set<CostServiceModel>();
+    public DbSet<CostServiceCell> CostServiceCells => Set<CostServiceCell>();
     public DbSet<SiteSettings> SiteSettings => Set<SiteSettings>();
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<MediaAsset> MediaAssets => Set<MediaAsset>();

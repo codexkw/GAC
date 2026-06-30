@@ -435,3 +435,42 @@ public class RoadAssistancePageConfig : IEntityTypeConfiguration<RoadAssistanceP
         b.OwnsLocalized(r => r.CallButtonLabel);
     }
 }
+
+public class CostOfServicePageConfig : IEntityTypeConfiguration<CostOfServicePage>
+{
+    public void Configure(EntityTypeBuilder<CostOfServicePage> b)
+    {
+        b.Property(p => p.ButtonUrl).HasMaxLength(500);
+        b.OwnsLocalized(p => p.Title);
+        b.OwnsLocalized(p => p.ButtonLabel);
+        b.OwnsLocalized(p => p.TableHeadLabel);
+        b.OwnsLocalized(p => p.FooterNote);
+        b.HasMany(p => p.Rows).WithOne().HasForeignKey(r => r.CostOfServicePageId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(p => p.Models).WithOne().HasForeignKey(m => m.CostOfServicePageId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class CostServiceRowConfig : IEntityTypeConfiguration<CostServiceRow>
+{
+    public void Configure(EntityTypeBuilder<CostServiceRow> b)
+    {
+        b.OwnsLocalized(r => r.Label);
+    }
+}
+
+public class CostServiceModelConfig : IEntityTypeConfiguration<CostServiceModel>
+{
+    public void Configure(EntityTypeBuilder<CostServiceModel> b)
+    {
+        b.Property(m => m.Name).HasMaxLength(120);
+        b.HasMany(m => m.Cells).WithOne().HasForeignKey(c => c.CostServiceModelId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class CostServiceCellConfig : IEntityTypeConfiguration<CostServiceCell>
+{
+    public void Configure(EntityTypeBuilder<CostServiceCell> b)
+    {
+        b.Property(c => c.Value).HasMaxLength(100);
+    }
+}
