@@ -710,19 +710,63 @@ public static class ContentSeeder
     }
 
     // ──────────────────────────────────────────────
-    //  Offers (1)
+    //  Offers (6 cards, bilingual). Write-only-when-empty.
+    //  Public /offers renders these live; admin manages them.
     // ──────────────────────────────────────────────
-    private static async Task SeedOffersAsync(ApplicationDbContext db)
+    public static async Task SeedOffersAsync(ApplicationDbContext db)
     {
+        // Retire the pre-wiring single placeholder (empty body, sole row) so it does
+        // not render as a lone empty card. Real admin-entered offers are never touched.
+        var existing = await db.Offers.ToListAsync();
+        if (existing.Count == 1 && existing[0].Slug == "current-offers"
+            && string.IsNullOrWhiteSpace(existing[0].Body?.En))
+        {
+            db.Offers.Remove(existing[0]);
+            await db.SaveChangesAsync();
+        }
+
         if (await db.Offers.AnyAsync()) return;
 
-        db.Offers.Add(new Offer
-        {
-            Slug      = "current-offers",
-            Title     = "Current Offers",
-            IsActive  = true,
-            SortOrder = 1
-        });
+        // Each owned LocalizedText must be its OWN instance — EF owned entities cannot
+        // be shared across owners (a shared instance reloads as null on all but one).
+        static LocalizedText Enquire() => new() { En = "Enquire Now", Ar = "استفسر الآن" };
+        db.Offers.AddRange(
+            new Offer
+            {
+                Slug = "finance-gs8", SortOrder = 1, IsActive = true, ButtonLabel = Enquire(),
+                Title = new LocalizedText { En = "0% APR on GS8", Ar = "تمويل 0% على GS8" },
+                Body  = new LocalizedText { En = "Drive home the flagship 7-seat SUV with zero-interest finance over selected terms.", Ar = "اقتنِ سيارة الدفع الرباعي الرائدة بسبعة مقاعد بتمويل بدون فوائد على فترات محددة." }
+            },
+            new Offer
+            {
+                Slug = "cashback-empow-r", SortOrder = 2, IsActive = true, ButtonLabel = Enquire(),
+                Title = new LocalizedText { En = "EMPOW R", Ar = "EMPOW R" },
+                Body  = new LocalizedText { En = "Special cashback on the high-performance sports sedan, this month only.", Ar = "استرداد نقدي خاص على السيدان الرياضية عالية الأداء، هذا الشهر فقط." }
+            },
+            new Offer
+            {
+                Slug = "aion-es-launch", SortOrder = 3, IsActive = true, ButtonLabel = Enquire(),
+                Title = new LocalizedText { En = "AION ES Launch", Ar = "إطلاق AION ES" },
+                Body  = new LocalizedText { En = "Introductory pricing plus a complimentary home-charging package on the all-electric ES.", Ar = "أسعار تمهيدية مع باقة شحن منزلي مجانية على ES الكهربائية بالكامل." }
+            },
+            new Offer
+            {
+                Slug = "trade-in-emzoom", SortOrder = 4, IsActive = true, ButtonLabel = Enquire(),
+                Title = new LocalizedText { En = "Upgrade to EMZOOM", Ar = "الترقية إلى EMZOOM" },
+                Body  = new LocalizedText { En = "Boosted trade-in value when you move up to the 2026 EMZOOM.", Ar = "قيمة استبدال أعلى عند الترقية إلى EMZOOM 2026." }
+            },
+            new Offer
+            {
+                Slug = "service-package", SortOrder = 5, IsActive = true, ButtonLabel = Enquire(),
+                Title = new LocalizedText { En = "Service Package", Ar = "باقة الصيانة" },
+                Body  = new LocalizedText { En = "Prepaid service plans with genuine parts and certified GAC technicians.", Ar = "خطط صيانة مدفوعة مسبقاً بقطع غيار أصلية وفنيين معتمدين من جي إيه سي." }
+            },
+            new Offer
+            {
+                Slug = "business-fleet", SortOrder = 6, IsActive = true, ButtonLabel = Enquire(),
+                Title = new LocalizedText { En = "Business & Fleet", Ar = "الأعمال والأساطيل" },
+                Body  = new LocalizedText { En = "Tailored pricing and dedicated support for corporate and fleet customers.", Ar = "أسعار مخصصة ودعم متخصص لعملاء الشركات والأساطيل." }
+            });
 
         await db.SaveChangesAsync();
     }
