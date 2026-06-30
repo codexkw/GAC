@@ -65,6 +65,7 @@ builder.Services.AddScoped<IAdminOfferService, AdminOfferService>();
 builder.Services.AddScoped<IAdminMenuService, AdminMenuService>();
 builder.Services.AddScoped<IAdminDockService, AdminDockService>();
 builder.Services.AddScoped<IAdminHomeService, AdminHomeService>();
+builder.Services.AddScoped<IAdminWarrantyService, AdminWarrantyService>();
 builder.Services.AddScoped<IAdminPageService, AdminPageService>();
 builder.Services.AddScoped<IAdminSettingsService, AdminSettingsService>();
 builder.Services.AddScoped<IContentService, ContentService>();
