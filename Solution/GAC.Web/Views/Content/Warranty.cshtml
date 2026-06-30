@@ -6,6 +6,13 @@
     var termsImg = string.IsNullOrEmpty(w.TermsImagePath) ? "/assets/img/warranty/callout.jpg" : w.TermsImagePath;
     Func<string?, IEnumerable<string>> paras = s =>
         (s ?? "").Split('\n').Select(p => p.Trim()).Where(p => p.Length > 0);
+    // Render a multi-line cell: HTML-encode each line, then join with <br> (encoding
+    // the admin-supplied text keeps it XSS-safe while preserving intentional breaks).
+    Func<string?, Microsoft.AspNetCore.Html.IHtmlContent> cell = s =>
+    {
+        var parts = (s ?? "").Split('\n').Select(x => x.Trim()).Where(x => x.Length > 0);
+        return new Microsoft.AspNetCore.Html.HtmlString(string.Join("<br />", parts.Select(System.Net.WebUtility.HtmlEncode)));
+    };
 }
 
 <div class="crumb-bar">
@@ -74,7 +81,40 @@
 }
     </div>
     <div class="datatable-wrap" style="margin-top:var(--space-6)">
-      @Html.Raw(w.ExtendedTableHtml.Localize())
+      <table class="datatable datatable--matrix">
+        <thead>
+          <tr>
+            <th>@w.TableBrandHeader.Localize()</th>
+            <th>@w.TableMfrWarrantyHeader.Localize()</th>
+            <th>@w.TableMfrRoadsideHeader.Localize()</th>
+            <th>@w.TableExtWarrantyHeader.Localize()</th>
+            <th>@w.TableExtRoadsideHeader.Localize()</th>
+            <th>@w.TablePolicyHeader.Localize()</th>
+          </tr>
+        </thead>
+        <tbody>
+@foreach (var row in w.BrandRows)
+{
+    var purl = (row.PolicyUrl ?? "").Trim();
+    var safe = purl.Length > 0 && (purl.StartsWith("/") || purl.StartsWith("#")
+        || purl.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+        || purl.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+          <tr>
+            <td>@row.Brand</td>
+            <td>@cell(row.ManufacturerWarranty.Localize())</td>
+            <td>@cell(row.ManufacturerRoadside.Localize())</td>
+            <td>@cell(row.ExtendedWarranty.Localize())</td>
+            <td>@cell(row.ExtendedRoadside.Localize())</td>
+            <td>
+@if (safe)
+{
+              <a href="@purl" target="_blank" rel="noopener">@L["Click Here"]</a>
+}
+            </td>
+          </tr>
+}
+        </tbody>
+      </table>
     </div>
   </div>
 </section>

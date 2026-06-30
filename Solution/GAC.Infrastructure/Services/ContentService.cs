@@ -22,6 +22,8 @@ public class ContentService : IContentService
     public async Task<WarrantyPage?> GetWarrantyPageAsync()
         => await _db.WarrantyPages
             .Include(w => w.Callouts.OrderBy(c => c.SortOrder))
+            .Include(w => w.BrandRows.OrderBy(r => r.SortOrder))
+            .AsSplitQuery()
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
