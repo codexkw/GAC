@@ -410,7 +410,14 @@ public class WarrantyPageConfig : IEntityTypeConfiguration<WarrantyPage>
         b.OwnsLocalized(w => w.ExtendedHeading);
         b.OwnsLocalized(w => w.ExtendedIntro);
         b.OwnsLocalized(w => w.ExtendedTableHtml);
+        b.OwnsLocalized(w => w.TableBrandHeader);
+        b.OwnsLocalized(w => w.TableMfrWarrantyHeader);
+        b.OwnsLocalized(w => w.TableMfrRoadsideHeader);
+        b.OwnsLocalized(w => w.TableExtWarrantyHeader);
+        b.OwnsLocalized(w => w.TableExtRoadsideHeader);
+        b.OwnsLocalized(w => w.TablePolicyHeader);
         b.HasMany(w => w.Callouts).WithOne().HasForeignKey(c => c.WarrantyPageId).OnDelete(DeleteBehavior.Cascade);
+        b.HasMany(w => w.BrandRows).WithOne().HasForeignKey(r => r.WarrantyPageId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 
@@ -420,6 +427,19 @@ public class WarrantyCalloutConfig : IEntityTypeConfiguration<WarrantyCallout>
     {
         b.OwnsLocalized(c => c.Lead);
         b.OwnsLocalized(c => c.Text);
+    }
+}
+
+public class WarrantyBrandRowConfig : IEntityTypeConfiguration<WarrantyBrandRow>
+{
+    public void Configure(EntityTypeBuilder<WarrantyBrandRow> b)
+    {
+        b.Property(r => r.Brand).HasMaxLength(120);
+        b.Property(r => r.PolicyUrl).HasMaxLength(500);
+        b.OwnsLocalized(r => r.ManufacturerWarranty);
+        b.OwnsLocalized(r => r.ManufacturerRoadside);
+        b.OwnsLocalized(r => r.ExtendedWarranty);
+        b.OwnsLocalized(r => r.ExtendedRoadside);
     }
 }
 

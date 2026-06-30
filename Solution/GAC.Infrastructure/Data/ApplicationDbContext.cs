@@ -33,6 +33,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<DualCard> DualCards => Set<DualCard>();
     public DbSet<WarrantyPage> WarrantyPages => Set<WarrantyPage>();
     public DbSet<WarrantyCallout> WarrantyCallouts => Set<WarrantyCallout>();
+    public DbSet<WarrantyBrandRow> WarrantyBrandRows => Set<WarrantyBrandRow>();
     public DbSet<RoadAssistancePage> RoadAssistancePages => Set<RoadAssistancePage>();
     public DbSet<CostOfServicePage> CostOfServicePages => Set<CostOfServicePage>();
     public DbSet<CostServiceRow> CostServiceRows => Set<CostServiceRow>();
