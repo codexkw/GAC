@@ -30,6 +30,12 @@
         <input type="hidden" asp-for="BodyHtml.Ar" />
         <p class="adm-note">This page's content is edited in <a asp-area="Admin" asp-controller="Warranty" asp-action="Index">Warranty page</a>. Only its title and meta are editable here.</p>
     }
+    else if (Model.Slug == "road-assistance")
+    {
+        <input type="hidden" asp-for="BodyHtml.En" />
+        <input type="hidden" asp-for="BodyHtml.Ar" />
+        <p class="adm-note">This page's content is edited in <a asp-area="Admin" asp-controller="RoadAssistance" asp-action="Index">Road Assistance</a>. Only its title and meta are editable here.</p>
+    }
     else
     {
         <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Page body (HTML)", NameEn = "BodyHtml.En", NameAr = "BodyHtml.Ar", ValueEn = Model.BodyHtml.En, ValueAr = Model.BodyHtml.Ar, Code = true }' />

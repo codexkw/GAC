@@ -30,6 +30,13 @@ public class PageController : Controller
                 return View("~/Views/Content/Warranty.cshtml",
                     new GAC.Web.Models.WarrantyPageViewModel { Warranty = warranty, Vehicles = vehicles });
             }
+            // The road-assistance page has a dedicated structured editor; its body is
+            // not the ContentPage HTML.
+            if (content.Slug == "road-assistance")
+            {
+                var road = await _content.GetRoadAssistancePageAsync() ?? new GAC.Core.Content.RoadAssistancePage();
+                return View("~/Views/Content/RoadAssistance.cshtml", road);
+            }
             return View("~/Views/Content/Page.cshtml", content);
         }
 

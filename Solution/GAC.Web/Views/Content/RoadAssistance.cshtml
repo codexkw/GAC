@@ -1,0 +1,42 @@
+@model GAC.Core.Content.RoadAssistancePage
+@{
+    Layout = "_Layout";
+    var r = Model;
+    Func<string?, IEnumerable<string>> paras = s =>
+        (s ?? "").Split('\n').Select(p => p.Trim()).Where(p => p.Length > 0);
+    var tel = new string((r.PhoneNumber ?? "").Where(char.IsDigit).ToArray());
+    var callLabel = string.IsNullOrWhiteSpace(r.CallButtonLabel.Localize())
+        ? L["Call {0}", r.PhoneNumber].Value
+        : r.CallButtonLabel.Localize();
+}
+
+<div class="crumb-bar">
+  <div class="container">
+    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> @L["Back"]</a>
+    <nav class="crumb-trail">@L["You are here:"] <a href="/">@L["Homepage"]</a> <span>&gt;</span> <a href="/book-a-service">@L["Owners"]</a> <span>&gt;</span> @r.Heading.Localize()</nav>
+  </div>
+</div>
+
+<section class="section cos-head">
+  <div class="container" style="max-width:920px">
+    <h1>@r.Heading.Localize()</h1>
+@foreach (var p in paras(r.Intro.Localize()))
+{
+    <p class="muted">@p</p>
+}
+@if (!string.IsNullOrWhiteSpace(r.ContactLead.Localize()))
+{
+    <p style="font-weight:700;color:var(--c-ink);margin-top:var(--space-5);margin-bottom:var(--space-3)">@r.ContactLead.Localize()</p>
+}
+@foreach (var p in paras(r.ContactText.Localize()))
+{
+    <p class="muted">@p</p>
+}
+@if (!string.IsNullOrWhiteSpace(tel))
+{
+    <div class="op-btns">
+      <a class="btn btn--hero" href="tel:@tel">@callLabel</a>
+    </div>
+}
+  </div>
+</section>
