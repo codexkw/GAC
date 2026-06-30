@@ -16,6 +16,7 @@ public class Vehicle
 
     public string? BrochurePdf { get; set; }
     public string? SpecPdf { get; set; }
+    public string? WarrantyBookletPdf { get; set; }
 
     public LocalizedText MetaTitle { get; set; } = new();
     public LocalizedText MetaDescription { get; set; } = new();

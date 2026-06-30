@@ -31,6 +31,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<PromoSection> PromoSections => Set<PromoSection>();
     public DbSet<PromoCampaign> PromoCampaigns => Set<PromoCampaign>();
     public DbSet<DualCard> DualCards => Set<DualCard>();
+    public DbSet<WarrantyPage> WarrantyPages => Set<WarrantyPage>();
+    public DbSet<WarrantyCallout> WarrantyCallouts => Set<WarrantyCallout>();
     public DbSet<SiteSettings> SiteSettings => Set<SiteSettings>();
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<MediaAsset> MediaAssets => Set<MediaAsset>();

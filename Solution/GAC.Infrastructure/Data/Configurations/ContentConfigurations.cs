@@ -395,3 +395,29 @@ public class QualityBlockConfig : IEntityTypeConfiguration<QualityBlock>
         b.OwnsLocalized(q => q.Content);
     }
 }
+
+public class WarrantyPageConfig : IEntityTypeConfiguration<WarrantyPage>
+{
+    public void Configure(EntityTypeBuilder<WarrantyPage> b)
+    {
+        b.Property(w => w.BannerImagePath).HasMaxLength(300).IsRequired();
+        b.Property(w => w.TermsImagePath).HasMaxLength(300).IsRequired();
+        b.OwnsLocalized(w => w.BannerLabel);
+        b.OwnsLocalized(w => w.Heading);
+        b.OwnsLocalized(w => w.Intro);
+        b.OwnsLocalized(w => w.TermsNote);
+        b.OwnsLocalized(w => w.ExtendedHeading);
+        b.OwnsLocalized(w => w.ExtendedIntro);
+        b.OwnsLocalized(w => w.ExtendedTableHtml);
+        b.HasMany(w => w.Callouts).WithOne().HasForeignKey(c => c.WarrantyPageId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+public class WarrantyCalloutConfig : IEntityTypeConfiguration<WarrantyCallout>
+{
+    public void Configure(EntityTypeBuilder<WarrantyCallout> b)
+    {
+        b.OwnsLocalized(c => c.Lead);
+        b.OwnsLocalized(c => c.Text);
+    }
+}
