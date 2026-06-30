@@ -25,6 +25,7 @@ public static class ContentSeeder
         await SeedDockItemsAsync(db);
         await SeedContentPagesAsync(db);
         await SeedWarrantyAsync(db);
+        await SeedRoadAssistanceAsync(db);
         await SeedFormPagesAsync(db);
         await EnsureFormBannersAsync(db);
         await SeedNewsArticlesAsync(db);
@@ -642,6 +643,33 @@ public static class ContentSeeder
                     Lead = new LocalizedText { En = "5 years or 150,000 Km", Ar = "5 سنوات أو 150,000 كم" },
                     Text = new LocalizedText { En = "whichever comes first for all other sale channels", Ar = "أيهما أقرب لجميع قنوات البيع الأخرى" } },
             }
+        });
+        await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Road-assistance page (singleton, structured). Write-only-when-empty.
+    // ──────────────────────────────────────────────
+    public static async Task SeedRoadAssistanceAsync(ApplicationDbContext db)
+    {
+        if (await db.RoadAssistancePages.AnyAsync()) return;
+
+        db.RoadAssistancePages.Add(new RoadAssistancePage
+        {
+            Heading = new LocalizedText { En = "Roadside Assistance", Ar = "المساعدة على الطريق" },
+            Intro = new LocalizedText
+            {
+                En = "You can rely on our roadside assistance to assist in a motoring emergency and get you to the nearest GAC Mutawa Alkadi Automotive centers.\nAll we ask is that your car is under warranty.",
+                Ar = "يمكنك الاعتماد على خدمة المساعدة على الطريق لدينا لمساعدتك في حالات الطوارئ المرورية وإيصالك إلى أقرب مراكز جي إيه سي مطوع القاضي للسيارات.\nكل ما نطلبه هو أن تكون سيارتك تحت الضمان."
+            },
+            ContactLead = new LocalizedText { En = "Getting In Touch", Ar = "للتواصل معنا" },
+            ContactText = new LocalizedText
+            {
+                En = "All you have to do is contact us on the phone numbers below and our team will be at your service:",
+                Ar = "كل ما عليك فعله هو التواصل معنا على أرقام الهاتف أدناه وسيكون فريقنا في خدمتك:"
+            },
+            PhoneNumber = "1833334",
+            CallButtonLabel = new LocalizedText { En = "Call 1833334", Ar = "اتصل 1833334" }
         });
         await db.SaveChangesAsync();
     }

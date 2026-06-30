@@ -25,6 +25,11 @@ public class ContentService : IContentService
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
+    public async Task<RoadAssistancePage?> GetRoadAssistancePageAsync()
+        => await _db.RoadAssistancePages
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
     public async Task<ContentPage?> GetContentPageBySlugAsync(string slug)
         => await _db.ContentPages
             .Include(p => p.Sections.OrderBy(s => s.SortOrder))

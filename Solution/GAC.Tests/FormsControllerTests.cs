@@ -19,6 +19,7 @@ public class FormsControllerTests
         public Task<FormPage?> GetFormPageBySlugAsync(string slug) => Task.FromResult(Form);
         public Task<HomePage?> GetHomePageAsync() => Task.FromResult<HomePage?>(null);
         public Task<WarrantyPage?> GetWarrantyPageAsync() => Task.FromResult<WarrantyPage?>(null);
+        public Task<RoadAssistancePage?> GetRoadAssistancePageAsync() => Task.FromResult<RoadAssistancePage?>(null);
         public Task<ContentPage?> GetContentPageBySlugAsync(string slug) => Task.FromResult<ContentPage?>(null);
         public Task<IReadOnlyList<NewsArticle>> GetPublishedNewsAsync() => Task.FromResult<IReadOnlyList<NewsArticle>>(new List<NewsArticle>());
         public Task<NewsArticle?> GetNewsBySlugAsync(string slug) => Task.FromResult<NewsArticle?>(null);

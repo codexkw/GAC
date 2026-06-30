@@ -6,6 +6,7 @@ public interface IContentService
 {
     Task<HomePage?> GetHomePageAsync();
     Task<WarrantyPage?> GetWarrantyPageAsync();
+    Task<RoadAssistancePage?> GetRoadAssistancePageAsync();
     Task<ContentPage?> GetContentPageBySlugAsync(string slug);
     Task<FormPage?> GetFormPageBySlugAsync(string slug);
     Task<IReadOnlyList<NewsArticle>> GetPublishedNewsAsync();
