@@ -19,6 +19,12 @@ public class ContentService : IContentService
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
+    public async Task<WarrantyPage?> GetWarrantyPageAsync()
+        => await _db.WarrantyPages
+            .Include(w => w.Callouts.OrderBy(c => c.SortOrder))
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
     public async Task<ContentPage?> GetContentPageBySlugAsync(string slug)
         => await _db.ContentPages
             .Include(p => p.Sections.OrderBy(s => s.SortOrder))

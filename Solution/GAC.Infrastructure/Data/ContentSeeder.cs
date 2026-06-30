@@ -24,6 +24,7 @@ public static class ContentSeeder
         await SeedMenuAsync(db);
         await SeedDockItemsAsync(db);
         await SeedContentPagesAsync(db);
+        await SeedWarrantyAsync(db);
         await SeedFormPagesAsync(db);
         await EnsureFormBannersAsync(db);
         await SeedNewsArticlesAsync(db);
@@ -596,6 +597,52 @@ public static class ContentSeeder
         };
 
         db.ContentPages.AddRange(pages);
+        await db.SaveChangesAsync();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Warranty page (singleton). Write-only-when-empty: seeds the structured
+    //  content from the current /warranty markup so the live page is identical
+    //  the moment the migration is applied, then becomes editable. The cars grid
+    //  is rendered dynamically from the visible Vehicles (not seeded here).
+    // ──────────────────────────────────────────────
+    public static async Task SeedWarrantyAsync(ApplicationDbContext db)
+    {
+        if (await db.WarrantyPages.AnyAsync()) return;
+
+        db.WarrantyPages.Add(new WarrantyPage
+        {
+            BannerImagePath = "/assets/img/warranty/banner.jpg",
+            BannerLabel = new LocalizedText { En = "GAC Mutawa Alkadi Automotive Warranty", Ar = "ضمان جي إيه سي مطوع القاضي للسيارات" },
+            Heading = new LocalizedText { En = "Warranty", Ar = "الضمان" },
+            Intro = new LocalizedText
+            {
+                En = "We, at GAC Mutawa Alkadi Automotive, believe that a premium and reliable vehicle should also be backed up by reliable warranty options.\nWe provide professional services delivered by professional experts by offering GAC Motor genuine spare parts and accessories at our professional service facility.",
+                Ar = "نحن في جي إيه سي مطوع القاضي للسيارات نؤمن بأن السيارة الفاخرة والموثوقة يجب أن تكون مدعومة أيضاً بخيارات ضمان موثوقة.\nنقدّم خدمات احترافية يؤديها خبراء محترفون من خلال توفير قطع غيار وإكسسوارات جي إيه سي موتور الأصلية في منشأة الخدمة الاحترافية لدينا."
+            },
+            TermsImagePath = "/assets/img/warranty/callout.jpg",
+            TermsNote = new LocalizedText { En = "*terms and conditions apply", Ar = "*تطبق الشروط والأحكام" },
+            ExtendedHeading = new LocalizedText { En = "Extended Warranty Program", Ar = "برنامج الضمان الممتد" },
+            ExtendedIntro = new LocalizedText
+            {
+                En = "Buy your new AAC vehicle today with complete peace of mind and stay protected longer with Extended Warranty and Roadside Assistance Programs offered through our licensed partners!\nThe program is offered as a 1-Year or 2-Year Extended Warranty and/or Roadside Assistance Program offering AAC Customers peace of mind through extended time and mileage depending on brand and model purchased. Both, the Extended Warranty and Roadside Assistance Programs offered AAC are done so through credible 3rd party companies to match and mirror the terms and conditions offered by the manufacturing brands.\nFor as long as you are driving an AAC vehicle, know that we have your best interest and care in mind.",
+                Ar = ""
+            },
+            ExtendedTableHtml = new LocalizedText
+            {
+                En = "<table class=\"datatable datatable--matrix\">\n  <thead>\n    <tr><th>Brand</th><th>Manufacturer Warranty</th><th>Manufacturer Roadside Assistance</th><th>Extended Warranty</th><th>Extended Roadside Assistance</th><th>View Extended Warranty Policy</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>GAC</td><td>5 Years and/or 150,000 KM</td><td>—</td><td>+2 Years<br>+Unlimited Mileage</td><td>+2 Years<br>+Unlimited Mileage</td><td><a href=\"#\">Click Here</a></td></tr>\n    <tr><td>Chevrolet</td><td>3 Years and/or 100,000 KM</td><td>3 Years and/or 100,000 KM</td><td>+2 Years<br>+50,000 KM</td><td>+2 Years<br>+50,000 KM</td><td><a href=\"#\">Click Here</a></td></tr>\n    <tr><td>GMC</td><td>3 Years and/or 100,000 KM</td><td>3 Years and/or 100,000 KM</td><td>+2 Years<br>+50,000 KM</td><td>+2 Years<br>+50,000 KM</td><td><a href=\"#\">Click Here</a></td></tr>\n    <tr><td>Cadillac</td><td>4 Years and/or 100,000 KM</td><td>4 Years and/or 100,000 KM</td><td>+1 Year<br>+50,000 KM</td><td>+1 Year<br>+50,000 KM</td><td><a href=\"#\">Click Here</a></td></tr>\n  </tbody>\n</table>",
+                Ar = ""
+            },
+            Callouts =
+            {
+                new WarrantyCallout { SortOrder = 0,
+                    Lead = new LocalizedText { En = "5 years extended warranty, unlimited mileage", Ar = "ضمان ممتد 5 سنوات، كيلومترات غير محدودة" },
+                    Text = new LocalizedText { En = "for Mutawa Alkadi showroom customers", Ar = "لعملاء معرض مطوع القاضي" } },
+                new WarrantyCallout { SortOrder = 1,
+                    Lead = new LocalizedText { En = "5 years or 150,000 Km", Ar = "5 سنوات أو 150,000 كم" },
+                    Text = new LocalizedText { En = "whichever comes first for all other sale channels", Ar = "أيهما أقرب لجميع قنوات البيع الأخرى" } },
+            }
+        });
         await db.SaveChangesAsync();
     }
 
