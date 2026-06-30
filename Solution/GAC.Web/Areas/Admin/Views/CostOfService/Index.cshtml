@@ -1,0 +1,151 @@
+@model GAC.Core.Content.CostOfServicePage
+@using GAC.Web.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Cost of Service page";
+}
+<h1>Cost of Service page</h1>
+<p class="adm-muted">Edit the public /cost-of-service page. The table is a grid: service intervals are rows, car models are columns. Use the buttons to add a model column or an interval row.</p>
+
+<form method="post" asp-action="Save" class="adm-form">
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = Model.Title.En, ValueAr = Model.Title.Ar }' />
+
+    <hr />
+    <h2>Policy button</h2>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Button label", NameEn = "ButtonLabel.En", NameAr = "ButtonLabel.Ar", ValueEn = Model.ButtonLabel.En, ValueAr = Model.ButtonLabel.Ar }' />
+    <div class="adm-field">
+        <label>Button target (upload a PDF or paste a link — leave empty to hide the button)</label>
+        <div class="adm-media__controls">
+            <input name="ButtonUrl" value="@Model.ButtonUrl" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </div>
+    </div>
+
+    <hr />
+    <h2>Price table</h2>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "First-column header", NameEn = "TableHeadLabel.En", NameAr = "TableHeadLabel.Ar", ValueEn = Model.TableHeadLabel.En, ValueAr = Model.TableHeadLabel.Ar }' />
+
+    <div class="cos-grid-actions">
+        <button type="button" class="adm-btn" data-add-model>+ Add car model</button>
+        <button type="button" class="adm-btn" data-add-row>+ Add interval</button>
+    </div>
+
+    <div class="cos-grid-wrap">
+        <table class="cos-grid" data-cos-grid>
+            <thead>
+                <tr>
+                    <th class="cos-grid__corner">Interval (EN / AR)</th>
+@for (var m = 0; m < Model.Models.Count; m++)
+{
+                    <th data-model-col>
+                        <input name="Models[@m].Name" value="@Model.Models[m].Name" placeholder="Model" />
+                        <button type="button" class="adm-btn adm-btn--danger" data-remove-model title="Remove model">&times;</button>
+                    </th>
+}
+                </tr>
+            </thead>
+            <tbody>
+@for (var i = 0; i < Model.Rows.Count; i++)
+{
+                <tr data-row>
+                    <td class="cos-grid__rowhead">
+                        <input name="Rows[@i].Label.En" value="@Model.Rows[i].Label.En" placeholder="Interval (EN)" />
+                        <input name="Rows[@i].Label.Ar" value="@Model.Rows[i].Label.Ar" dir="rtl" placeholder="(AR)" />
+                        <button type="button" class="adm-btn adm-btn--danger" data-remove-row title="Remove interval">&times;</button>
+                    </td>
+@for (var m = 0; m < Model.Models.Count; m++)
+{
+                    <td data-cell><input name="Models[@m].Cells[@i].Value" value="@(Model.Models[m].Cells.ElementAtOrDefault(i)?.Value)" placeholder="—" /></td>
+}
+                </tr>
+}
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Footer note (one line per line)", NameEn = "FooterNote.En", NameAr = "FooterNote.Ar", ValueEn = Model.FooterNote.En, ValueAr = Model.FooterNote.Ar, Multiline = true }' />
+
+    <button type="submit" class="adm-btn">Save cost of service page</button>
+</form>
+
+<partial name="_PickerModal" />
+
+@section Scripts {
+<script>
+(function () {
+  "use strict";
+  var table = document.querySelector("[data-cos-grid]");
+  if (!table) return;
+  var thead = table.querySelector("thead tr");
+  var tbody = table.querySelector("tbody");
+
+  function modelCols() { return thead.querySelectorAll("[data-model-col]"); }
+  function rows() { return tbody.querySelectorAll("[data-row]"); }
+
+  // Keep Models[m].Name, Rows[i].Label.*, and Models[m].Cells[i].Value contiguous and aligned.
+  function reindex() {
+    Array.prototype.forEach.call(modelCols(), function (th, m) {
+      var n = th.querySelector("input");
+      if (n) n.name = "Models[" + m + "].Name";
+    });
+    Array.prototype.forEach.call(rows(), function (tr, i) {
+      var head = tr.querySelectorAll(".cos-grid__rowhead input");
+      if (head[0]) head[0].name = "Rows[" + i + "].Label.En";
+      if (head[1]) head[1].name = "Rows[" + i + "].Label.Ar";
+      Array.prototype.forEach.call(tr.querySelectorAll("[data-cell]"), function (td, m) {
+        var inp = td.querySelector("input");
+        if (inp) inp.name = "Models[" + m + "].Cells[" + i + "].Value";
+      });
+    });
+  }
+
+  function modelTh() {
+    var th = document.createElement("th");
+    th.setAttribute("data-model-col", "");
+    th.innerHTML = '<input placeholder="Model" /> <button type="button" class="adm-btn adm-btn--danger" data-remove-model title="Remove model">&times;</button>';
+    return th;
+  }
+  function cellTd() {
+    var td = document.createElement("td");
+    td.setAttribute("data-cell", "");
+    td.innerHTML = '<input placeholder="&mdash;" />';
+    return td;
+  }
+  function rowTr(modelCount) {
+    var tr = document.createElement("tr");
+    tr.setAttribute("data-row", "");
+    var html = '<td class="cos-grid__rowhead"><input placeholder="Interval (EN)" /> <input dir="rtl" placeholder="(AR)" /> <button type="button" class="adm-btn adm-btn--danger" data-remove-row title="Remove interval">&times;</button></td>';
+    for (var m = 0; m < modelCount; m++) html += '<td data-cell><input placeholder="&mdash;" /></td>';
+    tr.innerHTML = html;
+    return tr;
+  }
+
+  document.querySelector("[data-add-model]").addEventListener("click", function () {
+    thead.appendChild(modelTh());
+    Array.prototype.forEach.call(rows(), function (tr) { tr.appendChild(cellTd()); });
+    reindex();
+  });
+  document.querySelector("[data-add-row]").addEventListener("click", function () {
+    tbody.appendChild(rowTr(modelCols().length));
+    reindex();
+  });
+
+  table.addEventListener("click", function (e) {
+    var rmRow = e.target.closest("[data-remove-row]");
+    if (rmRow) { rmRow.closest("[data-row]").remove(); reindex(); return; }
+    var rmModel = e.target.closest("[data-remove-model]");
+    if (rmModel) {
+      var th = rmModel.closest("[data-model-col]");
+      var idx = Array.prototype.indexOf.call(modelCols(), th);   // positional model column
+      th.remove();
+      Array.prototype.forEach.call(rows(), function (tr) {
+        var cells = tr.querySelectorAll("[data-cell]");
+        if (cells[idx]) cells[idx].remove();
+      });
+      reindex();
+    }
+  });
+})();
+</script>
+}
