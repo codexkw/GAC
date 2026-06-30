@@ -175,6 +175,7 @@ public class OfferConfig : IEntityTypeConfiguration<Offer>
         b.Property(o => o.Slug).HasMaxLength(120).IsRequired();
         b.OwnsLocalized(o => o.Title);
         b.OwnsLocalized(o => o.Body);
+        b.OwnsLocalized(o => o.ButtonLabel);
     }
 }
 
