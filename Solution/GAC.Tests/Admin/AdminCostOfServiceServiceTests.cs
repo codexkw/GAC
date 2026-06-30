@@ -83,9 +83,44 @@ public class AdminCostOfServiceServiceTests
         var p = await svc.GetAsync();
         Assert.Equal(new[] { "r0", "r2" }, p.Rows.Select(r => r.Label.En).ToArray());     // blank row dropped + reindexed
         Assert.Equal(new[] { "A", "B" }, p.Models.Select(m => m.Name).ToArray());          // blank model dropped
-        Assert.All(p.Models, m => Assert.Equal(2, m.Cells.Count));                          // every model padded/truncated to row count
+        Assert.All(p.Models, m => Assert.Equal(2, m.Cells.Count));                          // every model aligned to row count
         Assert.Equal("a0", p.Models[0].Cells[0].Value);
         Assert.Null(p.Models[0].Cells[1].Value);                                            // padded blank
-        Assert.Equal(new[] { "b0", "b1" }, p.Models[1].Cells.Select(c => c.Value).ToArray()); // truncated keeps first 2
+        // Cells must drop at the SAME index as the dropped row (idx 1), NOT tail-truncate:
+        // kept rows are original idx 0 (r0) and 2 (r2), so B keeps b0 and b2 (b1 is dropped).
+        Assert.Equal(new[] { "b0", "b2" }, p.Models[1].Cells.Select(c => c.Value).ToArray());
+    }
+
+    [Fact]
+    public async Task Save_BlankingMiddleRowLabel_KeepsBottomRowPrice()
+    {
+        // Regression: blanking a non-last interval's label (without removing it) must not
+        // shift prices up or silently lose the last interval's price.
+        var db = NewDb(nameof(Save_BlankingMiddleRowLabel_KeepsBottomRowPrice));
+        var svc = new AdminCostOfServiceService(db);
+
+        await svc.SaveAsync(new CostOfServicePage
+        {
+            Rows =
+            {
+                new CostServiceRow { SortOrder = 0, Label = new LocalizedText { En = "5,000 KM" } },
+                new CostServiceRow { SortOrder = 1, Label = new LocalizedText { En = "" } },          // middle, blank → dropped
+                new CostServiceRow { SortOrder = 2, Label = new LocalizedText { En = "20,000 KM" } },
+            },
+            Models =
+            {
+                new CostServiceModel { SortOrder = 0, Name = "M8", Cells =
+                {
+                    new CostServiceCell { SortOrder = 0, Value = "P0" },
+                    new CostServiceCell { SortOrder = 1, Value = "P1" },
+                    new CostServiceCell { SortOrder = 2, Value = "P2" },
+                } },
+            }
+        });
+
+        var p = await svc.GetAsync();
+        Assert.Equal(new[] { "5,000 KM", "20,000 KM" }, p.Rows.Select(r => r.Label.En).ToArray());
+        // 20,000 KM (kept row, original idx 2) must still show its own price P2 — not P1.
+        Assert.Equal(new[] { "P0", "P2" }, p.Models[0].Cells.Select(c => c.Value).ToArray());
     }
 }

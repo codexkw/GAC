@@ -66,26 +66,39 @@ public class AdminCostOfServiceService : IAdminCostOfServiceService
     }
 
     // Drop blank rows/models (the grid UI can submit empties), re-index, and align each
-    // model's cells to the kept row count (pad with blanks, truncate extras) so the matrix
-    // always renders without gaps.
+    // model's cells to the KEPT rows. Cells bind positionally to rows by index, so a dropped
+    // row must drop the cell at THAT index in every model (not a tail truncation) — otherwise
+    // blanking a non-last interval's label silently shifts/loses prices.
     private static (List<CostServiceRow> rows, List<CostServiceModel> models) Normalize(CostOfServicePage page)
     {
-        var rows = (page.Rows ?? new())
-            .Where(r => !string.IsNullOrWhiteSpace(r.Label?.En) || !string.IsNullOrWhiteSpace(r.Label?.Ar))
-            .Select((r, i) => new CostServiceRow { Label = r.Label ?? new(), SortOrder = i })
+        var srcRows = page.Rows ?? new();
+        // Original indices of the rows we keep, in order — used to pick the matching cell
+        // from each model so cells stay paired with their interval.
+        var keptRowIdx = new List<int>();
+        for (var i = 0; i < srcRows.Count; i++)
+        {
+            var lbl = srcRows[i].Label;
+            if (!string.IsNullOrWhiteSpace(lbl?.En) || !string.IsNullOrWhiteSpace(lbl?.Ar))
+                keptRowIdx.Add(i);
+        }
+
+        var rows = keptRowIdx
+            .Select((origIdx, newIdx) => new CostServiceRow { Label = srcRows[origIdx].Label ?? new(), SortOrder = newIdx })
             .ToList();
-        var n = rows.Count;
 
         var models = (page.Models ?? new())
             .Where(m => !string.IsNullOrWhiteSpace(m.Name)
                      || (m.Cells ?? new()).Any(c => !string.IsNullOrWhiteSpace(c.Value)))
             .Select((m, mi) =>
             {
-                var cells = (m.Cells ?? new())
-                    .Take(n)
-                    .Select((c, ci) => new CostServiceCell { SortOrder = ci, Value = c.Value })
+                var src = m.Cells ?? new();
+                var cells = keptRowIdx
+                    .Select((origIdx, newIdx) => new CostServiceCell
+                    {
+                        SortOrder = newIdx,
+                        Value = origIdx < src.Count ? src[origIdx].Value : null   // pad when the model has fewer cells than rows
+                    })
                     .ToList();
-                while (cells.Count < n) cells.Add(new CostServiceCell { SortOrder = cells.Count, Value = null });
                 return new CostServiceModel { Name = m.Name ?? "", SortOrder = mi, Cells = cells };
             })
             .ToList();

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GAC.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -37,6 +38,30 @@ public class CostOfServiceRenderTests : IClassFixture<CostOfServiceRenderTests.F
         Assert.Contains("5,000 KM/6 Month", html);         // an interval row label
         Assert.Contains("Kuwaiti Dinars", html);           // footer line
         Assert.Contains(">525<", html);                    // a price cell value
+    }
+
+    [Fact]
+    public async Task PolicyButton_RendersOnlyForSafeSchemes()
+    {
+        async Task<string> GetWithButtonUrl(string url)
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var p = await db.CostOfServicePages.FirstAsync();
+                p.ButtonUrl = url;
+                await db.SaveChangesAsync();
+            }
+            return await (await _factory.CreateClient().GetAsync("/cost-of-service")).Content.ReadAsStringAsync();
+        }
+
+        var unsafe1 = await GetWithButtonUrl("javascript:alert(document.cookie)");
+        Assert.DoesNotContain("javascript:alert", unsafe1);   // dangerous scheme never emitted into href
+        Assert.DoesNotContain("cos-policy-btn", unsafe1);     // button hidden for unsafe scheme
+
+        var safe = await GetWithButtonUrl("https://example.com/policy.pdf");
+        Assert.Contains("https://example.com/policy.pdf", safe);
+        Assert.Contains("cos-policy-btn", safe);
     }
 
     [Fact]

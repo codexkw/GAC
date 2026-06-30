@@ -5,6 +5,12 @@
     Func<string?, List<string>> lines = s =>
         (s ?? "").Split('\n').Select(x => x.Trim()).Where(x => x.Length > 0).ToList();
     var footer = lines(p.FooterNote.Localize());
+    // Only emit the policy button for safe schemes (http/https or a relative/anchor path),
+    // so an admin-supplied javascript:/data: URL can't become a clickable script on the page.
+    var btnUrl = (p.ButtonUrl ?? "").Trim();
+    var btnSafe = btnUrl.Length > 0 && (btnUrl.StartsWith("/") || btnUrl.StartsWith("#")
+        || btnUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+        || btnUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
 }
 
 <div class="crumb-bar">
@@ -17,9 +23,9 @@
 <section class="section cos-head">
   <div class="container">
     <h1>@p.Title.Localize()</h1>
-@if (!string.IsNullOrWhiteSpace(p.ButtonUrl))
+@if (btnSafe)
 {
-    <a class="btn btn--hero cos-policy-btn" href="@p.ButtonUrl" target="_blank" rel="noopener">@p.ButtonLabel.Localize()</a>
+    <a class="btn btn--hero cos-policy-btn" href="@btnUrl" target="_blank" rel="noopener">@p.ButtonLabel.Localize()</a>
 }
     <div class="datatable-wrap">
       <table class="datatable">
