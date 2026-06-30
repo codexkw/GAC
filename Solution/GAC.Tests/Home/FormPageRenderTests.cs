@@ -46,4 +46,33 @@ public class FormPageRenderTests : IClassFixture<FormPageRenderTests.Factory>
         Assert.Contains("ZZZ-FORM-INTRO", html);      // intro text came from the DB
         Assert.Contains("/forms/fleet", html);        // the lead form itself is still rendered
     }
+
+    [Fact]
+    public async Task FleetPage_Intro_RendersAfterImage_BeforeForm_NoHardcodedDuplicate()
+    {
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var fleet = await db.FormPages.FirstAsync(f => f.Slug == "fleet");
+            fleet.BannerImagePath = "/zzz-fleet-banner.jpg";
+            fleet.IntroText = new LocalizedText { En = "ZZZ-UNIQUE-FLEET-INTRO", Ar = "ZZZ-UNIQUE-FLEET-INTRO" };
+            await db.SaveChangesAsync();
+        }
+
+        var html = await (await _factory.CreateClient().GetAsync("/fleet")).Content.ReadAsStringAsync();
+
+        // Anchor on the BODY paragraph markup (class="fleet-intro"), not the raw
+        // intro text — the latter also lands in the <head> meta description (SEO),
+        // which would otherwise sort before the body banner.
+        const string bodyIntro = "fleet-intro\">ZZZ-UNIQUE-FLEET-INTRO";
+        var iBanner = html.IndexOf("class=\"fleet-banner\"", StringComparison.Ordinal);
+        var iIntro  = html.IndexOf(bodyIntro, StringComparison.Ordinal);
+        var iForm   = html.IndexOf("/forms/fleet", StringComparison.Ordinal);
+
+        Assert.True(iBanner >= 0 && iIntro >= 0 && iForm >= 0, "banner, intro and form must all render");
+        Assert.True(iBanner < iIntro, "intro must render AFTER the banner image, not above it");
+        Assert.True(iIntro < iForm, "intro must render BEFORE the lead form");
+        // The old hardcoded marketing paragraph must NOT co-render alongside the editable intro.
+        Assert.DoesNotContain("Whether you are looking for a single vehicle", html);
+    }
 }

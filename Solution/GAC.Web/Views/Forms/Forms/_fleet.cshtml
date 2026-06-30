@@ -7,15 +7,18 @@
   </div>
 </div>
 
-@if (!string.IsNullOrWhiteSpace(Model.Page.IntroText.Localize()))
-{
-  <div class="form-intro"><div class="container"><p>@Model.Page.IntroText.Localize()</p></div></div>
-}
 <section class="section cos-head">
   <div class="container">
     <h1>@Model.Page.Title.Localize()</h1>
     <div class="fleet-banner"><img src="@(string.IsNullOrEmpty(Model.Page.BannerImagePath) ? "/assets/img/fleet/vehicles.jpg" : Model.Page.BannerImagePath)" alt="GAC fleet vehicles" /></div>
-    <p class="fleet-intro">@L["Whether you are looking for a single vehicle or a fleet, we, at <strong>GAC Mutawa Alkadi Automotive</strong>, offer a wide selection of vehicles that can meet all of your needs to help propel your business. Thanks our fleet sales team, located in several major cities across Kuwait, you will be provided with solutions that meet your business needs and fit your budget."]</p>
+    @if (!string.IsNullOrWhiteSpace(Model.Page.IntroText.Localize()))
+    {
+      <p class="fleet-intro">@Model.Page.IntroText.Localize()</p>
+    }
+    else
+    {
+      <p class="fleet-intro">@L["Whether you are looking for a single vehicle or a fleet, we, at <strong>GAC Mutawa Alkadi Automotive</strong>, offer a wide selection of vehicles that can meet all of your needs to help propel your business. Thanks our fleet sales team, located in several major cities across Kuwait, you will be provided with solutions that meet your business needs and fit your budget."]</p>
+    }
     <p class="fleet-intro" style="margin-top:var(--space-4)">@L["Fill out the forms below and our team will contact you the soonest:"]</p>
     <form data-form class="flt-form" novalidate method="post" asp-controller="Forms" asp-action="Submit" asp-route-slug="@Model.Page.Slug">
       <div class="field@(Html.FieldErrorClass("Branch"))"><label for="branch">@L["Select Branch"] *</label>
