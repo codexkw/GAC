@@ -119,4 +119,28 @@ public class AdminHomeService : IAdminHomeService
         await _db.SaveChangesAsync(ct);
         return true;
     }
+
+    public async Task<int> CreateCardAsync(DualCard card, CancellationToken ct = default)
+    {
+        var home = await EnsureHomeAsync(ct);
+        card.Id = 0;
+        card.HomePageId = home.Id;
+        // Append after the highest existing SortOrder — using a count would collide
+        // with a survivor's SortOrder after a non-last card is deleted.
+        card.SortOrder = 1 + (await _db.DualCards
+            .Where(c => c.HomePageId == home.Id)
+            .MaxAsync(c => (int?)c.SortOrder, ct) ?? -1);
+        _db.DualCards.Add(card);
+        await _db.SaveChangesAsync(ct);
+        return card.Id;
+    }
+
+    public async Task<bool> DeleteCardAsync(int id, CancellationToken ct = default)
+    {
+        var card = await _db.DualCards.FindAsync([id], ct);
+        if (card is null) return false;
+        _db.DualCards.Remove(card);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
 }

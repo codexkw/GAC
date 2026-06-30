@@ -96,9 +96,38 @@
         <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = card.Title.En, ValueAr = card.Title.Ar }' />
         <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Description", NameEn = "Description.En", NameAr = "Description.Ar", ValueEn = card.Description.En, ValueAr = card.Description.Ar, Multiline = true }' />
         <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Button text", NameEn = "ButtonText.En", NameAr = "ButtonText.Ar", ValueEn = card.ButtonText.En, ValueAr = card.ButtonText.Ar }' />
-        <button type="submit" class="adm-btn">Save card</button>
+        <div class="adm-card-actions">
+            <button type="submit" class="adm-btn">Save card</button>
+            <button type="submit" class="adm-btn adm-btn--danger" formaction="@Url.Action("DeleteCard")" formnovalidate
+                    onclick="return confirm('Remove this card? This cannot be undone.');">Remove card</button>
+        </div>
     </form>
 }
+
+<hr />
+<h3>Add a feature card</h3>
+<p class="adm-muted">Create a new card. New cards appear after the existing ones on the home page.</p>
+<form method="post" asp-action="AddCard" class="adm-form adm-card-edit">
+    <div class="adm-field">
+        <label>Image</label>
+        <div class="adm-media">
+            <img data-media-preview alt="" class="adm-media__preview is-empty" />
+            <div class="adm-media__controls">
+                <input name="ImagePath" value="" data-media-input />
+                <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+            </div>
+        </div>
+    </div>
+    <div class="adm-field">
+        <label>Link</label>
+        <input name="Link" value="" />
+    </div>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Eyebrow", NameEn = "Eyebrow.En", NameAr = "Eyebrow.Ar", ValueEn = "", ValueAr = "" }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Title", NameEn = "Title.En", NameAr = "Title.Ar", ValueEn = "", ValueAr = "" }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Description", NameEn = "Description.En", NameAr = "Description.Ar", ValueEn = "", ValueAr = "", Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Button text", NameEn = "ButtonText.En", NameAr = "ButtonText.Ar", ValueEn = "", ValueAr = "" }' />
+    <button type="submit" class="adm-btn">Add card</button>
+</form>
 
 <partial name="_PickerModal" />
 

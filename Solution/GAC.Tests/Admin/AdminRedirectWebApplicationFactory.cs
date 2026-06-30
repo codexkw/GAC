@@ -38,6 +38,8 @@ public class AdminRedirectWebApplicationFactory : AdminWebApplicationFactory
         public Task<HomePage> GetHomeAggregateAsync(CancellationToken ct = default) => Task.FromResult(new HomePage());
         public Task SavePromoAsync(PromoSection promo, CancellationToken ct = default) => Task.CompletedTask;
         public Task<bool> SaveCardAsync(DualCard card, CancellationToken ct = default) => Task.FromResult(true);
+        public Task<int> CreateCardAsync(DualCard card, CancellationToken ct = default) => Task.FromResult(1);
+        public Task<bool> DeleteCardAsync(int id, CancellationToken ct = default) => Task.FromResult(true);
     }
 
     private sealed class FakeNews : IAdminNewsService

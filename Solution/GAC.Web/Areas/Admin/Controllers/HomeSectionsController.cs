@@ -32,4 +32,20 @@ public class HomeSectionsController : Controller
         TempData["Flash"] = "Card saved.";
         return RedirectToAction(nameof(Index), new { area = "Admin" });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> AddCard(DualCard card)
+    {
+        await _svc.CreateCardAsync(card);
+        TempData["Flash"] = "Card added.";
+        return RedirectToAction(nameof(Index), new { area = "Admin" });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteCard(int id)
+    {
+        await _svc.DeleteCardAsync(id);
+        TempData["Flash"] = "Card removed.";
+        return RedirectToAction(nameof(Index), new { area = "Admin" });
+    }
 }

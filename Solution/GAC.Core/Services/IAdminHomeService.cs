@@ -15,4 +15,6 @@ public interface IAdminHomeService
     Task<HomePage> GetHomeAggregateAsync(CancellationToken ct = default);
     Task SavePromoAsync(PromoSection promo, CancellationToken ct = default);   // upserts the singleton promo, replaces its campaigns
     Task<bool> SaveCardAsync(DualCard card, CancellationToken ct = default);    // updates an existing card in place
+    Task<int> CreateCardAsync(DualCard card, CancellationToken ct = default);   // appends a new card to the singleton HomePage
+    Task<bool> DeleteCardAsync(int id, CancellationToken ct = default);         // removes a card
 }
