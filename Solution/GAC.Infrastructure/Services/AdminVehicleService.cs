@@ -144,6 +144,7 @@ public class AdminVehicleService : IAdminVehicleService
         existing.PriceFrom = vehicle.PriceFrom;
         existing.BrochurePdf = vehicle.BrochurePdf;
         existing.SpecPdf = vehicle.SpecPdf;
+        existing.WarrantyBookletPdf = vehicle.WarrantyBookletPdf;
         existing.Name = vehicle.Name;
         existing.Tagline = vehicle.Tagline;
         existing.IntroText = vehicle.IntroText;

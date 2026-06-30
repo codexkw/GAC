@@ -1,0 +1,139 @@
+@model GAC.Core.Content.WarrantyPage
+@using GAC.Web.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Warranty page";
+}
+<h1>Warranty page</h1>
+<p class="adm-muted">Edit the public /warranty page. The cars grid is generated automatically from your visible car models — each shows a "Warranty Booklet" button when that model has a Warranty booklet PDF set.</p>
+
+<form method="post" asp-action="Save" class="adm-form">
+
+    <h2>Banner</h2>
+    <div class="adm-field">
+        <label>Banner image</label>
+        <div class="adm-media">
+            @if (string.IsNullOrWhiteSpace(Model.BannerImagePath))
+            {
+                <img data-media-preview alt="" class="adm-media__preview is-empty" />
+            }
+            else
+            {
+                <img data-media-preview alt="" class="adm-media__preview" src="@Model.BannerImagePath" />
+            }
+            <div class="adm-media__controls">
+                <input name="BannerImagePath" value="@Model.BannerImagePath" data-media-input />
+                <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+            </div>
+        </div>
+    </div>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Banner label", NameEn = "BannerLabel.En", NameAr = "BannerLabel.Ar", ValueEn = Model.BannerLabel.En, ValueAr = Model.BannerLabel.Ar }' />
+
+    <hr />
+    <h2>Intro</h2>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "Heading.En", NameAr = "Heading.Ar", ValueEn = Model.Heading.En, ValueAr = Model.Heading.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Intro paragraphs (one per line)", NameEn = "Intro.En", NameAr = "Intro.Ar", ValueEn = Model.Intro.En, ValueAr = Model.Intro.Ar, Multiline = true }' />
+
+    <hr />
+    <h2>Terms</h2>
+    <div class="adm-field">
+        <label>Terms image</label>
+        <div class="adm-media">
+            @if (string.IsNullOrWhiteSpace(Model.TermsImagePath))
+            {
+                <img data-media-preview alt="" class="adm-media__preview is-empty" />
+            }
+            else
+            {
+                <img data-media-preview alt="" class="adm-media__preview" src="@Model.TermsImagePath" />
+            }
+            <div class="adm-media__controls">
+                <input name="TermsImagePath" value="@Model.TermsImagePath" data-media-input />
+                <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+            </div>
+        </div>
+    </div>
+    <div class="adm-field">
+        <label>Terms callouts</label>
+        <div data-callouts>
+@for (var i = 0; i < Model.Callouts.Count; i++)
+{
+            <div class="adm-callout-row" data-callout-row>
+                <input name="Callouts[@i].Lead.En" value="@Model.Callouts[i].Lead.En" placeholder="Bold lead (English)" />
+                <input name="Callouts[@i].Lead.Ar" value="@Model.Callouts[i].Lead.Ar" placeholder="Bold lead (Arabic)" dir="rtl" />
+                <input name="Callouts[@i].Text.En" value="@Model.Callouts[i].Text.En" placeholder="Rest (English)" />
+                <input name="Callouts[@i].Text.Ar" value="@Model.Callouts[i].Text.Ar" placeholder="Rest (Arabic)" dir="rtl" />
+                <button type="button" class="adm-btn adm-btn--danger" data-callout-remove title="Remove">&times;</button>
+            </div>
+}
+        </div>
+        <button type="button" class="adm-btn" data-callout-add>Add callout</button>
+    </div>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Terms note", NameEn = "TermsNote.En", NameAr = "TermsNote.Ar", ValueEn = Model.TermsNote.En, ValueAr = Model.TermsNote.Ar }' />
+
+    <hr />
+    <h2>Extended Warranty</h2>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "ExtendedHeading.En", NameAr = "ExtendedHeading.Ar", ValueEn = Model.ExtendedHeading.En, ValueAr = Model.ExtendedHeading.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Paragraphs (one per line)", NameEn = "ExtendedIntro.En", NameAr = "ExtendedIntro.Ar", ValueEn = Model.ExtendedIntro.En, ValueAr = Model.ExtendedIntro.Ar, Multiline = true }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Brand table (HTML)", NameEn = "ExtendedTableHtml.En", NameAr = "ExtendedTableHtml.Ar", ValueEn = Model.ExtendedTableHtml.En, ValueAr = Model.ExtendedTableHtml.Ar, Code = true }' />
+
+    <button type="submit" class="adm-btn">Save warranty page</button>
+</form>
+
+<template data-callout-template>
+    <div class="adm-callout-row" data-callout-row>
+        <input name="Callouts[0].Lead.En" placeholder="Bold lead (English)" />
+        <input name="Callouts[0].Lead.Ar" placeholder="Bold lead (Arabic)" dir="rtl" />
+        <input name="Callouts[0].Text.En" placeholder="Rest (English)" />
+        <input name="Callouts[0].Text.Ar" placeholder="Rest (Arabic)" dir="rtl" />
+        <button type="button" class="adm-btn adm-btn--danger" data-callout-remove title="Remove">&times;</button>
+    </div>
+</template>
+
+<partial name="_PickerModal" />
+
+@section Scripts {
+<script>
+(function () {
+  "use strict";
+
+  // Live image preview for every picker field on the page.
+  Array.prototype.forEach.call(document.querySelectorAll("[data-media-input]"), function (input) {
+    function sync() {
+      var media = input.closest(".adm-media");
+      var prev = media ? media.querySelector("[data-media-preview]") : null;
+      if (!prev) return;
+      var v = (input.value || "").trim();
+      if (v) { prev.setAttribute("src", v); prev.classList.remove("is-empty"); }
+      else { prev.removeAttribute("src"); prev.classList.add("is-empty"); }
+    }
+    input.addEventListener("input", sync);
+    input.addEventListener("change", sync); // dispatched by the media picker
+  });
+
+  // Add/remove callout rows, keeping the Callouts[i] indices contiguous.
+  var container = document.querySelector("[data-callouts]");
+  var tpl = document.querySelector("[data-callout-template]");
+  var addBtn = document.querySelector("[data-callout-add]");
+  if (!container || !tpl || !addBtn) return;
+
+  function reindex() {
+    var rows = container.querySelectorAll("[data-callout-row]");
+    Array.prototype.forEach.call(rows, function (row, i) {
+      var inputs = row.querySelectorAll("input");
+      if (inputs[0]) inputs[0].name = "Callouts[" + i + "].Lead.En";
+      if (inputs[1]) inputs[1].name = "Callouts[" + i + "].Lead.Ar";
+      if (inputs[2]) inputs[2].name = "Callouts[" + i + "].Text.En";
+      if (inputs[3]) inputs[3].name = "Callouts[" + i + "].Text.Ar";
+    });
+  }
+  addBtn.addEventListener("click", function () {
+    container.appendChild(tpl.content.cloneNode(true));
+    reindex();
+  });
+  container.addEventListener("click", function (e) {
+    var rm = e.target.closest("[data-callout-remove]");
+    if (rm) { rm.closest("[data-callout-row]").remove(); reindex(); }
+  });
+})();
+</script>
+}

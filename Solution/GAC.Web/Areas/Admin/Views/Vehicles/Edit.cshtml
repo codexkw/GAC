@@ -45,6 +45,14 @@
     </div>
 
     <div class="adm-field">
+        <label asp-for="WarrantyBookletPdf">Warranty booklet PDF</label>
+        <span style="display:inline-flex;gap:.4rem;align-items:center">
+            <input asp-for="WarrantyBookletPdf" data-media-input />
+            <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+        </span>
+    </div>
+
+    <div class="adm-field">
         <span class="adm-localized__label">Category</span>
         <label><input type="checkbox" name="Category" value="Sedan" checked="@Model.Category.HasFlag(VehicleCategory.Sedan)" /> Sedan</label>
         <label><input type="checkbox" name="Category" value="Suv" checked="@Model.Category.HasFlag(VehicleCategory.Suv)" /> SUV</label>

@@ -267,6 +267,9 @@ trix-toolbar .trix-button-group--file-tools { display: none; }
 .adm-campaign-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
 .adm-campaign-row input { width: auto; flex: 1; }
 .adm-campaign-row .adm-btn--danger { flex: 0 0 auto; }
+.adm-callout-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; flex-wrap: wrap; }
+.adm-callout-row input { width: auto; flex: 1 1 12rem; }
+.adm-callout-row .adm-btn--danger { flex: 0 0 auto; }
 .adm-card-edit { border: 1px solid #e4e7eb; border-radius: 6px; padding: 16px 20px; margin-bottom: 20px; background: #fff; }
 .adm-card-edit h3 { margin-top: 0; }
 .adm-card-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
