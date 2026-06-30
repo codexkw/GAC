@@ -422,3 +422,16 @@ public class WarrantyCalloutConfig : IEntityTypeConfiguration<WarrantyCallout>
         b.OwnsLocalized(c => c.Text);
     }
 }
+
+public class RoadAssistancePageConfig : IEntityTypeConfiguration<RoadAssistancePage>
+{
+    public void Configure(EntityTypeBuilder<RoadAssistancePage> b)
+    {
+        b.Property(r => r.PhoneNumber).HasMaxLength(40);
+        b.OwnsLocalized(r => r.Heading);
+        b.OwnsLocalized(r => r.Intro);
+        b.OwnsLocalized(r => r.ContactLead);
+        b.OwnsLocalized(r => r.ContactText);
+        b.OwnsLocalized(r => r.CallButtonLabel);
+    }
+}
