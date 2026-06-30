@@ -14,7 +14,8 @@ namespace GAC.Tests.Home;
 
 // Proves /warranty renders its structured fields FROM THE DATABASE, the cars grid
 // dynamically FROM the visible Vehicles (with a per-vehicle booklet link), and the
-// brand table HTML raw. Hermetic in-memory DB.
+// structured Extended-Warranty brand table (seeded from the canonical table).
+// Hermetic in-memory DB.
 public class WarrantyRenderTests : IClassFixture<WarrantyRenderTests.Factory>
 {
     public class Factory : WebApplicationFactory<Program>
@@ -38,7 +39,6 @@ public class WarrantyRenderTests : IClassFixture<WarrantyRenderTests.Factory>
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var w = await db.WarrantyPages.FirstAsync();
             w.Heading = new LocalizedText { En = "ZZZ-WARR-HEAD", Ar = "ZZZ-WARR-HEAD" };
-            w.ExtendedTableHtml = new LocalizedText { En = "<table id=\"zzz-table\"></table>", Ar = "" };
             var v = await db.Vehicles.OrderBy(x => x.SortOrder).FirstAsync();
             v.IsVisible = true;
             v.Name = new LocalizedText { En = "ZZZ-CAR", Ar = "ZZZ-CAR" };
@@ -51,6 +51,7 @@ public class WarrantyRenderTests : IClassFixture<WarrantyRenderTests.Factory>
         Assert.Contains("ZZZ-WARR-HEAD", html);          // structured heading from DB
         Assert.Contains("ZZZ-CAR", html);                // dynamic car name from Vehicles
         Assert.Contains("/zzz-booklet.pdf", html);       // per-vehicle booklet link
-        Assert.Contains("id=\"zzz-table\"", html);       // brand table HTML rendered raw
+        Assert.Contains("Manufacturer Warranty", html);  // structured brand table header (seeded)
+        Assert.Contains("Cadillac", html);               // a seeded brand row
     }
 }
