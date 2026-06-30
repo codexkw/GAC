@@ -33,7 +33,7 @@
           <div class="field@(Html.FieldErrorClass("Branch"))"><label for="branch">@L["Select Branch"] *</label>
             <select id="branch" name="branch" required>
               <option value="">@L["Please select ..."]</option>
-              @foreach (var opt in new[] { "GAC service Center", "GAC Motors Jeddah, Kilo 3 Branch", "Jeddah, Al Amal Branch", "Dammam Branch – Service", "GAC Motors Al-Madinah Al-Munawarrah Branch", "GAC Motors Jazan Branch" })
+              @foreach (var opt in new[] { "Al-Rai", "Shuwaikh", "Al-Jahra", "Al-Ahmadi" })
               {
                 <option selected="@(Model.Input.Branch == opt)">@opt</option>
               }
