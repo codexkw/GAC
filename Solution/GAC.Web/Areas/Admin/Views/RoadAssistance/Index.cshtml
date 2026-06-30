@@ -1,0 +1,26 @@
+@model GAC.Core.Content.RoadAssistancePage
+@using GAC.Web.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Road Assistance page";
+}
+<h1>Road Assistance page</h1>
+<p class="adm-muted">Edit the public /road-assistance page. The phone number drives the Call button link.</p>
+
+<form method="post" asp-action="Save" class="adm-form">
+
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "Heading.En", NameAr = "Heading.Ar", ValueEn = Model.Heading.En, ValueAr = Model.Heading.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Intro paragraphs (one per line)", NameEn = "Intro.En", NameAr = "Intro.Ar", ValueEn = Model.Intro.En, ValueAr = Model.Intro.Ar, Multiline = true }' />
+
+    <hr />
+    <h2>Getting in touch</h2>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Lead (bold)", NameEn = "ContactLead.En", NameAr = "ContactLead.Ar", ValueEn = Model.ContactLead.En, ValueAr = Model.ContactLead.Ar }' />
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Contact text", NameEn = "ContactText.En", NameAr = "ContactText.Ar", ValueEn = Model.ContactText.En, ValueAr = Model.ContactText.Ar, Multiline = true }' />
+
+    <div class="adm-field">
+        <label>Phone number (for the Call button link)</label>
+        <input name="PhoneNumber" value="@Model.PhoneNumber" />
+    </div>
+    <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Call button label", NameEn = "CallButtonLabel.En", NameAr = "CallButtonLabel.Ar", ValueEn = Model.CallButtonLabel.En, ValueAr = Model.CallButtonLabel.Ar }' />
+
+    <button type="submit" class="adm-btn">Save road assistance page</button>
+</form>
