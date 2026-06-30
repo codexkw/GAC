@@ -17,6 +17,10 @@ else if (Model.Page.FormType == GAC.Core.Content.FormType.Contact)
   {
     <div class="form-banner" style="background-image:url('@Model.Page.BannerImagePath')"></div>
   }
+  @if (!string.IsNullOrWhiteSpace(Model.Page.IntroText.Localize()))
+  {
+    <div class="form-intro"><div class="container"><p>@Model.Page.IntroText.Localize()</p></div></div>
+  }
   @Html.Raw(Model.Page.BodyHtml.Localize())
 }
 else
