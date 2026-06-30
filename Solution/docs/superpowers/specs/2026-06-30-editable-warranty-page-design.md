@@ -57,10 +57,11 @@ LocalizedText TermsNote          // "*terms and conditions apply"
 LocalizedText ExtendedHeading    // "Extended Warranty Program"
 LocalizedText ExtendedIntro      // 3 paragraphs (multiline)
 LocalizedText ExtendedTableHtml  // the brand matrix <table> markup (hybrid HTML field)
-LocalizedText MetaTitle
-LocalizedText MetaDescription
 List<WarrantyCallout> Callouts
 ```
+
+(Title / meta / visibility stay on the existing `ContentPage` "warranty" record —
+only the page **body** moves to `WarrantyPage`, so SEO is unchanged.)
 
 ### WarrantyCallout (the checkmark "terms" lines; add/remove rows)
 ```
@@ -92,8 +93,8 @@ string? WarrantyBookletPdf   // per-vehicle booklet PDF used by the warranty gri
   load the `WarrantyPage` aggregate (incl. ordered `Callouts`) + all **visible**
   vehicles (ordered by `SortOrder`, with their thumbnail images), and render a new
   `~/Views/Content/Warranty.cshtml` with a `WarrantyPageViewModel { Warranty, Vehicles }`.
-  Visibility still honoured via `ContentPage.IsVisible`. SEO from `WarrantyPage`
-  meta (fallback to `ContentPage`).
+  Visibility + SEO (title/meta) stay on the `ContentPage` record, unchanged
+  (`SeoBuilder.ForContentPage`); only the page body moves to `WarrantyPage`.
 - **View** (`Views/Content/Warranty.cshtml`): reproduce the current markup using
   the **exact same CSS classes** (`warr-banner`, `cos-head`, `warr-terms`,
   `callouts`/`callout`, `wgrid`/`wcard`, `warr-ext-title`, `datatable`) so styling
