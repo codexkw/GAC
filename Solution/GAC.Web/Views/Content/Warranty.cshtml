@@ -1,0 +1,80 @@
+@model GAC.Web.Models.WarrantyPageViewModel
+@{
+    Layout = "_Layout";
+    var w = Model.Warranty;
+    var banner = string.IsNullOrEmpty(w.BannerImagePath) ? "/assets/img/warranty/banner.jpg" : w.BannerImagePath;
+    var termsImg = string.IsNullOrEmpty(w.TermsImagePath) ? "/assets/img/warranty/callout.jpg" : w.TermsImagePath;
+    Func<string?, IEnumerable<string>> paras = s =>
+        (s ?? "").Split('\n').Select(p => p.Trim()).Where(p => p.Length > 0);
+}
+
+<div class="crumb-bar">
+  <div class="container">
+    <a class="crumb-back" href="/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> @L["Back"]</a>
+    <nav class="crumb-trail">@L["You are here:"] <a href="/">@L["Homepage"]</a> <span>&gt;</span> <a href="/book-a-service">@L["Owners"]</a> <span>&gt;</span> @w.Heading.Localize()</nav>
+  </div>
+</div>
+
+<section class="warr-banner">
+  <div class="container">
+    <div class="warr-banner__img" style="background-image:url('@banner')">
+      <span class="warr-banner__label">@w.BannerLabel.Localize()</span>
+    </div>
+  </div>
+</section>
+
+<section class="section cos-head">
+  <div class="container" style="max-width:920px">
+    <h1>@w.Heading.Localize()</h1>
+@foreach (var p in paras(w.Intro.Localize()))
+{
+    <p class="muted">@p</p>
+}
+    <div class="warr-terms">
+      <img src="@termsImg" alt="GAC warranty" />
+      <div class="callouts">
+@foreach (var c in w.Callouts)
+{
+        <div class="callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><div><strong>@c.Lead.Localize()</strong> @c.Text.Localize()</div></div>
+}
+      </div>
+    </div>
+@if (!string.IsNullOrWhiteSpace(w.TermsNote.Localize()))
+{
+    <p class="note">@w.TermsNote.Localize()</p>
+}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="wgrid">
+@foreach (var v in Model.Vehicles)
+{
+      <div class="wcard">
+        <img src="@UrlHelpers.ThumbPath(v)" alt="@v.Name.Localize()" />
+        <div class="wcard__name">@v.Name.Localize()</div>
+@if (!string.IsNullOrEmpty(v.WarrantyBookletPdf))
+{
+        <a class="btn btn--doc" href="@v.WarrantyBookletPdf" target="_blank" rel="noopener">@L["Warranty Booklet"]</a>
+}
+      </div>
+}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="warr-ext-title">@w.ExtendedHeading.Localize()</h2>
+    <div style="max-width:920px">
+@foreach (var p in paras(w.ExtendedIntro.Localize()))
+{
+      <p class="muted">@p</p>
+}
+    </div>
+    <div class="datatable-wrap" style="margin-top:var(--space-6)">
+      @Html.Raw(w.ExtendedTableHtml.Localize())
+    </div>
+  </div>
+</section>

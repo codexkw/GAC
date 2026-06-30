@@ -21,6 +21,15 @@ public class PageController : Controller
         if (content != null)
         {
             ViewData["Seo"] = SeoBuilder.ForContentPage(content, baseUrl);
+            // The warranty page has a dedicated structured editor + a cars grid
+            // pulled live from the visible vehicles; its body is not the ContentPage HTML.
+            if (content.Slug == "warranty")
+            {
+                var warranty = await _content.GetWarrantyPageAsync() ?? new GAC.Core.Content.WarrantyPage();
+                var vehicles = await _vehicles.GetVisibleAsync();
+                return View("~/Views/Content/Warranty.cshtml",
+                    new GAC.Web.Models.WarrantyPageViewModel { Warranty = warranty, Vehicles = vehicles });
+            }
             return View("~/Views/Content/Page.cshtml", content);
         }
 
