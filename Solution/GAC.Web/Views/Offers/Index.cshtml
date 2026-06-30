@@ -3,29 +3,39 @@
 
 <section class="page-hero">
   <div class="container">
-    <nav class="crumbs"><a href="/">Home</a><span>/</span>Offers</nav>
-    <h1>Latest Offers</h1>
-    <p style="max-width:60ch;color:rgba(255,255,255,.75)">Limited-time deals and finance packages across the 2026 GAC range.</p>
+    <nav class="crumbs"><a href="/">@L["Home"]</a><span>/</span>@L["Offers"]</nav>
+    <h1>@L["Latest Offers"]</h1>
+    <p style="max-width:60ch;color:rgba(255,255,255,.75)">@L["Limited-time deals and finance packages across the 2026 GAC range."]</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
+@if (Model.Count == 0)
+{
+    <p class="muted">@L["There are no current offers. Please check back soon."]</p>
+}
+else
+{
     <div class="offer-grid">
-      <div class="offer-card"><span class="offer-card__badge">Finance</span><h3 class="offer-card__title">0% APR on GS8</h3><p class="offer-card__text">Drive home the flagship 7-seat SUV with zero-interest finance over selected terms.</p><a class="btn btn--accent" href="/request-a-quote">Enquire Now</a></div>
-      <div class="offer-card"><span class="offer-card__badge">Cashback</span><h3 class="offer-card__title">EMPOW R</h3><p class="offer-card__text">Special cashback on the high-performance sports sedan, this month only.</p><a class="btn btn--accent" href="/request-a-quote">Enquire Now</a></div>
-      <div class="offer-card"><span class="offer-card__badge">EV</span><h3 class="offer-card__title">AION ES Launch</h3><p class="offer-card__text">Introductory pricing plus a complimentary home-charging package on the all-electric ES.</p><a class="btn btn--accent" href="/request-a-quote">Enquire Now</a></div>
-      <div class="offer-card"><span class="offer-card__badge">Trade-in</span><h3 class="offer-card__title">Upgrade to EMZOOM</h3><p class="offer-card__text">Boosted trade-in value when you move up to the 2026 EMZOOM.</p><a class="btn btn--accent" href="/request-a-quote">Enquire Now</a></div>
-      <div class="offer-card"><span class="offer-card__badge">Aftersales</span><h3 class="offer-card__title">Service Package</h3><p class="offer-card__text">Prepaid service plans with genuine parts and certified GAC technicians.</p><a class="btn btn--accent" href="/request-a-quote">Enquire Now</a></div>
-      <div class="offer-card"><span class="offer-card__badge">Fleet</span><h3 class="offer-card__title">Business &amp; Fleet</h3><p class="offer-card__text">Tailored pricing and dedicated support for corporate and fleet customers.</p><a class="btn btn--accent" href="/request-a-quote">Enquire Now</a></div>
+@foreach (var o in Model)
+{
+    var btn = !string.IsNullOrWhiteSpace(o.ButtonLabel.Localize()) ? o.ButtonLabel.Localize() : L["Enquire Now"].Value;
+      <div class="offer-card">
+        <h3 class="offer-card__title">@o.Title.Localize()</h3>
+        <p class="offer-card__text">@o.Body.Localize()</p>
+        <a class="btn btn--accent" href="/request-a-quote">@btn</a>
+      </div>
+}
     </div>
+}
   </div>
 </section>
 
 <section class="cta-strip">
   <div class="container">
-    <h2>Found an offer you like?</h2>
-    <p>Speak to our team to confirm availability and terms at your nearest showroom.</p>
-    <a class="btn" href="/contact-us">Contact Sales</a>
+    <h2>@L["Found an offer you like?"]</h2>
+    <p>@L["Speak to our team to confirm availability and terms at your nearest showroom."]</p>
+    <a class="btn" href="/contact-us">@L["Contact Sales"]</a>
   </div>
 </section>
