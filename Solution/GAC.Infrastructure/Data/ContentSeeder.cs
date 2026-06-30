@@ -25,6 +25,7 @@ public static class ContentSeeder
         await SeedDockItemsAsync(db);
         await SeedContentPagesAsync(db);
         await SeedWarrantyAsync(db);
+        await SeedWarrantyBrandRowsAsync(db);
         await SeedRoadAssistanceAsync(db);
         await SeedCostOfServiceAsync(db);
         await SeedFormPagesAsync(db);
@@ -750,6 +751,82 @@ public static class ContentSeeder
             r.Footer = string.Join("\n", text.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0));
         }
         return r;
+    }
+
+    // ──────────────────────────────────────────────
+    //  Warranty brand table (backfill the structured rows onto the existing page)
+    // ──────────────────────────────────────────────
+    public static async Task SeedWarrantyBrandRowsAsync(ApplicationDbContext db)
+    {
+        if (await db.WarrantyBrandRows.AnyAsync()) return;
+        var page = await db.WarrantyPages.FirstOrDefaultAsync();
+        if (page is null) return;
+        var html = page.ExtendedTableHtml?.En;
+        if (string.IsNullOrWhiteSpace(html)) return;
+
+        var parsed = ParseBrandTable(html);
+        if (parsed.Headers.Count < 6 || parsed.Rows.Count == 0) return;
+
+        // Arabic header labels (the source table is English-only); positional with the parsed headers.
+        string[] ar = { "العلامة التجارية", "ضمان المصنّع", "مساعدة المصنّع على الطريق", "الضمان الممتد", "المساعدة الممتدة على الطريق", "عرض وثيقة الضمان الممتد" };
+        page.TableBrandHeader       = new LocalizedText { En = parsed.Headers[0], Ar = ar[0] };
+        page.TableMfrWarrantyHeader = new LocalizedText { En = parsed.Headers[1], Ar = ar[1] };
+        page.TableMfrRoadsideHeader = new LocalizedText { En = parsed.Headers[2], Ar = ar[2] };
+        page.TableExtWarrantyHeader = new LocalizedText { En = parsed.Headers[3], Ar = ar[3] };
+        page.TableExtRoadsideHeader = new LocalizedText { En = parsed.Headers[4], Ar = ar[4] };
+        page.TablePolicyHeader      = new LocalizedText { En = parsed.Headers[5], Ar = ar[5] };
+
+        for (var i = 0; i < parsed.Rows.Count; i++)
+        {
+            var cells = parsed.Rows[i];   // [brand, mfrWarranty, mfrRoadside, extWarranty, extRoadside, policy(ignored)]
+            db.WarrantyBrandRows.Add(new WarrantyBrandRow
+            {
+                WarrantyPageId = page.Id,
+                SortOrder = i,
+                Brand = cells.ElementAtOrDefault(0) ?? "",
+                ManufacturerWarranty = new LocalizedText { En = cells.ElementAtOrDefault(1) },
+                ManufacturerRoadside = new LocalizedText { En = cells.ElementAtOrDefault(2) },
+                ExtendedWarranty     = new LocalizedText { En = cells.ElementAtOrDefault(3) },
+                ExtendedRoadside     = new LocalizedText { En = cells.ElementAtOrDefault(4) },
+                PolicyUrl = null   // current links are placeholders ('#') — admin sets real ones
+            });
+        }
+        await db.SaveChangesAsync();
+    }
+
+    private sealed class ParsedBrandTable
+    {
+        public List<string> Headers = new();
+        public List<List<string>> Rows = new();   // each row: cell texts, brand first; <br> preserved as newline
+    }
+
+    private static ParsedBrandTable ParseBrandTable(string html)
+    {
+        var doc = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(html);
+        var r = new ParsedBrandTable
+        {
+            Headers = doc.QuerySelectorAll("table thead th").Select(t => t.TextContent.Trim()).ToList()
+        };
+        foreach (var tr in doc.QuerySelectorAll("table tbody tr"))
+        {
+            var tds = tr.QuerySelectorAll("td").ToList();
+            if (tds.Count == 0) continue;
+            var row = new List<string>();
+            for (var c = 0; c < tds.Count; c++)
+                row.Add(c == 0 ? tds[c].TextContent.Trim() : CellMultiline(tds[c]));   // brand plain; others keep <br>
+            r.Rows.Add(row);
+        }
+        return r;
+    }
+
+    // Convert a cell's <br> to newlines and strip the rest of the markup.
+    private static string CellMultiline(AngleSharp.Dom.IElement td)
+    {
+        var withBreaks = System.Text.RegularExpressions.Regex.Replace(
+            td.InnerHtml, "<br\\s*/?>", "\n", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        var text = new AngleSharp.Html.Parser.HtmlParser().ParseDocument("<p>" + withBreaks + "</p>")
+            .QuerySelector("p")!.TextContent;
+        return string.Join("\n", text.Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0));
     }
 
     // ──────────────────────────────────────────────
