@@ -19,6 +19,13 @@
     </div>
 
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Heading", NameEn = "Heading.En", NameAr = "Heading.Ar", ValueEn = Model.Heading.En, ValueAr = Model.Heading.Ar }' />
+
+    <div class="adm-field">
+        <label asp-for="LogoImagePath">Logo image (optional — replaces the heading text when set)</label>
+        <input asp-for="LogoImagePath" data-media-input />
+        <button type="button" class="adm-btn" data-media-pick>Choose&hellip;</button>
+    </div>
+
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "Subheading", NameEn = "Subheading.En", NameAr = "Subheading.Ar", ValueEn = Model.Subheading.En, ValueAr = Model.Subheading.Ar, Multiline = true }' />
     <partial name="_LocalizedField" model='new LocalizedFieldModel { Label = "CTA text", NameEn = "CtaText.En", NameAr = "CtaText.Ar", ValueEn = Model.CtaText.En, ValueAr = Model.CtaText.Ar }' />
 

@@ -17,7 +17,14 @@
         <div class="hero__bg hero__bg--img" style="background-image:url('@slide.ImagePath')"></div>
         <div class="hero__inner"><div class="hero__content">
           <div class="hero__eyebrow">@slide.Subheading.Localize()</div>
+@if (!string.IsNullOrWhiteSpace(slide.LogoImagePath))
+{
+          <img class="hero__logo" src="@slide.LogoImagePath" alt="@slide.Heading.Localize()" />
+}
+else
+{
           <h1 class="hero__title">@slide.Heading.Localize()</h1>
+}
 @if (slide.CtaLink != null)
 {
           <a class="btn btn--primary" href="@UrlHelpers.NormalizeUrl(slide.CtaLink)">@(string.IsNullOrWhiteSpace(slide.CtaText.Localize()) ? L["Find Out More"].Value : slide.CtaText.Localize())</a>
