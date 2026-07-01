@@ -277,9 +277,14 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
 }
 .hero__logo {
   display: block;
-  max-height: clamp(2.5rem, 5.5vw, 4.5rem);
+  /* Forced responsive height so the logo is prominent regardless of the
+     uploaded image's pixel size (max-height alone can't scale a small source up).
+     object-fit:contain keeps the aspect ratio if a wide logo hits max-width. */
+  height: clamp(5rem, 12vw, 10.5rem);
   width: auto;
-  max-width: min(90%, 520px);
+  max-width: min(92%, 720px);
+  object-fit: contain;
+  object-position: left center;
   margin-bottom: var(--space-5);
   filter: drop-shadow(0 2px 30px rgba(0,0,0,.4));
 }
@@ -1182,7 +1187,7 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
   .hero__bg svg { width: 110%; right: -10%; top: auto; bottom: 0; transform: translateY(40%); }
   .hero__content { text-align: center; margin-inline: auto; padding: 0 16px; }
   .hero__title { font-size: clamp(2rem, 8vw, 3rem); }
-  .hero__logo { max-height: clamp(2rem, 8vw, 3rem); }
+  .hero__logo { height: clamp(3.5rem, 10vw, 6.5rem); margin-inline: auto; object-position: center; }
   .hero__dots { bottom: 24px; }
   .hero__arrows { display: none; }
   .searchblock__form { flex-direction: column; }
@@ -1515,7 +1520,7 @@ a, button, .btn, .chip, label, summary, input, select, textarea,
   .hero__content { text-align: center; max-width: 560px; margin-inline: auto; padding: 0 18px; }
   .hero__eyebrow { max-width: 34ch; margin-inline: auto; margin-bottom: 10px; }
   .hero__title { font-size: clamp(2rem, 8vw, 3rem); margin-bottom: 16px; }
-  .hero__logo { max-height: clamp(2rem, 8vw, 3rem); margin-bottom: 16px; }
+  .hero__logo { height: clamp(3rem, 11vw, 5.5rem); margin-inline: auto; object-position: center; margin-bottom: 16px; }
   /* dots over the image, just above the bottom action-dock */
   .hero__dots { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%);
                 width: auto; justify-content: center; }
