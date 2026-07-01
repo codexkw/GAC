@@ -240,6 +240,7 @@ public class HeroSlideConfig : IEntityTypeConfiguration<HeroSlide>
     public void Configure(EntityTypeBuilder<HeroSlide> b)
     {
         b.Property(s => s.ImagePath).HasMaxLength(300).IsRequired();
+        b.Property(s => s.LogoImagePath).HasMaxLength(300);
         b.OwnsLocalized(s => s.Heading);
         b.OwnsLocalized(s => s.Subheading);
         b.OwnsLocalized(s => s.CtaText);

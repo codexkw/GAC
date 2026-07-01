@@ -42,7 +42,7 @@ public class AdminHomeService : IAdminHomeService
     {
         var e = await _db.HeroSlides.FirstOrDefaultAsync(s => s.Id == slide.Id, ct);
         if (e is null) return false;
-        e.ImagePath = slide.ImagePath; e.Heading = slide.Heading; e.Subheading = slide.Subheading;
+        e.ImagePath = slide.ImagePath; e.LogoImagePath = slide.LogoImagePath; e.Heading = slide.Heading; e.Subheading = slide.Subheading;
         e.CtaText = slide.CtaText; e.CtaLink = slide.CtaLink;
         await _db.SaveChangesAsync(ct);
         return true;
